@@ -66,9 +66,17 @@ namespace Bookstore.Domain.Books
 
         public bool IsLowInStock => Quantity <= LowBookThreshold;
 
+        // INV-BOOK-01, revised by ISSUE-03: a withdrawal that would take the stock level below
+        // zero is rejected instead of being silently saturated at zero, so a shortage is never
+        // hidden behind a stock level that only ever looks non-negative.
         public void ReduceStockLevel(int quantity)
         {
-            Quantity = Math.Max(Quantity - quantity, 0);
+            if (quantity > Quantity)
+            {
+                throw new DomainException($"Cannot withdraw {quantity} of \"{Name}\"; only {Quantity} in stock.");
+            }
+
+            Quantity -= quantity;
         }
     }
 }

@@ -46,17 +46,16 @@ namespace Bookstore.Domain.Tests
         }
 
         [Fact]
-        public void ReduceStockLevel_DoesNotReduceQuantityBelowZero_When_Executed()
+        public void ReduceStockLevel_Throws_When_QuantityExceedsStock()
         {
             var book = new BookBuilder()
                 .Quantity(50)
                 .Build();
-            
+
             const int amountToReduce = 60;
 
-            book.ReduceStockLevel(amountToReduce);
-
-            Assert.Equal(0, book.Quantity);
+            Assert.Throws<DomainException>(() => book.ReduceStockLevel(amountToReduce));
+            Assert.Equal(50, book.Quantity);
         }
     }
 }
