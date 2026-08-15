@@ -28,6 +28,12 @@
                 <input id="OrderDateTo" type="date" class="form-control" name="Filters.OrderDateTofilter" asp-for="Filters.OrderDateToFilter" />
             </div>
 
+            @* ISSUE-25: past due is a rule of the order aggregate, so it can be filtered on. *@
+            <div class="col-12 form-check">
+                <input id="PastDueFilter" class="form-check-input" type="checkbox" name="Filters.PastDueFilter" value="true" checked="@(Model.Filters?.PastDueFilter == true)" />
+                <label class="form-check-label" for="PastDueFilter">Past due only</label>
+            </div>
+
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Filter</button>
             </div>
@@ -65,7 +71,13 @@
                         <td>@order.CustomerName</td>
                         <td>@order.OrderStatus</td>
                         <td>@order.OrderDate</td>
-                        <td>@order.DeliveryDate.ToShortDateString()</td>
+                        <td>
+                            @order.DeliveryDate.ToShortDateString()
+                            @if (order.IsPastDue)
+                            {
+                                <span class="badge bg-warning text-dark">Past due</span>
+                            }
+                        </td>
                         <td>@order.Total.ToString("C")</td>
                         <td>
                             <a class="card-link" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">View</a>

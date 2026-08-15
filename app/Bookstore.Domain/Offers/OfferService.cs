@@ -98,7 +98,7 @@ namespace Bookstore.Domain.Offers
 
         public async Task RecordOfferPaymentAsync(int offerId)
         {
-            await TransitionAsync(offerId, offer => offer.RecordPayment());
+            await TransitionAsync(offerId, offer => offer.RecordPayment(DateTime.UtcNow));
         }
 
         private async Task TransitionAsync(int offerId, Action<Offer> transition)

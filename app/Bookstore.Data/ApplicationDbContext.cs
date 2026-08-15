@@ -42,6 +42,11 @@ namespace Bookstore.Data
             modelBuilder.Entity<Book>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Book>().HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
 
+            // ISSUE-06: Book.SourceOfferId points back at the offer the book was bought as. There
+            // is no navigation property: the book keeps the identifier only, and the cost it was
+            // bought for is copied onto the book itself.
+            modelBuilder.Entity<Book>().HasOne<Offer>().WithMany().HasForeignKey(x => x.SourceOfferId).OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Offer>().HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Offer>().HasOne(x => x.BookType).WithMany().HasForeignKey(x => x.BookTypeId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Offer>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);

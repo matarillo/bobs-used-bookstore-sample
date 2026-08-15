@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain.Orders;
+﻿using Bookstore.Domain.Offers;
+using Bookstore.Domain.Orders;
 
 namespace Bookstore.Domain.Books
 {
@@ -16,6 +17,9 @@ namespace Bookstore.Domain.Books
 
         Task<BookResult> AddAsync(CreateBookDto createBookDto);
 
+        // ISSUE-06: puts a paid offer on the shelf, recording it as the source of the stock.
+        Task<BookResult> AddFromOfferAsync(CreateBookFromOfferDto createBookFromOfferDto);
+
         Task<BookResult> UpdateAsync(UpdateBookDto updateBookDto);
     }
 
@@ -26,14 +30,16 @@ namespace Bookstore.Domain.Books
         private readonly IFileService fileService;
         private readonly IBookRepository bookRepository;
         private readonly IOrderRepository orderRepository;
+        private readonly IOfferRepository offerRepository;
 
-        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository)
+        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, IOfferRepository offerRepository)
         {
             this.imageResizeService = imageResizeService;
             this.imageValidationService = imageValidationService;
             this.fileService = fileService;
             this.bookRepository = bookRepository;
             this.orderRepository = orderRepository;
+            this.offerRepository = offerRepository;
         }
 
         public async Task<Book> GetBookAsync(int id)
@@ -75,6 +81,25 @@ namespace Bookstore.Domain.Books
                 dto.Quantity,
                 dto.Year,
                 dto.Summary);
+
+            await bookRepository.AddAsync(book);
+
+            return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
+        }
+
+        // ISSUE-06: the offer and the book it becomes are changed together, which the shared unit
+        // of work behind the repositories allows (see CreateOrderAsync for the same pattern).
+        public async Task<BookResult> AddFromOfferAsync(CreateBookFromOfferDto dto)
+        {
+            var offer = await offerRepository.GetAsync(dto.OfferId);
+
+            // ISSUE-13: stocking is a strict update targeting one specific offer.
+            if (offer == null)
+            {
+                throw new DomainException($"Offer {dto.OfferId} was not found.");
+            }
+
+            var book = Book.CreateFromOffer(offer, dto.Price, dto.Year, dto.Summary);
 
             await bookRepository.AddAsync(book);
 

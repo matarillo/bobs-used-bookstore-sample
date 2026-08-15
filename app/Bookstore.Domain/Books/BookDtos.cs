@@ -15,6 +15,16 @@
         Stream CoverImage,
         string CoverImageFileName);
 
+    // ISSUE-06: stocking a paid offer. Name, author, ISBN and the four classifications are not
+    // asked for — they come from the offer.
+    public record CreateBookFromOfferDto(
+        int OfferId,
+        int? Year,
+        string Summary,
+        decimal Price,
+        Stream CoverImage,
+        string CoverImageFileName);
+
     public record UpdateBookDto(
         int BookId,
         string Name,

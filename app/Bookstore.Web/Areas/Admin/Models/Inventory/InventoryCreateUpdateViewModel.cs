@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Bookstore.Domain.Books;
+using Bookstore.Domain.Offers;
 using Bookstore.Domain.ReferenceData;
 using Bookstore.Web.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +37,29 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Year = book.Year.GetValueOrDefault();
         }
 
+        // ISSUE-06: stocking a paid offer. The book is described by the offer, so only the sale
+        // price and the presentation details are left for the store to fill in.
+        public InventoryCreateUpdateViewModel(IEnumerable<ReferenceDataItem> referenceDataItems, Offer offer) : this(referenceDataItems)
+        {
+            SourceOfferId = offer.Id;
+            PurchaseCost = offer.BookPrice;
+            Author = offer.Author;
+            ISBN = offer.ISBN;
+            Name = offer.BookName;
+            SelectedBookTypeId = offer.BookTypeId;
+            SelectedConditionId = offer.ConditionId;
+            SelectedGenreId = offer.GenreId;
+            SelectedPublisherId = offer.PublisherId;
+            Summary = offer.Summary;
+        }
+
         public int Id { get; set; }
+
+        // ISSUE-06: set only when the book is being stocked from an offer.
+        public int? SourceOfferId { get; set; }
+
+        [DisplayName("Purchase cost")]
+        public decimal? PurchaseCost { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -79,14 +102,20 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         [Required]
         public int Quantity { get; set; } = 1;
 
+        // Nullable because none of the three is required to describe a book, and under
+        // <Nullable>enable</Nullable> MVC treats a non-nullable reference type as implicitly
+        // required: declared as "string"/"IFormFile" they made every submit fail validation.
+        // CoverImageUrl and Summary are not even rendered as inputs, so no submit could satisfy
+        // them. This blocked the pre-existing create and update forms as well as ISSUE-06's
+        // stock-from-offer route.
         [MaxFileSize(2 * 1024 * 1024)]
         [ImageTypes(new[] { ".png", ".jpg", ".jpeg" })]
         [DisplayName("Cover image")]
-        public IFormFile CoverImage { get; set; }
-        
-        public string CoverImageUrl { get; set; }
+        public IFormFile? CoverImage { get; set; }
 
-        public string Summary { get; set; }
+        public string? CoverImageUrl { get; set; }
+
+        public string? Summary { get; set; }
 
         public void AddReferenceData(IEnumerable<ReferenceDataItem> referenceDataItems)
         {

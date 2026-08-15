@@ -1,4 +1,5 @@
 using Bookstore.Domain.Books;
+using Bookstore.Domain.Offers;
 using Bookstore.Domain.Tests.Builders;
 
 namespace Bookstore.Domain.Tests
@@ -71,5 +72,98 @@ namespace Bookstore.Domain.Tests
 
             Assert.Equal(53, book.Quantity);
         }
+
+        // ISSUE-06: the offer describes the book, so stocking it must carry that description over
+        // unchanged. What the store sells it for is a separate decision.
+        [Fact]
+        public void CreateFromOffer_CopiesTheOfferDescriptionOfTheBook_When_TheOfferIsPaid()
+        {
+            var offer = PaidOffer();
+
+            var book = Book.CreateFromOffer(offer, price: 20m);
+
+            Assert.Equal(offer.BookName, book.Name);
+            Assert.Equal(offer.Author, book.Author);
+            Assert.Equal(offer.ISBN, book.ISBN);
+            Assert.Equal(offer.BookTypeId, book.BookTypeId);
+            Assert.Equal(offer.ConditionId, book.ConditionId);
+            Assert.Equal(offer.GenreId, book.GenreId);
+            Assert.Equal(offer.PublisherId, book.PublisherId);
+        }
+
+        [Fact]
+        public void CreateFromOffer_StocksOneCopyAtThePriceTheStoreChose()
+        {
+            var offer = PaidOffer(bookPrice: 5m);
+
+            var book = Book.CreateFromOffer(offer, price: 20m);
+
+            Assert.Equal(20m, book.Price);
+            Assert.Equal(1, book.Quantity);
+        }
+
+        // ISSUE-06: the source of the stock and what it cost, which is what makes a margin
+        // calculable at all.
+        [Fact]
+        public void CreateFromOffer_RecordsTheOfferAsTheSourceAndItsPriceAsTheCost()
+        {
+            var offer = PaidOffer(bookPrice: 5m, id: 7);
+
+            var book = Book.CreateFromOffer(offer, price: 20m);
+
+            Assert.Equal(7, book.SourceOfferId);
+            Assert.Equal(5m, book.PurchaseCost);
+            Assert.Equal(15m, book.Margin);
+        }
+
+        [Fact]
+        public void CreateFromOffer_MarksTheOfferAsStocked()
+        {
+            var offer = PaidOffer();
+
+            Assert.False(offer.IsStocked);
+
+            Book.CreateFromOffer(offer, price: 20m);
+
+            Assert.True(offer.IsStocked);
+        }
+
+        // ISSUE-06: the store does not shelve what it has not yet bought and paid for.
+        [Theory]
+        [InlineData(OfferStatus.PendingApproval)]
+        [InlineData(OfferStatus.Approved)]
+        [InlineData(OfferStatus.Received)]
+        [InlineData(OfferStatus.Rejected)]
+        public void CreateFromOffer_Throws_When_TheOfferHasNotBeenPaid(OfferStatus status)
+        {
+            var offer = new OfferBuilder().Status(status).Build();
+
+            Assert.Throws<DomainException>(() => Book.CreateFromOffer(offer, price: 20m));
+            Assert.False(offer.IsStocked);
+        }
+
+        // ISSUE-06: one bought copy is one book. Stocking the same offer twice would invent stock.
+        [Fact]
+        public void CreateFromOffer_Throws_When_TheOfferHasAlreadyBeenStocked()
+        {
+            var offer = PaidOffer();
+
+            Book.CreateFromOffer(offer, price: 20m);
+
+            Assert.Throws<DomainException>(() => Book.CreateFromOffer(offer, price: 20m));
+        }
+
+        [Fact]
+        public void Margin_IsNull_When_TheBookWasNotSourcedFromAnOffer()
+        {
+            var book = new BookBuilder().Build();
+
+            Assert.Null(book.SourceOfferId);
+            Assert.Null(book.PurchaseCost);
+            Assert.Null(book.Margin);
+        }
+
+        private static Offer PaidOffer(decimal bookPrice = 5m, int id = 1) =>
+            new OfferBuilder().Id(id).BookPrice(bookPrice).Status(OfferStatus.Paid).Build();
     }
 }

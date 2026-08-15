@@ -56,17 +56,58 @@ namespace Bookstore.Data.Repositories
 
         async Task<OrderStatistics> IOrderRepository.GetStatisticsAsync()
         {
-            var startOfMonth = DateTime.UtcNow.StartOfMonth();
+            var now = DateTime.UtcNow;
+            var startOfMonth = now.StartOfMonth();
 
-            return await dbContext.Orders
+            var statistics = await dbContext.Orders
                 .GroupBy(x => 1)
                 .Select(x => new OrderStatistics
                 {
                     PendingOrders = x.Count(y => y.OrderStatus == OrderStatus.Pending),
-                    PastDueOrders = x.Count(y => y.OrderStatus == OrderStatus.Ordered && y.DeliveryDate < DateTime.UtcNow),
                     OrdersThisMonth = x.Count(y => y.CreatedOn >= startOfMonth),
                     OrdersTotal = x.Count()
                 }).SingleOrDefaultAsync();
+
+            if (statistics == null) return null;
+
+            // ISSUE-25: the rule for "past due" belongs to the order, not to this query. Counted
+            // separately because the aggregate's predicate cannot be applied inside the grouped
+            // projection above.
+            statistics.PastDueOrders = await dbContext.Orders.CountAsync(Order.PastDueAsOf(now));
+
+            // The monetary indicators (12 §2.4). What counts as a sale is the order's rule; the
+            // amounts are the ones the order items already carry.
+            var sales = dbContext.Orders.Where(Order.SalesFilter());
+            var salesThisMonth = sales.Where(x => x.CreatedOn >= startOfMonth);
+
+            statistics.SalesTotal = await SumSubTotalAsync(sales);
+            statistics.SalesThisMonth = await SumSubTotalAsync(salesThisMonth);
+            statistics.GrossProfitTotal = await SumGrossProfitAsync(sales);
+            statistics.GrossProfitThisMonth = await SumGrossProfitAsync(salesThisMonth);
+            statistics.SalesWithKnownCostTotal = await SumSubTotalWithKnownCostAsync(sales);
+            statistics.SalesWithKnownCostThisMonth = await SumSubTotalWithKnownCostAsync(salesThisMonth);
+
+            return statistics;
+        }
+
+        private static Task<decimal> SumSubTotalAsync(IQueryable<Order> orders)
+        {
+            return orders.SelectMany(x => x.OrderItems).SumAsync(x => x.Price * x.Quantity);
+        }
+
+        // Only the items whose cost the domain knows — see OrderStatistics.GrossProfitTotal.
+        private static Task<decimal> SumGrossProfitAsync(IQueryable<Order> orders)
+        {
+            return orders.SelectMany(x => x.OrderItems)
+                .Where(x => x.Cost != null)
+                .SumAsync(x => (x.Price - x.Cost.Value) * x.Quantity);
+        }
+
+        private static Task<decimal> SumSubTotalWithKnownCostAsync(IQueryable<Order> orders)
+        {
+            return orders.SelectMany(x => x.OrderItems)
+                .Where(x => x.Cost != null)
+                .SumAsync(x => x.Price * x.Quantity);
         }
 
         async Task<IPaginatedList<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
@@ -86,6 +127,13 @@ namespace Bookstore.Data.Repositories
             if (filters.OrderDateToFilter.HasValue)
             {
                 query = query.Where(x => x.CreatedOn < filters.OrderDateToFilter.Value.OneSecondToMidnight());
+            }
+
+            // ISSUE-25: now that the domain defines "past due", the dashboard's past-due count is
+            // something staff can open and work through.
+            if (filters.PastDueFilter == true)
+            {
+                query = query.Where(Order.PastDueAsOf(DateTime.UtcNow));
             }
 
             query = query

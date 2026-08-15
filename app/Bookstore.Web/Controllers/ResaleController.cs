@@ -35,7 +35,14 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ResaleCreateViewModel resaleViewModel)
         {
-            if (!ModelState.IsValid) return View();
+            // Redisplaying the form used to pass no model at all, so an invalid submit met a
+            // NullReferenceException in the view instead of the validation messages.
+            if (!ModelState.IsValid)
+            {
+                resaleViewModel.AddReferenceData(await referenceDataService.GetAllReferenceDataAsync());
+
+                return View(resaleViewModel);
+            }
 
             var dto = new CreateOfferDto(
                 User.GetSub(), 
