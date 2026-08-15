@@ -9,10 +9,10 @@ using NSubstitute;
 
 namespace Bookstore.Web.Tests.Controllers;
 
-// Checkout is where the shopping-cart flow and the order flow meet: it is the one place ISSUE-11
-// (out-of-stock items silently dropped) and ISSUE-03/16 (stock shortages surfacing as a
-// DomainException) become something a customer actually sees, instead of an unhandled exception
-// or a checkout that quietly loses part of the order.
+// Checkout is where the shopping-cart flow and the order flow meet: it is the one place
+// out-of-stock items and stock shortages (which surface as a DomainException) become something a
+// customer actually sees, instead of an unhandled exception or a checkout that quietly loses
+// part of the order.
 public class CheckoutControllerTests
 {
     private readonly IShoppingCartService shoppingCartService = Substitute.For<IShoppingCartService>();
@@ -57,8 +57,8 @@ public class CheckoutControllerTests
         Assert.Equal(42, redirect.RouteValues!["orderId"]);
     }
 
-    // ISSUE-11: items skipped for being out of stock still let the order succeed, but the
-    // customer has to be told which ones did not make it in.
+    // Items skipped for being out of stock still let the order succeed, but the customer has to
+    // be told which ones did not make it in.
     [Fact]
     public async Task Index_Post_Success_WithSkippedItems_NotifiesWhichBooksWereSkipped()
     {
@@ -83,9 +83,8 @@ public class CheckoutControllerTests
         Assert.Null(sut.TempData["Notification"]);
     }
 
-    // ISSUE-11/ISSUE-03: an empty cart or a shortage caught at order time surfaces here as a
-    // DomainException. It has to become a customer-facing validation message and a redisplayed
-    // form, not a 500 page.
+    // An empty cart or a shortage caught at order time surfaces here as a DomainException. It has
+    // to become a customer-facing validation message and a redisplayed form, not a 500 page.
     [Fact]
     public async Task Index_Post_DomainException_RedisplaysTheFormWithTheErrorAndTheSelectedAddress()
     {
@@ -121,7 +120,7 @@ public class CheckoutControllerTests
         Assert.IsType<CheckoutFinishedViewModel>(view.Model);
     }
 
-    // RULE-CUST-01, ISSUE-21: an order id alone must not be enough to see someone else's order.
+    // An order id alone must not be enough to see someone else's order.
     [Fact]
     public async Task Finished_ReturnsNotFound_When_TheOrderDoesNotBelongToTheCaller()
     {

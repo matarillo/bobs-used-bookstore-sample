@@ -26,18 +26,16 @@ namespace Bookstore.Domain.Orders
 
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
-        // RULE-ORDER-01, revised by ISSUE-25: seven days out, counted from UTC. The date used to
-        // be taken from the local time of the machine while the only thing that read it — the
-        // past-due count — compared it against UTC, so the two ends of that comparison did not
-        // share a basis (ISSUE-09).
+        // Seven days out, counted from UTC — the same basis IsPastDue compares it against, so the
+        // two ends of that comparison share a basis.
         public DateTime DeliveryDate { get; set; } = DateTime.UtcNow.AddDays(7);
 
-        // INV-ORDER-02/03/04, revised by ISSUE-15: the status only moves through the behaviours
-        // below, which each check the current state before transitioning.
+        // The status only moves through the behaviours below, which each check the current state
+        // before transitioning.
         public OrderStatus OrderStatus { get; private set; } = OrderStatus.Pending;
 
-        // The rate the store charges. Named because ISSUE-07 is about amounts saying what they
-        // are: a tenth buried in an expression says nothing about what it is a tenth of.
+        // The rate the store charges. Named because a tenth buried in an expression says nothing
+        // about what it is a tenth of.
         public const decimal TaxRate = 0.1m;
 
         public Money Tax => SubTotal.Times(TaxRate);
@@ -48,8 +46,8 @@ namespace Bookstore.Domain.Orders
 
         public void AddOrderItem(Book book, Quantity quantity)
         {
-            // ISSUE-07: Quantity rules out a negative count; a line of an order also has to be
-            // for at least one copy, which is the aggregate's rule rather than the value's.
+            // Quantity rules out a negative count; a line of an order also has to be for at least
+            // one copy, which is the aggregate's rule rather than the value's.
             if (quantity.IsNone)
             {
                 throw new DomainException($"An order line for \"{book.Name}\" must be for at least one copy.");
@@ -58,10 +56,9 @@ namespace Bookstore.Domain.Orders
             orderItems.Add(new OrderItem(this, book, quantity));
         }
 
-        // The monetary indicators (12 §2.4) count an order as revenue unless it was cancelled: a
-        // cancelled order was never charged and its stock came back. Nothing else in the
-        // lifecycle changes whether it is a sale — an order is an agreement from the moment it is
-        // placed.
+        // The monetary indicators count an order as revenue unless it was cancelled: a cancelled
+        // order was never charged and its stock came back. Nothing else in the lifecycle changes
+        // whether it is a sale — an order is an agreement from the moment it is placed.
         public bool CountsAsSale => OrderStatus != OrderStatus.Cancelled;
 
         // The same rule for the read side, which sums these amounts across every order.
@@ -70,11 +67,9 @@ namespace Bookstore.Domain.Orders
             return order => order.OrderStatus != OrderStatus.Cancelled;
         }
 
-        // ISSUE-25: "past due" used to exist only as a line on the dashboard, with its rule
-        // written into the query that counted it. The order decides what it means: the delivery
-        // date promised by RULE-ORDER-01 has passed and the order has still not reached the
-        // customer. A cancelled order is not past due — it is never going to be delivered, and
-        // nothing about it is waiting to be chased.
+        // The order decides what "past due" means: the promised delivery date has passed and the
+        // order has still not reached the customer. A cancelled order is not past due — it is
+        // never going to be delivered, and nothing about it is waiting to be chased.
         //
         // "Now" is passed in rather than read here, so the rule is testable and so the caller
         // decides the basis (UTC, as DeliveryDate is).
@@ -118,9 +113,8 @@ namespace Bookstore.Domain.Orders
             OrderStatus = OrderStatus.Delivered;
         }
 
-        // RULE-ORDER-05, revised by ISSUE-15/16: INV-ORDER-04 keeps a shipped, delivered or
-        // already cancelled order from being cancelled again, and the stock withdrawn for each
-        // item is returned to its book as part of cancelling.
+        // A shipped, delivered or already cancelled order cannot be cancelled, and the stock
+        // withdrawn for each item is returned to its book as part of cancelling.
         public void Cancel()
         {
             if (OrderStatus != OrderStatus.Pending && OrderStatus != OrderStatus.Ordered)

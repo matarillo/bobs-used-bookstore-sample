@@ -2,8 +2,8 @@ using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Domain.Tests.Builders;
 
-// ISSUE-05: a classification can only be made by looking the items up, so the builders need
-// something to look them up in. One item of each of the four types.
+// A classification can only be made by looking the items up, so the builders need something to
+// look them up in. One item of each of the four types.
 public static class TestReferenceData
 {
     public const int PublisherId = 1;

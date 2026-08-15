@@ -8,7 +8,7 @@
 
         public DateTime? OrderDateToFilter { get; set; }
 
-        // ISSUE-25: past due as defined by Order.PastDueAsOf.
+        // Past due as defined by Order.PastDueAsOf.
         public bool? PastDueFilter { get; set; }
     }
 }

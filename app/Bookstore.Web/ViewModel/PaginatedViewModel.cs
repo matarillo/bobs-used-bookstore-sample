@@ -5,7 +5,7 @@ using Bookstore.Domain;
 
 namespace Bookstore.Web.ViewModel
 {
-    // ISSUE-26: the pager lives here now. The domain reports which rows were asked for and how
+    // The pager lives here. The domain reports which rows were asked for and how
     // many match altogether (PagedResult); how many pages that makes, whether there is one either
     // side of this one, and which numbered buttons to draw are all questions about a screen.
     public abstract class PaginatedViewModel

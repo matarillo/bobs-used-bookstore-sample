@@ -73,7 +73,7 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(Quantity.Of(53), book.Quantity);
         }
 
-        // ISSUE-06: the offer describes the book, so stocking it must carry that description over
+        // The offer describes the book, so stocking it must carry that description over
         // unchanged. What the store sells it for is a separate decision.
         [Fact]
         public void CreateFromOffer_CopiesTheOfferDescriptionOfTheBook_When_TheOfferIsPaid()
@@ -102,8 +102,8 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(Quantity.Of(1), book.Quantity);
         }
 
-        // ISSUE-06: the source of the stock and what it cost, which is what makes a margin
-        // calculable at all.
+        // The source of the stock and what it cost, which is what makes a margin calculable at
+        // all.
         [Fact]
         public void CreateFromOffer_RecordsTheOfferAsTheSourceAndItsPriceAsTheCost()
         {
@@ -128,7 +128,7 @@ namespace Bookstore.Domain.Tests
             Assert.True(offer.IsStocked);
         }
 
-        // ISSUE-06: the store does not shelve what it has not yet bought and paid for.
+        // The store does not shelve what it has not yet bought and paid for.
         [Theory]
         [InlineData(OfferStatus.PendingApproval)]
         [InlineData(OfferStatus.Approved)]
@@ -142,7 +142,7 @@ namespace Bookstore.Domain.Tests
             Assert.False(offer.IsStocked);
         }
 
-        // ISSUE-06: one bought copy is one book. Stocking the same offer twice would invent stock.
+        // One bought copy is one book. Stocking the same offer twice would invent stock.
         [Fact]
         public void CreateFromOffer_Throws_When_TheOfferHasAlreadyBeenStocked()
         {

@@ -53,7 +53,7 @@ namespace Bookstore.Data
                 new Book("My Search For Meaning", "Mateo Jackson", "4558786554", Classify(22, 3, 8, 7), Money.Of(5M), Quantity.Of(15), null, null, "/images/coverimages/mysearchformeaning.png") { Id = 8 }
             );
 
-            // ISSUE-05: the seed goes through the same checked factory the application does, so a
+            // The seed goes through the same checked factory the application does, so a
             // mistyped identifier here fails at start-up rather than seeding a book filed under a
             // publisher.
             BookClassification Classify(int publisherId, int bookTypeId, int genreId, int conditionId) =>

@@ -28,9 +28,8 @@ namespace Bookstore.Domain.Tests
                 bookRepository, orderRepository, offerRepository, referenceDataRepository, unitOfWork);
         }
 
-        // ISSUE-22: the safety check has to guard what actually ends up on the shelf, so it runs
-        // against the resized image — the stream that gets saved — rather than the one that was
-        // uploaded. Previously pinned the other way round.
+        // The safety check has to guard what actually ends up on the shelf, so it runs against
+        // the resized image — the stream that gets saved — rather than the one that was uploaded.
         [Fact]
         public async Task AddAsync_ValidatesTheResizedImage_NotTheOneThatWasUploaded()
         {

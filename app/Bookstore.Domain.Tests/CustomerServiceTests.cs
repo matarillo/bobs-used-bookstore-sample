@@ -14,9 +14,8 @@ namespace Bookstore.Domain.Tests
             sut = new CustomerService(customerRepository, unitOfWork);
         }
 
-        // ISSUE-08: the subject identifier is set through the constructor now, rather than
-        // assigned after an empty customer is built — the customer this creates can never exist
-        // without one, even for a moment.
+        // The subject identifier is set through the constructor, so the customer this creates can
+        // never exist without one, even for a moment.
         [Fact]
         public async Task CreateOrUpdateCustomerAsync_CreatesACustomerWithTheSubjectIdentifier_When_NoneExists()
         {
@@ -47,8 +46,8 @@ namespace Bookstore.Domain.Tests
             await unitOfWork.Received(1).CompleteAsync();
         }
 
-        // ISSUE-08: the single find-or-create operation the design doc asked for, so address
-        // creation no longer builds a customer inline.
+        // The single find-or-create operation, so address creation does not build a customer
+        // inline.
         [Fact]
         public async Task FindOrCreateAsync_ReturnsTheExistingCustomer_When_OneAlreadyExists()
         {

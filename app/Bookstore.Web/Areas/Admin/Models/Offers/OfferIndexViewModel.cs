@@ -67,7 +67,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
 
         public string Condition { get; internal set; } = null!;
 
-        // ISSUE-06: whether the bought book has already been put on the shelf.
+        // Whether the bought book has already been put on the shelf.
         public bool IsStocked { get; internal set; }
     }
 }

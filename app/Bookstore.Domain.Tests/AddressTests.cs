@@ -3,9 +3,8 @@ using Bookstore.Domain.Customers;
 
 namespace Bookstore.Domain.Tests
 {
-    // ISSUE-04: the active flag existed, but nothing on the aggregate owned it — any code could
-    // flip it back on, and the repository set it directly rather than through a behaviour that
-    // says what is happening (a logical delete, not a physical one).
+    // The aggregate owns the active flag: deactivation happens through a behaviour that says what
+    // is happening (a logical delete, not a physical one) and there is no way back.
     public class AddressTests
     {
         [Fact]

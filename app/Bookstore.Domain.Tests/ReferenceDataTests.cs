@@ -3,10 +3,9 @@ using Bookstore.Domain.Tests.Builders;
 
 namespace Bookstore.Domain.Tests
 {
-    // ISSUE-05: four classification axes were represented by one concept, so nothing checked that
-    // the item put in the genre position was a genre, and an item's type could be changed after
-    // books and offers were already filed under it. INV-BOOK-05, INV-OFFER-07 and INV-REFDATA-03
-    // are now enforced rather than assumed.
+    // Four classification axes are represented by one concept, so only a lookup can check that
+    // the item put in the genre position is a genre. An item's type is settled at creation, so
+    // it cannot change after books and offers are already filed under it.
     public class ReferenceDataTests
     {
         [Fact]
@@ -31,7 +30,7 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(TestReferenceData.ConditionId, classification.ConditionId);
         }
 
-        // A publisher in the genre position used to be stored without complaint.
+        // A publisher in the genre position is rejected rather than stored without complaint.
         [Fact]
         public void AClassificationRejectsAnItemOfTheWrongType()
         {
@@ -48,8 +47,8 @@ namespace Bookstore.Domain.Tests
             Assert.Throws<DomainException>(() => TestReferenceData.Classification(conditionId: 99));
         }
 
-        // ISSUE-06: an offer that is stocked as a book carries its classification across, and it
-        // was checked when the offer was made.
+        // An offer that is stocked as a book carries its classification across, and it was
+        // checked when the offer was made.
         [Fact]
         public void AStockedOfferKeepsTheClassificationItWasMadeWith()
         {

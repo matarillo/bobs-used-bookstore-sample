@@ -46,9 +46,9 @@ namespace Bookstore.Web.Controllers
             }
             catch (DomainException ex)
             {
-                // ISSUE-11: an empty cart, an out-of-stock cart, or a shortage caught by
-                // ISSUE-03's stock check all surface here as a customer-facing message instead
-                // of falling through to the generic error page.
+                // An empty cart, an out-of-stock cart, or a shortage caught by the stock check
+                // all surface here as a customer-facing message instead of falling through to
+                // the generic error page.
                 ModelState.AddModelError(string.Empty, ex.Message);
 
                 var shoppingCart = await shoppingCartService.GetShoppingCartAsync(HttpContext.GetShoppingCartCorrelationId());
@@ -69,7 +69,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Finished(int orderId)
         {
-            // RULE-CUST-01, ISSUE-21: only the owner may see this order.
+            // Only the owner may see this order.
             var order = await orderService.GetOrderAsync(User.GetSub(), orderId);
 
             if (order == null) return NotFound();

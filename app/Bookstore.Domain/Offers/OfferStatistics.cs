@@ -8,8 +8,8 @@ namespace Bookstore.Domain.Offers
 
         public int OffersTotal { get; set; }
 
-        // The buying half of the monetary indicators (12 §2.4). How many offers are waiting was
-        // measurable; what they would cost to accept was not.
+        // The buying half of the monetary indicators: what the waiting offers would cost to
+        // accept, not merely how many of them there are.
         public decimal PendingOffersValue { get; set; }
 
         // What the store has actually paid customers, dated by Offer.PaidOn.

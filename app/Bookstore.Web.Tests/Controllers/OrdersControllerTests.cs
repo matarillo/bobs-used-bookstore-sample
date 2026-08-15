@@ -30,7 +30,7 @@ public class OrdersControllerTests
         Assert.Equal(5, model.OrderId);
     }
 
-    // RULE-CUST-01, ISSUE-21: an order id alone must not be enough to see someone else's order.
+    // An order id alone must not be enough to see someone else's order.
     [Fact]
     public async Task Details_ReturnsNotFound_When_TheOrderDoesNotBelongToTheCaller()
     {

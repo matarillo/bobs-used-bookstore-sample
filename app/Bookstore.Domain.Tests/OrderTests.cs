@@ -286,8 +286,7 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(order.CountsAsSale, Order.SalesFilter().Compile()(order));
         }
 
-        // Changed by ISSUE-25, having been pinned as "seven days after the local time". The
-        // delivery date is now counted from UTC, the basis IsPastDue compares it against.
+        // The delivery date is counted from UTC, the basis IsPastDue compares it against.
         [Fact]
         public void DeliveryDate_IsSevenDaysAfterTheCurrentUtcTime_When_TheOrderIsCreated()
         {
@@ -296,7 +295,7 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(DateTime.UtcNow.AddDays(7), order.DeliveryDate, TimeSpan.FromMinutes(1));
         }
 
-        // ISSUE-25: an order that has passed its delivery date without reaching the customer.
+        // An order that has passed its delivery date without reaching the customer.
         [Theory]
         [InlineData(OrderStatus.Pending, true)]
         [InlineData(OrderStatus.Ordered, true)]
@@ -323,9 +322,9 @@ namespace Bookstore.Domain.Tests
             Assert.False(order.IsPastDue(new DateTime(2026, 1, 1)));
         }
 
-        // ISSUE-25: the read side asks the aggregate for the rule. This holds the query form of it
-        // to the same answers as the aggregate itself, so a dashboard count cannot quietly come to
-        // mean something other than what the order says.
+        // The read side asks the aggregate for the rule. This holds the query form of it to the
+        // same answers as the aggregate itself, so a dashboard count cannot quietly come to mean
+        // something other than what the order says.
         [Theory]
         [InlineData(OrderStatus.Pending)]
         [InlineData(OrderStatus.Ordered)]

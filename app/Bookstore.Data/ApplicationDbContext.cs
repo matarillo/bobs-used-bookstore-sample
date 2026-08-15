@@ -44,7 +44,7 @@ namespace Bookstore.Data
             modelBuilder.Entity<Book>().HasOne(x => x.Genre).WithMany().HasForeignKey(x => x.GenreId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Book>().HasOne(x => x.Condition).WithMany().HasForeignKey(x => x.ConditionId).OnDelete(DeleteBehavior.Restrict);
 
-            // ISSUE-06: Book.SourceOfferId points back at the offer the book was bought as. There
+            // Book.SourceOfferId points back at the offer the book was bought as. There
             // is no navigation property: the book keeps the identifier only, and the cost it was
             // bought for is copied onto the book itself.
             modelBuilder.Entity<Book>().HasOne<Offer>().WithMany().HasForeignKey(x => x.SourceOfferId).OnDelete(DeleteBehavior.Restrict);
@@ -62,13 +62,13 @@ namespace Bookstore.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        // ISSUE-07: Money and Quantity are the domain's way of talking about amounts and counts;
-        // the database's way is a decimal and an int. Each aggregate keeps an internal property
-        // for the column and derives the value from it, so the column names and the read-side
-        // queries are exactly what they were before the values were introduced.
+        // Money and Quantity are the domain's way of talking about amounts and counts; the
+        // database's way is a decimal and an int. Each aggregate keeps an internal property for
+        // the column and derives the value from it, so the column names and the read-side queries
+        // stay in plain numbers.
         private static void ConfigureMoneyAndQuantity(ModelBuilder modelBuilder)
         {
-            // ISSUE-05: the classification is a view over the four foreign keys, which stay mapped.
+            // The classification is a view over the four foreign keys, which stay mapped.
             modelBuilder.Entity<Book>().Ignore(x => x.Classification);
             modelBuilder.Entity<Offer>().Ignore(x => x.Classification);
 

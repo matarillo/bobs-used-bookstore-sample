@@ -18,8 +18,8 @@
         // including ones that have completely sold out.
         public bool LowStock { get; set; }
 
-        // ISSUE-01: a book with none left, offered as its own filter so a caller after only
-        // stockouts is not handed every merely-low book along with them.
+        // A book with none left, offered as its own filter so a caller after only stockouts is
+        // not handed every merely-low book along with them.
         public bool OutOfStock { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         public int Quantity { get; set; }
 
-        // ISSUE-06: where the stock came from and what it cost, so the buying and selling sides
+        // Where the stock came from and what it cost, so the buying and selling sides
         // of the business can be read together.
         public int? SourceOfferId { get; set; }
 

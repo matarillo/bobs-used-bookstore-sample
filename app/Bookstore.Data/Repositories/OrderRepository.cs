@@ -40,8 +40,8 @@ namespace Bookstore.Data.Repositories
 
         async Task<Order> IOrderRepository.GetAsync(int id, string sub)
         {
-            // OrderItems and their Book are needed here so Order.Cancel() (ISSUE-16) can return
-            // the withdrawn stock to each book.
+            // OrderItems and their Book are needed here so Order.Cancel() can return the
+            // withdrawn stock to each book.
             return (await dbContext.Orders
                 .Include(x => x.OrderItems).ThenInclude(x => x.Book)
                 .SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub))!;
@@ -76,13 +76,13 @@ namespace Bookstore.Data.Repositories
             // empty-store code path.
             if (statistics == null) return null!;
 
-            // ISSUE-25: the rule for "past due" belongs to the order, not to this query. Counted
-            // separately because the aggregate's predicate cannot be applied inside the grouped
-            // projection above.
+            // The rule for "past due" belongs to the order, not to this query. Counted separately
+            // because the aggregate's predicate cannot be applied inside the grouped projection
+            // above.
             statistics.PastDueOrders = await dbContext.Orders.CountAsync(Order.PastDueAsOf(now));
 
-            // The monetary indicators (12 §2.4). What counts as a sale is the order's rule; the
-            // amounts are the ones the order items already carry.
+            // The monetary indicators. What counts as a sale is the order's rule; the amounts are
+            // the ones the order items already carry.
             var sales = dbContext.Orders.Where(Order.SalesFilter());
             var salesThisMonth = sales.Where(x => x.CreatedOn >= startOfMonth);
 
@@ -138,8 +138,8 @@ namespace Bookstore.Data.Repositories
                 query = query.Where(x => x.CreatedOn < filters.OrderDateToFilter.Value.OneSecondToMidnight());
             }
 
-            // ISSUE-25: now that the domain defines "past due", the dashboard's past-due count is
-            // something staff can open and work through.
+            // The domain defines "past due", so the dashboard's past-due count is something staff
+            // can open and work through.
             if (filters.PastDueFilter == true)
             {
                 query = query.Where(Order.PastDueAsOf(DateTime.UtcNow));

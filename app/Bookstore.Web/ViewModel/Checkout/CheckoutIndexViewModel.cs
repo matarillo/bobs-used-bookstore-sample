@@ -29,9 +29,9 @@ namespace Bookstore.Web.ViewModel.Checkout
                 ZipCode = x.ZipCode
             }).ToList();
 
-            // ISSUE-13: reading a cart that does not exist yet is treated as an empty cart, the
-            // same tolerant-read policy ShoppingCartIndexViewModel and WishlistIndexViewModel
-            // already apply, rather than crashing on a first-time visitor who lands here directly.
+            // Reading a cart that does not exist yet is treated as an empty cart, the same
+            // tolerant-read policy ShoppingCartIndexViewModel and WishlistIndexViewModel apply,
+            // rather than crashing on a first-time visitor who lands here directly.
             if (shoppingCart != null)
             {
                 ShoppingCartItems = shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Select(x => new CheckoutItemViewModel

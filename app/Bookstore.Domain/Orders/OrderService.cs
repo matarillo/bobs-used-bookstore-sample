@@ -9,13 +9,11 @@ namespace Bookstore.Domain.Orders
 
         Task<IEnumerable<Order>> GetOrdersAsync(string sub);
 
-        // Unscoped: for staff, who may look up any order (UC-ADMIN-05/06).
+        // Unscoped: for staff, who may look up any order.
         Task<Order> GetOrderAsync(int id);
 
-        // RULE-CUST-01: the customer-safe lookup — returns null unless the order belongs to the
-        // given subject. Customer-facing routes must use this, not the unscoped overload above.
-        // Extended to ISSUE-21's fix, which gave Offer the same pairing; Order's own unscoped
-        // getter was already being used by two customer routes without this check.
+        // The customer-safe lookup — returns null unless the order belongs to the given subject.
+        // Customer-facing routes must use this, not the unscoped overload above.
         Task<Order> GetOrderAsync(string sub, int id);
 
         Task<OrderStatistics> GetStatisticsAsync();
@@ -78,8 +76,8 @@ namespace Bookstore.Domain.Orders
         {
             var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
-            // ISSUE-13: placing an order is a strict update targeting one specific cart and one
-            // specific customer; either missing is a failure rather than a silent no-op.
+            // Placing an order is a strict update targeting one specific cart and one specific
+            // customer; either missing is a failure rather than a silent no-op.
             if (shoppingCart == null)
             {
                 throw new DomainException($"Shopping cart \"{dto.CorrelationId}\" was not found.");
@@ -92,9 +90,9 @@ namespace Bookstore.Domain.Orders
                 throw new DomainException($"Customer \"{dto.CustomerSub}\" was not found.");
             }
 
-            // INV-ORDER-06, revised by ISSUE-11: throws if there is nothing in stock to order,
-            // instead of silently placing an order with zero items. Items skipped because they
-            // are out of stock are reported back so the caller can tell the customer.
+            // Throws if there is nothing in stock to order, rather than silently placing an order
+            // with zero items. Items skipped because they are out of stock are reported back so
+            // the caller can tell the customer.
             var itemsToOrder = shoppingCart.GetItemsForNewOrder();
             var skippedItems = shoppingCart.GetOutOfStockWantedItems();
 
@@ -111,7 +109,6 @@ namespace Bookstore.Domain.Orders
                 shoppingCart.RemoveShoppingCartItemById(item.Id);
             }
 
-            // ISSUE-23/ISSUE-18: this is the boundary the design doc asked to be made visible.
             // Placing an order changes three aggregates — the new order, the stock level of each
             // book ordered, and the cart the items came out of — and all of them go in together
             // or not at all. That strong consistency is deliberate for a second-hand shop, where
@@ -151,10 +148,10 @@ namespace Bookstore.Domain.Orders
             await unitOfWork.CompleteAsync();
         }
 
-        // ISSUE-13: deliberately kept tolerant, unlike the strict lookups elsewhere in this
-        // class. Cancelling is idempotent by nature — the design doc calls it out by name as the
-        // exception to "updates are strict" — so an order that is already gone or was never the
-        // caller's is treated as already cancelled rather than as an error.
+        // Deliberately tolerant, unlike the strict lookups elsewhere in this class. Cancelling is
+        // idempotent by nature — the exception to "updates are strict" — so an order that is
+        // already gone or was never the caller's is treated as already cancelled rather than as
+        // an error.
         public async Task CancelOrderAsync(CancelOrderDto dto)
         {
             var order = await orderRepository.GetAsync(dto.OrderId, dto.CustomerSub);
