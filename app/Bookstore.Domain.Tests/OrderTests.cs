@@ -6,14 +6,27 @@ namespace Bookstore.Domain.Tests
     public class OrderTests
     {
         [Fact]
-        public void SubTotal_IgnoresTheQuantity_When_Executed()
+        public void SubTotal_MultipliesThePriceByTheQuantity_When_Executed()
         {
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
             var order = new Order(1, 1);
             order.AddOrderItem(book, 3);
 
-            Assert.Equal(10m, order.SubTotal);
+            Assert.Equal(30m, order.SubTotal);
+        }
+
+        [Fact]
+        public void SubTotal_SumsEveryOrderItem_When_TheOrderHasSeveralItems()
+        {
+            var firstBook = new BookBuilder().Id(1).Price(10m).Build();
+            var secondBook = new BookBuilder().Id(2).Price(5m).Build();
+
+            var order = new Order(1, 1);
+            order.AddOrderItem(firstBook, 3);
+            order.AddOrderItem(secondBook, 2);
+
+            Assert.Equal(40m, order.SubTotal);
         }
 
         [Fact]

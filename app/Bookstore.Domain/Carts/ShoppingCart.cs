@@ -77,7 +77,7 @@
 
         public decimal GetSubTotal(ShoppingCartItemFilter filter)
         {
-            return GetShoppingCartItems(filter).Sum(x => x.Book.Price);
+            return GetShoppingCartItems(filter).Sum(x => x.SubTotal);
         }
     }
 

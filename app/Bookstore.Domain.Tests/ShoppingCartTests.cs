@@ -97,7 +97,7 @@ namespace Bookstore.Domain.Tests
         }
 
         [Fact]
-        public void GetSubTotal_IgnoresTheQuantity_When_Executed()
+        public void GetSubTotal_MultipliesThePriceByTheQuantity_When_Executed()
         {
             var book = new BookBuilder().Id(1).Price(10m).Quantity(100).Build();
 
@@ -105,7 +105,20 @@ namespace Bookstore.Domain.Tests
                 .WithShoppingCartItem(book, 3)
                 .Build();
 
-            Assert.Equal(10m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
+            Assert.Equal(30m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
+        }
+
+        [Fact]
+        public void GetSubTotal_CountsAMergedLineOnce_When_TheSameBookIsAddedTwice()
+        {
+            var book = new BookBuilder().Id(1).Price(10m).Quantity(100).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithShoppingCartItem(book, 2)
+                .WithShoppingCartItem(book, 3)
+                .Build();
+
+            Assert.Equal(50m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
         }
 
         [Fact]

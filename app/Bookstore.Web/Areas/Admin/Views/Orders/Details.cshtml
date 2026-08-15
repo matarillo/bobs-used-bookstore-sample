@@ -79,6 +79,8 @@
                             <th scope="col">Type</th>
                             <th scope="col">Condition</th>
                             <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,6 +94,8 @@
                                 <td>@book.BookType</td>
                                 <td>@book.Condition</td>
                                 <td>@book.Price.ToString("C")</td>
+                                <td>@book.Quantity</td>
+                                <td>@book.SubTotal.ToString("C")</td>
                             </tr>
                         }
                     </tbody>

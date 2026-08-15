@@ -23,5 +23,8 @@ namespace Bookstore.Domain.Orders
         public Book Book { get; set; }
 
         public int Quantity { get; set; }
+
+        // RULE-ORDER-02: the price of the book multiplied by the quantity ordered.
+        public decimal SubTotal => Book.Price * Quantity;
     }
 }
