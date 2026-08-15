@@ -9,7 +9,14 @@ namespace Bookstore.Domain.Orders
 
         Task<IEnumerable<Order>> GetOrdersAsync(string sub);
 
+        // Unscoped: for staff, who may look up any order (UC-ADMIN-05/06).
         Task<Order> GetOrderAsync(int id);
+
+        // RULE-CUST-01: the customer-safe lookup — returns null unless the order belongs to the
+        // given subject. Customer-facing routes must use this, not the unscoped overload above.
+        // Extended to ISSUE-21's fix, which gave Offer the same pairing; Order's own unscoped
+        // getter was already being used by two customer routes without this check.
+        Task<Order> GetOrderAsync(string sub, int id);
 
         Task<OrderStatistics> GetStatisticsAsync();
 
@@ -52,6 +59,11 @@ namespace Bookstore.Domain.Orders
         public async Task<Order> GetOrderAsync(int id)
         {
             return await orderRepository.GetAsync(id);
+        }
+
+        public async Task<Order> GetOrderAsync(string sub, int id)
+        {
+            return await orderRepository.GetAsync(id, sub);
         }
 
         public async Task<OrderStatistics> GetStatisticsAsync()

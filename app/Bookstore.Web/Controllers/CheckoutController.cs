@@ -69,7 +69,10 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Finished(int orderId)
         {
-            var order = await orderService.GetOrderAsync(orderId);
+            // RULE-CUST-01, ISSUE-21: only the owner may see this order.
+            var order = await orderService.GetOrderAsync(User.GetSub(), orderId);
+
+            if (order == null) return NotFound();
 
             return View(new CheckoutFinishedViewModel(order));
         }
