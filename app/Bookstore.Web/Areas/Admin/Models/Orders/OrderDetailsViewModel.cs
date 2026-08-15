@@ -8,7 +8,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
     {
         public int OrderId { get; set; }
 
-        public OrderStatus SelectedOrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
 
         public DateTime OrderDate { get; set; }
 
@@ -42,7 +42,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
         {
             OrderId = order.Id;
             CustomerName = order.Customer.FullName;
-            SelectedOrderStatus = order.OrderStatus;
+            OrderStatus = order.OrderStatus;
             AddressLine1 = order.Address.AddressLine1;
             AddressLine2 = order.Address.AddressLine2;
             City = order.Address.City;

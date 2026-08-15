@@ -37,7 +37,11 @@ namespace Bookstore.Data.Repositories
 
         async Task<Order> IOrderRepository.GetAsync(int id, string sub)
         {
-            return await dbContext.Orders.SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
+            // OrderItems and their Book are needed here so Order.Cancel() (ISSUE-16) can return
+            // the withdrawn stock to each book.
+            return await dbContext.Orders
+                .Include(x => x.OrderItems).ThenInclude(x => x.Book)
+                .SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
         }
 
         async Task<IEnumerable<Book>> IOrderRepository.ListBestSellingBooksAsync(int count)

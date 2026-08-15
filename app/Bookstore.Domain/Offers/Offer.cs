@@ -49,7 +49,9 @@ namespace Bookstore.Domain.Offers
 
         public string? Summary { get; set; }
 
-        public OfferStatus OfferStatus { get; set; } = OfferStatus.PendingApproval;
+        // INV-OFFER-02/03/04, revised by ISSUE-15: the status only moves through the behaviours
+        // below, which each check the current state before transitioning.
+        public OfferStatus OfferStatus { get; private set; } = OfferStatus.PendingApproval;
 
         public string? Comment { get; set; }
 
@@ -57,5 +59,49 @@ namespace Bookstore.Domain.Offers
         public int CustomerId { get; set; }
 
         public decimal BookPrice { get; set; }
+
+        // The store approves a pending offer and awaits the shipment from the customer.
+        public void Approve()
+        {
+            RequireStatus(OfferStatus.PendingApproval, "be approved");
+
+            OfferStatus = OfferStatus.Approved;
+        }
+
+        // The store rejects an offer, either up front or after finding the shipped book does
+        // not match what was declared.
+        public void Reject()
+        {
+            if (OfferStatus != OfferStatus.PendingApproval && OfferStatus != OfferStatus.Received)
+            {
+                throw new DomainException($"Offer {Id} cannot be rejected from the \"{OfferStatus}\" state.");
+            }
+
+            OfferStatus = OfferStatus.Rejected;
+        }
+
+        // The store confirms the customer's shipment has arrived.
+        public void ConfirmReceipt()
+        {
+            RequireStatus(OfferStatus.Approved, "be marked as received");
+
+            OfferStatus = OfferStatus.Received;
+        }
+
+        // INV-OFFER-04: the store pays the customer only after receipt has been confirmed.
+        public void RecordPayment()
+        {
+            RequireStatus(OfferStatus.Received, "be paid");
+
+            OfferStatus = OfferStatus.Paid;
+        }
+
+        private void RequireStatus(OfferStatus required, string action)
+        {
+            if (OfferStatus != required)
+            {
+                throw new DomainException($"Offer {Id} cannot {action} from the \"{OfferStatus}\" state.");
+            }
+        }
     }
 }

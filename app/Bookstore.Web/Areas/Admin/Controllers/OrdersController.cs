@@ -29,15 +29,30 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Details(OrderDetailsViewModel model)
+        public async Task<IActionResult> AcceptAsync(int id)
         {
-            var dto = new UpdateOrderStatusDto(model.OrderId, model.SelectedOrderStatus);
+            return await UpdateOrderStatus(id, () => orderService.AcceptOrderAsync(id), "The order has been accepted");
+        }
 
-            await orderService.UpdateOrderStatusAsync(dto);
+        [HttpPost]
+        public async Task<IActionResult> ShipAsync(int id)
+        {
+            return await UpdateOrderStatus(id, () => orderService.ShipOrderAsync(id), "The order has been shipped");
+        }
 
-            TempData["Message"] = "Order status has been updated";
+        [HttpPost]
+        public async Task<IActionResult> DeliverAsync(int id)
+        {
+            return await UpdateOrderStatus(id, () => orderService.DeliverOrderAsync(id), "The order has been marked as delivered");
+        }
 
-            return RedirectToAction("Details", new { model.OrderId });
+        private async Task<IActionResult> UpdateOrderStatus(int id, Func<Task> transition, string message)
+        {
+            await transition();
+
+            TempData["Message"] = message;
+
+            return RedirectToAction("Details", new { id });
         }
     }
 }

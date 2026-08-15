@@ -28,32 +28,30 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ApproveAsync(int id)
         {
-            return await UpdateOfferStatus(id, OfferStatus.Approved, "The offer has been approved");
+            return await UpdateOfferStatus(() => offerService.ApproveOfferAsync(id), "The offer has been approved");
         }
 
         [HttpPost]
         public async Task<IActionResult> RejectAsync(int id)
         {
-            return await UpdateOfferStatus(id, OfferStatus.Rejected, "The offer has been rejected");
+            return await UpdateOfferStatus(() => offerService.RejectOfferAsync(id), "The offer has been rejected");
         }
 
         [HttpPost]
         public async Task<IActionResult> ReceivedAsync(int id)
         {
-            return await UpdateOfferStatus(id, OfferStatus.Received, "The book has been received");
+            return await UpdateOfferStatus(() => offerService.ConfirmOfferReceiptAsync(id), "The book has been received");
         }
 
         [HttpPost]
         public async Task<IActionResult> PaidAsync(int id)
         {
-            return await UpdateOfferStatus(id, OfferStatus.Paid, "The customer has been paid");
+            return await UpdateOfferStatus(() => offerService.RecordOfferPaymentAsync(id), "The customer has been paid");
         }
 
-        private async Task<IActionResult> UpdateOfferStatus(int id, OfferStatus status, string message)
+        private async Task<IActionResult> UpdateOfferStatus(Func<Task> transition, string message)
         {
-            var dto = new UpdateOfferStatusDto(id, status);
-
-            await offerService.UpdateOfferStatusAsync(dto);
+            await transition();
 
             TempData["Message"] = message;
 
