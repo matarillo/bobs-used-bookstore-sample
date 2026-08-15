@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Bookstore.Web.ViewModel.Wishlist
@@ -18,7 +18,7 @@ namespace Bookstore.Web.ViewModel.Wishlist
                     ShoppingCartItemId = x.Id,
                     BookName = x.Book.Name,
                     ImageUrl = x.Book.CoverImageUrl,
-                    Price = x.Book.Price
+                    Price = x.Book.Price.Amount
                 }).ToList();
         }
     }

@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
+using Bookstore.Web.ViewModel;
 using Bookstore.Domain.Orders;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,12 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
 
         public OrderFilters Filters { get; set; }
 
-        public OrderIndexViewModel(IPaginatedList<Order> orderDtos, OrderFilters filters)
+        public OrderIndexViewModel(PagedResult<Order> orderDtos, OrderFilters filters)
         {
             // ISSUE-25: read once so every row on the page is judged against the same instant.
             var now = DateTime.UtcNow;
 
-            foreach (var order in orderDtos)
+            foreach (var order in orderDtos.Items)
             {
                 Items.Add(new OrderIndexListItemViewModel
                 {
@@ -26,19 +27,14 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
                     OrderStatus = order.OrderStatus,
                     OrderDate = order.CreatedOn,
                     DeliveryDate = order.DeliveryDate,
-                    Total = order.Total,
+                    Total = order.Total.Amount,
                     IsPastDue = order.IsPastDue(now)
                 });
             }
 
             Filters = filters;
 
-            PageIndex = orderDtos.PageIndex;
-            PageSize = orderDtos.Count;
-            PageCount = orderDtos.TotalPages;
-            HasNextPage = orderDtos.HasNextPage;
-            HasPreviousPage = orderDtos.HasPreviousPage;
-            PaginationButtons = orderDtos.GetPageList(5).ToList();
+            SetPage(orderDtos);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using Bookstore.Domain;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Bookstore.Web.Helpers;
@@ -36,7 +37,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> AddItemToShoppingCart(int bookId)
         {
-            var dto = new AddToShoppingCartDto(HttpContext.GetShoppingCartCorrelationId(), bookId, 1);
+            var dto = new AddToShoppingCartDto(HttpContext.GetShoppingCartCorrelationId(), bookId, Quantity.One);
 
             await shoppingCartService.AddToShoppingCartAsync(dto);
 

@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +33,9 @@ namespace Bookstore.Data.Repositories
                     // The monetary indicators (12 §2.4): what the waiting offers would cost to
                     // accept, and what the store has actually paid out. A purchase is an offer
                     // that has been paid for, dated by Offer.PaidOn.
-                    PendingOffersValue = x.Sum(y => y.OfferStatus == OfferStatus.PendingApproval ? y.BookPrice : 0),
-                    PurchasesThisMonth = x.Sum(y => y.PaidOn >= startOfMonth ? y.BookPrice : 0),
-                    PurchasesTotal = x.Sum(y => y.PaidOn != null ? y.BookPrice : 0)
+                    PendingOffersValue = x.Sum(y => y.OfferStatus == OfferStatus.PendingApproval ? y.BookPriceAmount : 0),
+                    PurchasesThisMonth = x.Sum(y => y.PaidOn >= startOfMonth ? y.BookPriceAmount : 0),
+                    PurchasesTotal = x.Sum(y => y.PaidOn != null ? y.BookPriceAmount : 0)
                 }).SingleOrDefaultAsync();
         }
 
@@ -59,7 +59,7 @@ namespace Bookstore.Data.Repositories
                 .SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
         }
 
-        async Task<IPaginatedList<Offer>> IOfferRepository.ListAsync(OfferFilters filters, int pageIndex, int pageSize)
+        async Task<PagedResult<Offer>> IOfferRepository.ListAsync(OfferFilters filters, int pageIndex, int pageSize)
         {
             var query = dbContext.Offer.AsQueryable();
 
@@ -90,11 +90,7 @@ namespace Bookstore.Data.Repositories
 
             query = query.Include(x => x.Customer);
 
-            var result = new PaginatedList<Offer>(query, pageIndex, pageSize);
-
-            await result.PopulateAsync();
-
-            return result;
+            return await query.ToPagedResultAsync(pageIndex, pageSize);
         }
 
         async Task<IEnumerable<Offer>> IOfferRepository.ListAsync(string sub)
@@ -108,9 +104,5 @@ namespace Bookstore.Data.Repositories
                 .ToListAsync();
         }
 
-        async Task IOfferRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

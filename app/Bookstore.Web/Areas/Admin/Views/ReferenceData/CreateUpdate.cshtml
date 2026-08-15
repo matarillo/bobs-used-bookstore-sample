@@ -14,7 +14,9 @@
     <div class="col-4">
         <div class="mb-3">
             <label for="referenceDataTypeSelect" class="form-label">Reference data type</label>
-            <select id="referenceDataTypeSelect" class="form-select" asp-for="SelectedReferenceDataType" asp-items="Html.GetEnumSelectList<ReferenceDataType>()"></select>
+            @* ISSUE-05: settled when the item is created. Books and offers are filed under it, so
+               an existing item's type is shown but cannot be changed. *@
+            <select id="referenceDataTypeSelect" class="form-select" asp-for="SelectedReferenceDataType" asp-items="Html.GetEnumSelectList<ReferenceDataType>()" disabled="@(Model.Id != 0)"></select>
         </div>
 
         <div class="mb-3">

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using Bookstore.Domain.Books;
@@ -15,26 +15,21 @@ namespace Bookstore.Web.ViewModel.Search
 
         public List<SearchIndexItemViewModel> Books { get; set; } = new List<SearchIndexItemViewModel>();
 
-        public SearchIndexViewModel(IPaginatedList<Book> books)
+        public SearchIndexViewModel(PagedResult<Book> books)
         {
-            foreach (var book in books)
+            foreach (var book in books.Items)
             {
                 Books.Add(new SearchIndexItemViewModel
                 {
                     BookId = book.Id,
                     BookName = book.Name,
                     ImageUrl = book.CoverImageUrl,
-                    Price = book.Price,
-                    Quantity = book.Quantity
+                    Price = book.Price.Amount,
+                    Quantity = book.Quantity.Value
                 });
             }
 
-            PageIndex = books.PageIndex;
-            PageSize = books.Count;
-            PageCount = books.TotalPages;
-            HasNextPage = books.HasNextPage;
-            HasPreviousPage = books.HasPreviousPage;
-            PaginationButtons = books.GetPageList(5).ToList();
+            SetPage(books);
         }
     }
 

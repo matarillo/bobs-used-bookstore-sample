@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain.Offers;
+using Bookstore.Domain.Offers;
+using Bookstore.Domain.ReferenceData;
 using Bookstore.Domain.Orders;
 
 namespace Bookstore.Domain.Books
@@ -7,9 +8,9 @@ namespace Bookstore.Domain.Books
     {
         Task<Book> GetBookAsync(int id);
 
-        Task<IPaginatedList<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize);
+        Task<PagedResult<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize);
 
-        Task<IPaginatedList<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize);
+        Task<PagedResult<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize);
 
         Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count);
 
@@ -31,8 +32,10 @@ namespace Bookstore.Domain.Books
         private readonly IBookRepository bookRepository;
         private readonly IOrderRepository orderRepository;
         private readonly IOfferRepository offerRepository;
+        private readonly IReferenceDataRepository referenceDataRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, IOfferRepository offerRepository)
+        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, IOfferRepository offerRepository, IReferenceDataRepository referenceDataRepository, IUnitOfWork unitOfWork)
         {
             this.imageResizeService = imageResizeService;
             this.imageValidationService = imageValidationService;
@@ -40,6 +43,8 @@ namespace Bookstore.Domain.Books
             this.bookRepository = bookRepository;
             this.orderRepository = orderRepository;
             this.offerRepository = offerRepository;
+            this.referenceDataRepository = referenceDataRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Book> GetBookAsync(int id)
@@ -47,12 +52,12 @@ namespace Bookstore.Domain.Books
             return await bookRepository.GetAsync(id);
         }
 
-        public async Task<IPaginatedList<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize)
+        public async Task<PagedResult<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize)
         {
             return await bookRepository.ListAsync(filters, pageIndex, pageSize);
         }
 
-        public async Task<IPaginatedList<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize)
+        public async Task<PagedResult<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize)
         {
             return await bookRepository.ListAsync(searchString, sortBy, pageIndex, pageSize);
         }
@@ -73,10 +78,7 @@ namespace Bookstore.Domain.Books
                 dto.Name,
                 dto.Author,
                 dto.ISBN,
-                dto.PublisherId,
-                dto.BookTypeId,
-                dto.GenreId,
-                dto.ConditionId,
+                await ClassifyAsync(dto.PublisherId, dto.BookTypeId, dto.GenreId, dto.ConditionId),
                 dto.Price,
                 dto.Quantity,
                 dto.Year,
@@ -113,10 +115,7 @@ namespace Bookstore.Domain.Books
             book.Name = dto.Name;
             book.Author = dto.Author;
             book.ISBN = dto.ISBN;
-            book.PublisherId = dto.PublisherId;
-            book.BookTypeId = dto.BookTypeId;
-            book.GenreId = dto.GenreId;
-            book.ConditionId = dto.ConditionId;
+            book.Classification = await ClassifyAsync(dto.PublisherId, dto.BookTypeId, dto.GenreId, dto.ConditionId);
             book.Price = dto.Price;
             book.Quantity = dto.Quantity;
             book.Year = dto.Year;
@@ -128,17 +127,30 @@ namespace Bookstore.Domain.Books
             return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }
 
+        // ISSUE-05: the four identifiers arrive from four dropdowns, and nothing but the shape of
+        // the form ever said the one in the genre position was a genre. Checked here, against the
+        // reference data they were chosen from, before the book is built.
+        private async Task<BookClassification> ClassifyAsync(int publisherId, int bookTypeId, int genreId, int conditionId)
+        {
+            var referenceData = await referenceDataRepository.FullListAsync();
+
+            return BookClassification.Of(referenceData, publisherId, bookTypeId, genreId, conditionId);
+        }
+
         private async Task<BookResult> SaveAsync(Book book, Stream? coverImage, string coverImageFileName)
         {
             var resizedCoverImage = await ResizeImageAsync(coverImage);
 
-            var imageIsSafe = await imageValidationService.IsSafeAsync(coverImage);
+            // ISSUE-22: the safety check has to guard what actually ends up on the shelf. It used
+            // to run against the image as uploaded, while the resized image — a different stream —
+            // was what got saved; resizing was silently trusted not to introduce anything unsafe.
+            var imageIsSafe = await imageValidationService.IsSafeAsync(resizedCoverImage);
 
             if (!imageIsSafe) return new BookResult(false, "The image failed the safety check. Please try another image.");
 
             await SaveImageAsync(book, resizedCoverImage, coverImageFileName);
 
-            await bookRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
 
             return new BookResult(true, null);
         }

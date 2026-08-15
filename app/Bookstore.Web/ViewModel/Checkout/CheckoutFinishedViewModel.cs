@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Orders;
+using Bookstore.Domain.Orders;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,8 +14,8 @@ namespace Bookstore.Web.ViewModel.Checkout
             {
                 BookId = x.Book.Id,
                 Bookname = x.Book.Name,
-                Price = x.Price,
-                Quantity = x.Quantity,
+                Price = x.Price.Amount,
+                Quantity = x.Quantity.Value,
                 Url = x.Book.CoverImageUrl
             });
         }

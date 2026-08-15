@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace Bookstore.Data.Repositories
                 .SingleAsync(x => x.Id == id);
         }
 
-        async Task<IPaginatedList<Book>> IBookRepository.ListAsync(BookFilters filters, int pageIndex, int pageSize)
+        async Task<PagedResult<Book>> IBookRepository.ListAsync(BookFilters filters, int pageIndex, int pageSize)
         {
             var query = dbContext.Book.AsQueryable();
 
@@ -61,7 +61,15 @@ namespace Bookstore.Data.Repositories
 
             if (filters.LowStock)
             {
-                query = query.Where(x => x.Quantity <= Book.LowBookThreshold);
+                query = query.Where(x => x.StockQuantity <= Book.LowBookThreshold);
+            }
+
+            // ISSUE-01: a filter of its own, so "which books are out of stock" does not have to
+            // be answered by way of "which books need reordering" (LowStock above, which includes
+            // these along with everything merely running low).
+            if (filters.OutOfStock)
+            {
+                query = query.Where(x => x.StockQuantity == 0);
             }
 
             query = query
@@ -70,14 +78,10 @@ namespace Bookstore.Data.Repositories
                 .Include(x => x.BookType)
                 .Include(x => x.Condition);
 
-            var result = new PaginatedList<Book>(query, pageIndex, pageSize);
-
-            await result.PopulateAsync();
-
-            return result;
+            return await query.ToPagedResultAsync(pageIndex, pageSize);
         }
 
-        async Task<IPaginatedList<Book>> IBookRepository.ListAsync(string searchString, string sortBy, int pageIndex, int pageSize)
+        async Task<PagedResult<Book>> IBookRepository.ListAsync(string searchString, string sortBy, int pageIndex, int pageSize)
         {
             var query = dbContext.Book.AsQueryable();
 
@@ -93,16 +97,12 @@ namespace Bookstore.Data.Repositories
             query = sortBy switch
             {
                 "Name" => query.OrderBy(x => x.Name),
-                "PriceAsc" => query.OrderBy(x => x.Price),
-                "PriceDesc" => query.OrderByDescending(x => x.Price),
+                "PriceAsc" => query.OrderBy(x => x.PriceAmount),
+                "PriceDesc" => query.OrderByDescending(x => x.PriceAmount),
                 _ => query.OrderBy(x => x.Name),
             };
 
-            var result = new PaginatedList<Book>(query, pageIndex, pageSize);
-
-            await result.PopulateAsync();
-
-            return result;
+            return await query.ToPagedResultAsync(pageIndex, pageSize);
         }
 
         async Task IBookRepository.AddAsync(Book book)
@@ -122,10 +122,6 @@ namespace Bookstore.Data.Repositories
             }
         }
 
-        async Task IBookRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
 
         async Task<BookStatistics> IBookRepository.GetStatisticsAsync()
         {
@@ -133,10 +129,11 @@ namespace Bookstore.Data.Repositories
                 .GroupBy(x => 1)
                 .Select(x => new BookStatistics
                 {
-                    LowStock = x.Count(y => y.Quantity > 0 && y.Quantity <= Book.LowBookThreshold),
-                    OutOfStock = x.Count(y => y.Quantity == 0),
+                    LowStockStillAvailable = x.Count(y => y.StockQuantity > 0 && y.StockQuantity <= Book.LowBookThreshold),
+                    OutOfStock = x.Count(y => y.StockQuantity == 0),
                     StockTotal = x.Count()
                 }).SingleOrDefaultAsync();
         }
     }
 }
+

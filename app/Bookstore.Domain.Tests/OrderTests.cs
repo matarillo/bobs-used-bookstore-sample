@@ -13,9 +13,9 @@ namespace Bookstore.Domain.Tests
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 3);
+            order.AddOrderItem(book, Quantity.Of(3));
 
-            Assert.Equal(30m, order.SubTotal);
+            Assert.Equal(Money.Of(30m), order.SubTotal);
         }
 
         [Fact]
@@ -25,10 +25,10 @@ namespace Bookstore.Domain.Tests
             var secondBook = new BookBuilder().Id(2).Price(5m).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(firstBook, 3);
-            order.AddOrderItem(secondBook, 2);
+            order.AddOrderItem(firstBook, Quantity.Of(3));
+            order.AddOrderItem(secondBook, Quantity.Of(2));
 
-            Assert.Equal(40m, order.SubTotal);
+            Assert.Equal(Money.Of(40m), order.SubTotal);
         }
 
         [Fact]
@@ -37,9 +37,9 @@ namespace Bookstore.Domain.Tests
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 1);
+            order.AddOrderItem(book, Quantity.Of(1));
 
-            Assert.Equal(1m, order.Tax);
+            Assert.Equal(Money.Of(1m), order.Tax);
         }
 
         [Fact]
@@ -48,10 +48,10 @@ namespace Bookstore.Domain.Tests
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 1);
+            order.AddOrderItem(book, Quantity.Of(1));
 
             Assert.Equal(order.SubTotal + order.Tax, order.Total);
-            Assert.Equal(11m, order.Total);
+            Assert.Equal(Money.Of(11m), order.Total);
         }
 
         [Fact]
@@ -60,11 +60,11 @@ namespace Bookstore.Domain.Tests
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 1);
+            order.AddOrderItem(book, Quantity.Of(1));
 
-            book.Price = 25m;
+            book.Price = Money.Of(25m);
 
-            Assert.Equal(10m, order.SubTotal);
+            Assert.Equal(Money.Of(10m), order.SubTotal);
         }
 
         [Fact]
@@ -73,9 +73,9 @@ namespace Bookstore.Domain.Tests
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 1);
+            order.AddOrderItem(book, Quantity.Of(1));
 
-            Assert.Equal(10m, order.OrderItems.Single().Price);
+            Assert.Equal(Money.Of(10m), order.OrderItems.Single().Price);
         }
 
         [Fact]
@@ -182,17 +182,17 @@ namespace Bookstore.Domain.Tests
             var secondBook = new BookBuilder().Id(2).Quantity(10).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(firstBook, 3);
-            order.AddOrderItem(secondBook, 2);
+            order.AddOrderItem(firstBook, Quantity.Of(3));
+            order.AddOrderItem(secondBook, Quantity.Of(2));
 
             // Mirrors what OrderService.CreateOrderAsync does when the order is placed.
-            firstBook.ReduceStockLevel(3);
-            secondBook.ReduceStockLevel(2);
+            firstBook.ReduceStockLevel(Quantity.Of(3));
+            secondBook.ReduceStockLevel(Quantity.Of(2));
 
             order.Cancel();
 
-            Assert.Equal(10, firstBook.Quantity);
-            Assert.Equal(10, secondBook.Quantity);
+            Assert.Equal(Quantity.Of(10), firstBook.Quantity);
+            Assert.Equal(Quantity.Of(10), secondBook.Quantity);
         }
 
         [Fact]
@@ -201,13 +201,13 @@ namespace Bookstore.Domain.Tests
             var book = new BookBuilder().Id(1).Quantity(10).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 3);
+            order.AddOrderItem(book, Quantity.Of(3));
 
-            book.ReduceStockLevel(3);
+            book.ReduceStockLevel(Quantity.Of(3));
             order.Cancel();
 
             Assert.Throws<DomainException>(() => order.Cancel());
-            Assert.Equal(10, book.Quantity);
+            Assert.Equal(Quantity.Of(10), book.Quantity);
         }
 
         // The monetary indicators: the profit on a sale is the difference between what the store
@@ -216,14 +216,14 @@ namespace Bookstore.Domain.Tests
         public void AddOrderItem_RecordsWhatTheBookCostTheStore_When_TheBookCameFromAnOffer()
         {
             var offer = new OfferBuilder().Id(1).BookPrice(4m).Status(OfferStatus.Paid).Build();
-            var book = Book.CreateFromOffer(offer, price: 10m);
+            var book = Book.CreateFromOffer(offer, price: Money.Of(10m));
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 3);
+            order.AddOrderItem(book, Quantity.Of(3));
 
             var orderItem = order.OrderItems.Single();
 
-            Assert.Equal(4m, orderItem.Cost);
+            Assert.Equal(Money.Of(4m), orderItem.Cost);
             Assert.Equal(18m, orderItem.GrossProfit);
         }
 
@@ -235,7 +235,7 @@ namespace Bookstore.Domain.Tests
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 3);
+            order.AddOrderItem(book, Quantity.Of(3));
 
             var orderItem = order.OrderItems.Single();
 
@@ -247,12 +247,12 @@ namespace Bookstore.Domain.Tests
         public void GrossProfit_IsUnchanged_When_TheBookIsRestockedAtADifferentCost()
         {
             var offer = new OfferBuilder().Id(1).BookPrice(4m).Status(OfferStatus.Paid).Build();
-            var book = Book.CreateFromOffer(offer, price: 10m);
+            var book = Book.CreateFromOffer(offer, price: Money.Of(10m));
 
             var order = new Order(1, 1);
-            order.AddOrderItem(book, 1);
+            order.AddOrderItem(book, Quantity.Of(1));
 
-            book.Price = 25m;
+            book.Price = Money.Of(25m);
 
             Assert.Equal(6m, order.OrderItems.Single().GrossProfit);
         }

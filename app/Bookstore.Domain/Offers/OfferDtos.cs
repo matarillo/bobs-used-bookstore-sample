@@ -9,5 +9,5 @@
         int ConditionId,
         int GenreId,        
         int PublisherId,
-        decimal BookPrice);
+        Money BookPrice);
 }

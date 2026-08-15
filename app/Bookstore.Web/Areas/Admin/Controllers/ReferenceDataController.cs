@@ -50,7 +50,9 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(ReferenceDataItemCreateUpdateViewModel model)
         {
-            var dto = new UpdateReferenceDataItemDto(model.Id, model.SelectedReferenceDataType, model.Text);
+            // ISSUE-05: only the name is sent. The type the form shows is the item's own and is
+            // rendered read-only, because books and offers are already filed under it.
+            var dto = new UpdateReferenceDataItemDto(model.Id, model.Text);
 
             await referenceDataService.UpdateAsync(dto);
 

@@ -1,11 +1,11 @@
-﻿using Bookstore.Domain.Carts;
+using Bookstore.Domain.Carts;
 using Bookstore.Domain.Customers;
 
 namespace Bookstore.Domain.Orders
 {
     public interface IOrderService
     {
-        Task<IPaginatedList<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
+        Task<PagedResult<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
 
         Task<IEnumerable<Order>> GetOrdersAsync(string sub);
 
@@ -36,17 +36,20 @@ namespace Bookstore.Domain.Orders
         private readonly IOrderRepository orderRepository;
         private readonly IShoppingCartRepository shoppingCartRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly IUnitOfWork unitOfWork;
 
         public OrderService(IOrderRepository orderRepository,
             IShoppingCartRepository shoppingCartRepository,
-            ICustomerRepository customerRepository)
+            ICustomerRepository customerRepository,
+            IUnitOfWork unitOfWork)
         {
             this.orderRepository = orderRepository;
             this.shoppingCartRepository = shoppingCartRepository;
             this.customerRepository = customerRepository;
+            this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IPaginatedList<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
+        public async Task<PagedResult<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
         {
             return await orderRepository.ListAsync(filters, pageIndex, pageSize);
         }
@@ -108,9 +111,12 @@ namespace Bookstore.Domain.Orders
                 shoppingCart.RemoveShoppingCartItemById(item.Id);
             }
 
-            // Because each repository implements a unit of work, changes to the shopping cart and to stock levels
-            // are captured by the unit of work and can be persisted by called SaveChangesAsync on _any_ repository.
-            await orderRepository.SaveChangesAsync();
+            // ISSUE-23/ISSUE-18: this is the boundary the design doc asked to be made visible.
+            // Placing an order changes three aggregates — the new order, the stock level of each
+            // book ordered, and the cart the items came out of — and all of them go in together
+            // or not at all. That strong consistency is deliberate for a second-hand shop, where
+            // there is usually one copy of a book and selling it twice is the worse outcome.
+            await unitOfWork.CompleteAsync();
 
             var skippedItemDtos = skippedItems
                 .Select(x => new SkippedOrderItemDto(x.BookId, x.Book.Name, x.Quantity))
@@ -142,7 +148,7 @@ namespace Bookstore.Domain.Orders
 
             order.UpdatedOn = DateTime.UtcNow;
 
-            await orderRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         // ISSUE-13: deliberately kept tolerant, unlike the strict lookups elsewhere in this
@@ -157,7 +163,7 @@ namespace Bookstore.Domain.Orders
 
             order.Cancel();
 
-            await orderRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
     }
 }

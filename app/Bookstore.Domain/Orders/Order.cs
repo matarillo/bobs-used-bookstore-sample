@@ -33,14 +33,25 @@ namespace Bookstore.Domain.Orders
         // below, which each check the current state before transitioning.
         public OrderStatus OrderStatus { get; private set; } = OrderStatus.Pending;
 
-        public decimal Tax => SubTotal * 0.1m;
+        // The rate the store charges. Named because ISSUE-07 is about amounts saying what they
+        // are: a tenth buried in an expression says nothing about what it is a tenth of.
+        public const decimal TaxRate = 0.1m;
 
-        public decimal SubTotal => OrderItems.Sum(x => x.SubTotal);
+        public Money Tax => SubTotal.Times(TaxRate);
 
-        public decimal Total => SubTotal + Tax;
+        public Money SubTotal => OrderItems.Sum(x => x.SubTotal);
 
-        public void AddOrderItem(Book book, int quantity)
+        public Money Total => SubTotal + Tax;
+
+        public void AddOrderItem(Book book, Quantity quantity)
         {
+            // ISSUE-07: Quantity rules out a negative count; a line of an order also has to be
+            // for at least one copy, which is the aggregate's rule rather than the value's.
+            if (quantity.IsNone)
+            {
+                throw new DomainException($"An order line for \"{book.Name}\" must be for at least one copy.");
+            }
+
             orderItems.Add(new OrderItem(this, book, quantity));
         }
 

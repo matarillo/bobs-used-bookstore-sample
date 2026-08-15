@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.ReferenceData
+namespace Bookstore.Domain.ReferenceData
 {
     public class ReferenceDataItem : Entity
     {
@@ -11,8 +11,17 @@
             Text = text;
         }
 
-        public ReferenceDataType DataType { get; set; }
+        // INV-REFDATA-03, enforced by ISSUE-05: what an item is, is settled when it is created.
+        // Changing it used to be part of editing an item, which meant a genre that books were
+        // already filed under could quietly become a publisher.
+        public ReferenceDataType DataType { get; private set; }
 
-        public string Text { get; set; }
+        public string Text { get; private set; }
+
+        // The only thing about an item that can change: what it is called.
+        public void Rename(string text)
+        {
+            Text = text;
+        }
     }
 }

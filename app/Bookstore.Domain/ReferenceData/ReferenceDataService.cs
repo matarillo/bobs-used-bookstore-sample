@@ -1,8 +1,8 @@
-﻿namespace Bookstore.Domain.ReferenceData
+namespace Bookstore.Domain.ReferenceData
 {
     public interface IReferenceDataService
     {
-        Task<IPaginatedList<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize);
+        Task<PagedResult<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize);
 
         Task<IEnumerable<ReferenceDataItem>> GetAllReferenceDataAsync();
 
@@ -16,13 +16,15 @@
     public class ReferenceDataService : IReferenceDataService
     {
         private readonly IReferenceDataRepository referenceDataRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ReferenceDataService(IReferenceDataRepository referenceDataRepository)
+        public ReferenceDataService(IReferenceDataRepository referenceDataRepository, IUnitOfWork unitOfWork)
         {
             this.referenceDataRepository = referenceDataRepository;
+            this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IPaginatedList<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize)
+        public async Task<PagedResult<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize)
         {
             return await referenceDataRepository.ListAsync(filters, pageIndex, pageSize);
         }
@@ -43,17 +45,23 @@
 
             await referenceDataRepository.AddAsync(referenceDataItem);
 
-            await referenceDataRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         public async Task UpdateAsync(UpdateReferenceDataItemDto dto)
         {
             var referenceDataItem = await referenceDataRepository.GetAsync(dto.Id);
 
-            referenceDataItem.DataType = dto.ReferenceDataType;
-            referenceDataItem.Text = dto.Text;
+            // ISSUE-13: updating one specifically-identified item is a strict update.
+            if (referenceDataItem == null)
+            {
+                throw new DomainException($"Reference data item {dto.Id} was not found.");
+            }
 
-            await referenceDataRepository.SaveChangesAsync();
+            // ISSUE-05: renaming is the whole of it — the type is not the caller's to change.
+            referenceDataItem.Rename(dto.Text);
+
+            await unitOfWork.CompleteAsync();
         }
     }
 }

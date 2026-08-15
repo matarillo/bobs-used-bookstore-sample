@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Addresses;
+using Bookstore.Domain.Addresses;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Bookstore.Data.Repositories
 
             if (address == null) return false;
 
-            address.IsActive = false;
+            address.Deactivate();
 
             return true;
         }
@@ -41,9 +41,5 @@ namespace Bookstore.Data.Repositories
             await dbContext.Address.AddAsync(address);
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
+using Bookstore.Web.ViewModel;
 using Bookstore.Domain.ReferenceData;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ namespace Bookstore.Web.Areas.Admin.Models.ReferenceData
 
         public ReferenceDataFilters Filters { get; set; } = new ReferenceDataFilters();
 
-        public ReferenceDataIndexViewModel(IPaginatedList<ReferenceDataItem> referenceDataItems, ReferenceDataFilters filters)
+        public ReferenceDataIndexViewModel(PagedResult<ReferenceDataItem> referenceDataItems, ReferenceDataFilters filters)
         {
-            foreach (var item in referenceDataItems.OrderBy(x => x.DataType.ToString()))
+            foreach (var item in referenceDataItems.Items.OrderBy(x => x.DataType.ToString()))
             {
                 Items.Add(new ReferenceDataIndexListItemViewModel
                 {
@@ -25,12 +26,7 @@ namespace Bookstore.Web.Areas.Admin.Models.ReferenceData
 
             Filters = filters;
 
-            PageIndex = referenceDataItems.PageIndex;
-            PageSize = referenceDataItems.Count;
-            PageCount = referenceDataItems.TotalPages;
-            HasNextPage = referenceDataItems.HasNextPage;
-            HasPreviousPage = referenceDataItems.HasPreviousPage;
-            PaginationButtons = referenceDataItems.GetPageList(5).ToList();
+            SetPage(referenceDataItems);
         }
     }
 

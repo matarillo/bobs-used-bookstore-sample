@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Carts;
+using Bookstore.Domain.Carts;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -26,9 +26,5 @@ namespace Bookstore.Data.Repositories
                 .SingleOrDefaultAsync(x => x.CorrelationId == correlationId);
         }
 
-        async Task IShoppingCartRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

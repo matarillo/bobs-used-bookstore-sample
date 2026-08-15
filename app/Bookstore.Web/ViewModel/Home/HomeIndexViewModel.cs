@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Books;
+using Bookstore.Domain.Books;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +16,7 @@ namespace Bookstore.Web.ViewModel.Home
             {
                 BookId = x.Id,
                 CoverImageUrl = x.CoverImageUrl,
-                BookPrice = x.Price,
+                BookPrice = x.Price.Amount,
                 BookName = x.Name,
                 HasLowStockLevels = x.IsLowInStock,
                 IsOutOfStock = !x.IsInStock

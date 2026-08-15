@@ -8,10 +8,10 @@ public class BookBuilder
     private string name = "test";
     private string author = "author";
     private string isbn = "12345678";
-    private int publisherId = 1;
-    private int bookTypeId = 2;
-    private int genreId = 3;
-    private int conditionId = 4;
+    private int publisherId = TestReferenceData.PublisherId;
+    private int bookTypeId = TestReferenceData.BookTypeId;
+    private int genreId = TestReferenceData.GenreId;
+    private int conditionId = TestReferenceData.ConditionId;
     private decimal price = 5;
     private int quantity = 6;
     private int? year = 2000;
@@ -20,7 +20,7 @@ public class BookBuilder
     
     public Book Build()
     {
-        return new Book(name, author, isbn, publisherId, bookTypeId, genreId, conditionId, price, quantity, year,
+        return new Book(name, author, isbn, TestReferenceData.Classification(publisherId, bookTypeId, genreId, conditionId), Money.Of(price), Domain.Quantity.Of(quantity), year,
             summary, coverImageUrl)
         {
             Id = id

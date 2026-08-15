@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Orders;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Bookstore.Web.ViewModel.Orders
                 Id = x.Id,
                 DeliveryDate = x.DeliveryDate,
                 OrderStatus = x.OrderStatus.GetDescription(),
-                SubTotal = x.SubTotal
+                SubTotal = x.SubTotal.Amount
             }).ToList();
         }
     }

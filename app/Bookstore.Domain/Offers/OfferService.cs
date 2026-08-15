@@ -1,11 +1,12 @@
-﻿using Bookstore.Domain.Customers;
+using Bookstore.Domain.Customers;
 using Bookstore.Domain.Orders;
+using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Domain.Offers
 {
     public interface IOfferService
     {
-        Task<IPaginatedList<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize);
+        Task<PagedResult<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize);
 
         Task<IEnumerable<Offer>> GetOffersAsync(string sub);
 
@@ -34,14 +35,18 @@ namespace Bookstore.Domain.Offers
     {
         private readonly IOfferRepository offerRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly IReferenceDataRepository referenceDataRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository)
+        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository, IReferenceDataRepository referenceDataRepository, IUnitOfWork unitOfWork)
         {
             this.offerRepository = offerRepository;
             this.customerRepository = customerRepository;
+            this.referenceDataRepository = referenceDataRepository;
+            this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IPaginatedList<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize)
+        public async Task<PagedResult<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize)
         {
             return await offerRepository.ListAsync(filters, pageIndex, pageSize);
         }
@@ -65,20 +70,21 @@ namespace Bookstore.Domain.Offers
         {
             var customer = await customerRepository.GetAsync(dto.CustomerSub);
 
+            // ISSUE-05: the four classification identifiers are checked against the reference
+            // data they were chosen from before the offer is made (see BookService.ClassifyAsync).
+            var referenceData = await referenceDataRepository.FullListAsync();
+
             var offer = new Offer(
                 customer.Id,
                 dto.BookName,
                 dto.Author,
                 dto.ISBN,
-                dto.BookTypeId,
-                dto.ConditionId,
-                dto.GenreId,
-                dto.PublisherId,
+                BookClassification.Of(referenceData, dto.PublisherId, dto.BookTypeId, dto.GenreId, dto.ConditionId),
                 dto.BookPrice);
 
             await offerRepository.AddAsync(offer);
 
-            await offerRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         public async Task ApproveOfferAsync(int offerId)
@@ -109,7 +115,7 @@ namespace Bookstore.Domain.Offers
 
             offer.UpdatedOn = DateTime.UtcNow;
 
-            await offerRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         public async Task<OfferStatistics> GetStatisticsAsync()

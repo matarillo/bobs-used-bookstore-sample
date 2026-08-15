@@ -1,4 +1,4 @@
-﻿@model Bookstore.Web.Areas.Admin.Models.PaginatedViewModel
+@model Bookstore.Web.ViewModel.PaginatedViewModel
 
 @{
     var filters = Context.Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());

@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Orders;
 using Microsoft.EntityFrameworkCore;
@@ -92,25 +92,25 @@ namespace Bookstore.Data.Repositories
 
         private static Task<decimal> SumSubTotalAsync(IQueryable<Order> orders)
         {
-            return orders.SelectMany(x => x.OrderItems).SumAsync(x => x.Price * x.Quantity);
+            return orders.SelectMany(x => x.OrderItems).SumAsync(x => x.PriceAmount * x.QuantityValue);
         }
 
         // Only the items whose cost the domain knows — see OrderStatistics.GrossProfitTotal.
         private static Task<decimal> SumGrossProfitAsync(IQueryable<Order> orders)
         {
             return orders.SelectMany(x => x.OrderItems)
-                .Where(x => x.Cost != null)
-                .SumAsync(x => (x.Price - x.Cost.Value) * x.Quantity);
+                .Where(x => x.CostAmount != null)
+                .SumAsync(x => (x.PriceAmount - x.CostAmount.Value) * x.QuantityValue);
         }
 
         private static Task<decimal> SumSubTotalWithKnownCostAsync(IQueryable<Order> orders)
         {
             return orders.SelectMany(x => x.OrderItems)
-                .Where(x => x.Cost != null)
-                .SumAsync(x => x.Price * x.Quantity);
+                .Where(x => x.CostAmount != null)
+                .SumAsync(x => x.PriceAmount * x.QuantityValue);
         }
 
-        async Task<IPaginatedList<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
+        async Task<PagedResult<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
         {
             var query = dbContext.Orders.AsQueryable();
 
@@ -141,11 +141,7 @@ namespace Bookstore.Data.Repositories
                 .Include(x => x.OrderItems)
                 .ThenInclude(x => x.Book);
 
-            var result = new PaginatedList<Order>(query, pageIndex, pageSize);
-
-            await result.PopulateAsync();
-
-            return result;
+            return await query.ToPagedResultAsync(pageIndex, pageSize);
         }
 
         async Task<IEnumerable<Order>> IOrderRepository.ListAsync(string sub)
@@ -157,9 +153,5 @@ namespace Bookstore.Data.Repositories
                 .ToListAsync();
         }
 
-        async Task IOrderRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

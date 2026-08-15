@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Books;
+using Bookstore.Domain.Books;
 
 namespace Bookstore.Domain.Orders
 {
@@ -10,7 +10,7 @@ namespace Bookstore.Domain.Orders
 
         internal protected Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count);
 
-        internal protected Task<IPaginatedList<Order>> ListAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
+        internal protected Task<PagedResult<Order>> ListAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
 
         internal protected Task<IEnumerable<Order>> ListAsync(string sub);
 
@@ -18,6 +18,5 @@ namespace Bookstore.Domain.Orders
 
         internal protected Task<OrderStatistics> GetStatisticsAsync();
 
-        internal protected Task SaveChangesAsync();
     }
 }

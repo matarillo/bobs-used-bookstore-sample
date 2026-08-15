@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Customers;
+using Bookstore.Domain.Customers;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -28,9 +28,5 @@ namespace Bookstore.Data.Repositories
             return await dbContext.Customer.SingleOrDefaultAsync(x => x.Sub == sub);
         }
 
-        async Task ICustomerRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

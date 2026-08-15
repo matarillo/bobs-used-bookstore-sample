@@ -1,6 +1,6 @@
 ﻿namespace Bookstore.Domain.Carts
 {
-    public record AddToShoppingCartDto(string CorrelationId, int BookId, int Quantity);
+    public record AddToShoppingCartDto(string CorrelationId, int BookId, Quantity Quantity);
 
     public record AddToWishlistDto(string CorrelationId, int BookId);
 

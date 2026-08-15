@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.Carts
+namespace Bookstore.Domain.Carts
 {
     public interface IShoppingCartService
     {
@@ -18,10 +18,12 @@
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly IShoppingCartRepository shoppingCartRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository)
+        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IUnitOfWork unitOfWork)
         {
             this.shoppingCartRepository = shoppingCartRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         // ISSUE-13: a query is tolerant of a missing cart — it is a valid "nothing here yet"
@@ -39,10 +41,11 @@
 
         public async Task AddToWishlistAsync(AddToWishlistDto dto)
         {
-            await AddToShoppingCartAsync(dto.CorrelationId, dto.BookId, 1, false);
+            // INV-CART-03 keeps a wish list line at one copy.
+            await AddToShoppingCartAsync(dto.CorrelationId, dto.BookId, Quantity.One, false);
         }
 
-        private async Task AddToShoppingCartAsync(string correlationId, int bookId, int quantity, bool wantToBuy)
+        private async Task AddToShoppingCartAsync(string correlationId, int bookId, Quantity quantity, bool wantToBuy)
         {
             var shoppingCart = await shoppingCartRepository.GetAsync(correlationId);
 
@@ -62,7 +65,7 @@
                 shoppingCart.AddItemToWishlist(bookId);
             }
 
-            await shoppingCartRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         // ISSUE-13: moving one specifically-identified item is a strict update — a cart that
@@ -79,7 +82,7 @@
 
             shoppingCart.MoveWishListItemToShoppingCart(dto.ShoppingCartItemId);
 
-            await shoppingCartRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         // ISSUE-13: deliberately kept tolerant, unlike the single-item move above. "Move
@@ -98,7 +101,7 @@
                 shoppingCart.MoveWishListItemToShoppingCart(wishListItem.Id);
             }
 
-            await shoppingCartRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         // ISSUE-13: deleting a specifically-identified item is a strict update.
@@ -113,7 +116,7 @@
 
             shoppingCart.RemoveShoppingCartItemById(dto.ShoppingCartItemId);
 
-            await shoppingCartRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
     }
 }

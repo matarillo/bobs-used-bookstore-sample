@@ -36,6 +36,15 @@ namespace Bookstore.Domain.Addresses
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        // ISSUE-04: an address is deleted logically, never physically — an order that already
+        // used it (INV-ADDR-05) would otherwise lose its delivery address. The flag used to be
+        // freely settable from outside, which left the delete/undelete decision to whoever held
+        // a reference rather than to a behaviour on the aggregate.
+        public bool IsActive { get; private set; } = true;
+
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
     }
 }

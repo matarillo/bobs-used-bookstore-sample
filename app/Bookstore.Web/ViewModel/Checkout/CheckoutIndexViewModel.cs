@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Carts;
+using Bookstore.Domain.Carts;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,12 +38,12 @@ namespace Bookstore.Web.ViewModel.Checkout
                 {
                     BookName = x.Book.Name,
                     ImageUrl = x.Book.CoverImageUrl,
-                    Price = x.Book.Price,
-                    Quantity = x.Quantity,
-                    OutOfStock = x.Book.Quantity <= 0
+                    Price = x.Book.Price.Amount,
+                    Quantity = x.Quantity.Value,
+                    OutOfStock = !x.Book.IsInStock
                 }).ToList();
 
-                Total = shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems);
+                Total = shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems).Amount;
             }
 
             SelectedAddressId = Addresses.Count > 0 ? Addresses.First().Id : 0;

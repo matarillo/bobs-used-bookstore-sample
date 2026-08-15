@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Orders;
+using Bookstore.Domain.Orders;
 using System;
 using System.Collections.Generic;
 
@@ -49,8 +49,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
             State = order.Address.State;
             ZipCode = order.Address.ZipCode;
             Country = order.Address.Country;
-            Subtotal = order.SubTotal;
-            Tax = order.Tax;
+            Subtotal = order.SubTotal.Amount;
+            Tax = order.Tax.Amount;
             OrderDate = order.CreatedOn;
             DeliveryDate = order.DeliveryDate;
 
@@ -63,8 +63,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
                     Condition = orderItem.Book.Condition.Text,
                     Genre = orderItem.Book.Genre.Text,
                     Name = orderItem.Book.Name,
-                    Price = orderItem.Price,
-                    Quantity = orderItem.Quantity,
+                    Price = orderItem.Price.Amount,
+                    Quantity = orderItem.Quantity.Value,
                     Publisher = orderItem.Book.Publisher.Text
                 });
             }

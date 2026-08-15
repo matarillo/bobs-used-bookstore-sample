@@ -7,47 +7,38 @@ namespace Bookstore.Domain.Tests
     public class AddressServiceTests
     {
         private readonly IAddressRepository addressRepository = Substitute.For<IAddressRepository>();
-        private readonly ICustomerRepository customerRepository = Substitute.For<ICustomerRepository>();
+        private readonly ICustomerService customerService = Substitute.For<ICustomerService>();
+        private readonly IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         private readonly AddressService sut;
 
         public AddressServiceTests()
         {
-            sut = new AddressService(addressRepository, customerRepository);
+            sut = new AddressService(addressRepository, customerService, unitOfWork);
         }
 
+        // ISSUE-08: address creation goes through the single find-or-create operation rather
+        // than building a customer itself.
         [Fact]
-        public async Task CreateAddressAsync_CreatesANewCustomer_When_NoneExists()
+        public async Task CreateAddressAsync_UsesTheCustomerFindOrCreateOperation()
         {
-            customerRepository.GetAsync("sub-1").Returns((Customer)null!);
+            var customer = new Customer("sub-1") { Id = 9 };
+            customerService.FindOrCreateAsync("sub-1").Returns(customer);
 
             var dto = new CreateAddressDto("123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
 
             await sut.CreateAddressAsync(dto);
 
-            await customerRepository.Received(1).AddAsync(Arg.Is<Customer>(c => c.Sub == "sub-1"));
-            await customerRepository.Received(1).SaveChangesAsync();
-            await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.AddressLine1 == "123 Main St"));
-            await addressRepository.Received(1).SaveChangesAsync();
-        }
+            await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.Customer == customer && a.AddressLine1 == "123 Main St"));
 
-        [Fact]
-        public async Task CreateAddressAsync_ReusesTheExistingCustomer_When_OneAlreadyExists()
-        {
-            var existingCustomer = new Customer("sub-1") { Id = 9 };
-            customerRepository.GetAsync("sub-1").Returns(existingCustomer);
-
-            var dto = new CreateAddressDto("123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
-
-            await sut.CreateAddressAsync(dto);
-
-            await customerRepository.DidNotReceive().AddAsync(Arg.Any<Customer>());
-            await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.Customer == existingCustomer));
+            // ISSUE-23: one unit of work. A customer FindOrCreateAsync had to create is folded
+            // into the same commit as the address, rather than being saved on its own first.
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
         public async Task CreateAddressAsync_AllowsAddressLine2ToBeOmitted()
         {
-            customerRepository.GetAsync("sub-1").Returns(new Customer("sub-1"));
+            customerService.FindOrCreateAsync("sub-1").Returns(new Customer("sub-1"));
 
             var dto = new CreateAddressDto("123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
 
@@ -64,7 +55,7 @@ namespace Bookstore.Domain.Tests
             var dto = new UpdateAddressDto(1, "123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
 
             await Assert.ThrowsAsync<DomainException>(() => sut.UpdateAddressAsync(dto));
-            await addressRepository.DidNotReceive().SaveChangesAsync();
+            await unitOfWork.DidNotReceive().CompleteAsync();
         }
 
         [Fact]
@@ -84,7 +75,7 @@ namespace Bookstore.Domain.Tests
             Assert.Equal("new state", address.State);
             Assert.Equal("new country", address.Country);
             Assert.Equal("99999", address.ZipCode);
-            await addressRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -95,7 +86,7 @@ namespace Bookstore.Domain.Tests
             var dto = new DeleteAddressDto(1, "sub-1");
 
             await Assert.ThrowsAsync<DomainException>(() => sut.DeleteAddressAsync(dto));
-            await addressRepository.DidNotReceive().SaveChangesAsync();
+            await unitOfWork.DidNotReceive().CompleteAsync();
         }
 
         [Fact]
@@ -107,7 +98,7 @@ namespace Bookstore.Domain.Tests
 
             await sut.DeleteAddressAsync(dto);
 
-            await addressRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]

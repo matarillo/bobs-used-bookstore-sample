@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Carts;
+using Bookstore.Domain.Carts;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,11 +20,11 @@ namespace Bookstore.Web.ViewModel.ShoppingCart
                     {
                         BookId = c.Book.Id,
                         ImageUrl = c.Book.CoverImageUrl,
-                        Price = c.Book.Price,
-                        Quantity = c.Quantity,
+                        Price = c.Book.Price.Amount,
+                        Quantity = c.Quantity.Value,
                         BookName = c.Book.Name,
                         ShoppingCartItemId = c.Id,
-                        StockLevel = c.Book.Quantity
+                        StockLevel = c.Book.Quantity.Value
                     }).ToList();
         }
     }

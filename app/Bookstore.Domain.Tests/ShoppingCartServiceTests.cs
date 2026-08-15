@@ -7,11 +7,12 @@ namespace Bookstore.Domain.Tests
     public class ShoppingCartServiceTests
     {
         private readonly IShoppingCartRepository shoppingCartRepository = Substitute.For<IShoppingCartRepository>();
+        private readonly IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         private readonly ShoppingCartService sut;
 
         public ShoppingCartServiceTests()
         {
-            sut = new ShoppingCartService(shoppingCartRepository);
+            sut = new ShoppingCartService(shoppingCartRepository, unitOfWork);
         }
 
         [Fact]
@@ -19,12 +20,12 @@ namespace Bookstore.Domain.Tests
         {
             shoppingCartRepository.GetAsync("cart-1").Returns((ShoppingCart)null!);
 
-            var dto = new AddToShoppingCartDto("cart-1", 1, 2);
+            var dto = new AddToShoppingCartDto("cart-1", 1, Quantity.Of(2));
 
             await sut.AddToShoppingCartAsync(dto);
 
             await shoppingCartRepository.Received(1).AddAsync(Arg.Is<ShoppingCart>(c => c.CorrelationId == "cart-1"));
-            await shoppingCartRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -34,12 +35,12 @@ namespace Bookstore.Domain.Tests
             var cart = new ShoppingCartBuilder().Build();
             shoppingCartRepository.GetAsync("cart-1").Returns(cart);
 
-            var dto = new AddToShoppingCartDto("cart-1", book.Id, 3);
+            var dto = new AddToShoppingCartDto("cart-1", book.Id, Quantity.Of(3));
 
             await sut.AddToShoppingCartAsync(dto);
 
             var item = Assert.Single(cart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems));
-            Assert.Equal(3, item.Quantity);
+            Assert.Equal(Quantity.Of(3), item.Quantity);
             await shoppingCartRepository.DidNotReceive().AddAsync(Arg.Any<ShoppingCart>());
         }
 
@@ -54,8 +55,8 @@ namespace Bookstore.Domain.Tests
             await sut.AddToWishlistAsync(dto);
 
             var item = Assert.Single(cart.GetWishListItems());
-            Assert.Equal(1, item.Quantity);
-            await shoppingCartRepository.Received(1).SaveChangesAsync();
+            Assert.Equal(Quantity.Of(1), item.Quantity);
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -82,7 +83,7 @@ namespace Bookstore.Domain.Tests
 
             Assert.Single(cart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems));
             Assert.Empty(cart.GetWishListItems());
-            await shoppingCartRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -94,7 +95,7 @@ namespace Bookstore.Domain.Tests
 
             await sut.MoveAllWishlistItemsToShoppingCartAsync(dto);
 
-            await shoppingCartRepository.DidNotReceive().SaveChangesAsync();
+            await unitOfWork.DidNotReceive().CompleteAsync();
         }
 
         [Fact]
@@ -114,7 +115,7 @@ namespace Bookstore.Domain.Tests
 
             Assert.Equal(2, cart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Count());
             Assert.Empty(cart.GetWishListItems());
-            await shoppingCartRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -140,7 +141,7 @@ namespace Bookstore.Domain.Tests
             await sut.DeleteShoppingCartItemAsync(dto);
 
             Assert.Empty(cart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems));
-            await shoppingCartRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]

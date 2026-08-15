@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using Bookstore.Domain;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Bookstore.Web.ViewModel.Resale;
 using Bookstore.Web.Helpers;
@@ -53,7 +54,7 @@ namespace Bookstore.Web.Controllers
                 resaleViewModel.SelectedConditionId, 
                 resaleViewModel.SelectedGenreId, 
                 resaleViewModel.SelectedPublisherId, 
-                resaleViewModel.BookPrice);
+                Money.Of(resaleViewModel.BookPrice));
 
             await offerService.CreateOfferAsync(dto);
 

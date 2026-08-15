@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.Books
+namespace Bookstore.Domain.Books
 {
     public record CreateBookDto(
         string Name,
@@ -10,8 +10,8 @@
         int? Year,
         string ISBN,
         string Summary,
-        decimal Price,
-        int Quantity,
+        Money Price,
+        Quantity Quantity,
         Stream CoverImage,
         string CoverImageFileName);
 
@@ -21,7 +21,7 @@
         int OfferId,
         int? Year,
         string Summary,
-        decimal Price,
+        Money Price,
         Stream CoverImage,
         string CoverImageFileName);
 
@@ -36,8 +36,8 @@
         int? Year,
         string ISBN,
         string Summary,
-        decimal Price,
-        int Quantity,
+        Money Price,
+        Quantity Quantity,
         Stream CoverImage,
         string CoverImageFileName);
 }

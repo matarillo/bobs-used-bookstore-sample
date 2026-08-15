@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -27,8 +27,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Id = book.Id;
             ISBN = book.ISBN;
             Name = book.Name;
-            Price = book.Price;
-            Quantity = book.Quantity;
+            Price = book.Price.Amount;
+            Quantity = book.Quantity.Value;
             SelectedBookTypeId = book.BookTypeId;
             SelectedConditionId = book.ConditionId;
             SelectedGenreId = book.GenreId;
@@ -42,7 +42,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         public InventoryCreateUpdateViewModel(IEnumerable<ReferenceDataItem> referenceDataItems, Offer offer) : this(referenceDataItems)
         {
             SourceOfferId = offer.Id;
-            PurchaseCost = offer.BookPrice;
+            PurchaseCost = offer.BookPrice.Amount;
             Author = offer.Author;
             ISBN = offer.ISBN;
             Name = offer.BookName;
@@ -96,10 +96,15 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         [DisplayName("Condition")]
         public int SelectedConditionId { get; set; }
 
+        // ISSUE-07: Money and Quantity reject a negative value by throwing, which is the right
+        // answer for the model and the wrong one for a form. Caught here so the store sees a
+        // validation message instead of an error page.
         [Required]
+        [Range(0, 1000000, ErrorMessage = "The price must be zero or more.")]
         public decimal Price { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "The quantity must be zero or more.")]
         public int Quantity { get; set; } = 1;
 
         // Nullable because none of the three is required to describe a book, and under
