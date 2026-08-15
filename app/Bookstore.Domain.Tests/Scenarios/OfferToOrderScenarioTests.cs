@@ -13,10 +13,21 @@ namespace Bookstore.Domain.Tests.Scenarios;
 // service in isolation with mocked repositories, which is exactly why a defect in the *handoff*
 // between OfferService, BookService and OrderService — e.g. the wrong price surviving into the
 // order, or the stocked book not actually being purchasable — would not necessarily be caught
-// anywhere else. This scenario drives all four services (Customer, Offer, Book, ShoppingCart,
-// Order) against one shared in-memory "database" the way a real request would, end to end: a
-// customer's offer is bought, stocked for sale, sold to another customer, and the sale is undone —
-// and the business is never left stuck in between.
+// anywhere else. These scenarios drive all four services (Customer, Offer, Book, ShoppingCart,
+// Order) against one shared in-memory "database" the way a real request would, covering:
+//
+//   - the full buy -> sell -> cancel -> resell loop (happy path across both flows)
+//   - failure modes that stay entirely on the buying side (a rejected offer, a double stocking
+//     attempt) and must not leave a dangling or duplicated book behind
+//   - a failure mode that stays entirely on the selling side (cancelling a shipped order) and
+//     must not corrupt stock that has already left the building
+//   - a purchase that pulls stock from two different offers at once, to check the handoff does
+//     not let one line's price or cost bleed into the other's
+//
+// Deliberately not a mechanical sweep of every offer/order state transition — those are already
+// pinned at the aggregate level (OfferTests, OrderTests) and the single-service level
+// (OfferServiceTests, OrderServiceTests, BookServiceTests). What is missing without these is
+// coverage of the connections between services that no single-service test can see.
 public class OfferToOrderScenarioTests
 {
     private const string SellerSub = "seller-sub";
@@ -58,31 +69,17 @@ public class OfferToOrderScenarioTests
         orderService = new OrderService(orderRepository, cartRepository, customerRepository, unitOfWork);
     }
 
+    // --- The full loop: buy, sell, get turned away while sold out, cancel, and resell. ---------
+
     [Fact]
     public async Task ABoughtOfferBecomesSellableStockThatCanBeOrderedCancelledAndResold()
     {
-        await CreateCustomerAsync(SellerSub);
         await CreateCustomerAsync(BuyerSub);
         await CreateCustomerAsync(OtherBuyerSub);
 
-        // --- Buying side (kaitori): the store approves, receives and pays for the offer.
-        await offerService.CreateOfferAsync(new CreateOfferDto(
-            SellerSub, "Domain-Driven Design", "Eric Evans", "9780321125217",
-            TestReferenceData.BookTypeId, TestReferenceData.ConditionId, TestReferenceData.GenreId, TestReferenceData.PublisherId,
-            Money.Of(8m)));
-        var offer = Assert.Single(db.Offers);
+        var (offer, book) = await CreateStockedBookAsync(
+            SellerSub, "Domain-Driven Design", "9780321125217", buyPrice: 8m, salePrice: 25m);
 
-        await offerService.ApproveOfferAsync(offer.Id);
-        await offerService.ConfirmOfferReceiptAsync(offer.Id);
-        await offerService.RecordOfferPaymentAsync(offer.Id);
-        Assert.Equal(OfferStatus.Paid, offer.OfferStatus);
-
-        // --- The handoff (ISSUE-06): staff puts the paid offer on the shelf at a price the store
-        // chooses, distinct from what it paid.
-        var stockResult = await bookService.AddFromOfferAsync(new CreateBookFromOfferDto(offer.Id, null, "First edition.", Money.Of(25m), null!, string.Empty));
-        Assert.True(stockResult.IsSuccess, stockResult.ErrorMessage);
-
-        var book = Assert.Single(db.Books);
         Assert.Equal("Domain-Driven Design", book.Name);
         Assert.Equal(offer.ISBN, book.ISBN);
         Assert.Equal(Quantity.One, book.Quantity);
@@ -130,9 +127,156 @@ public class OfferToOrderScenarioTests
         Assert.Equal(2, db.Orders.Count);
     }
 
+    // --- Failure modes that stay entirely inside the buying (kaitori) flow. -------------------
+
+    // ISSUE-06's gate is "only a paid offer may become stock"; rejection is the other legitimate
+    // way an offer's life can end, and it has to close the loop just as cleanly as a sale does —
+    // nothing is left half-done for a member of staff to trip over later.
+    [Fact]
+    public async Task ARejectedOfferNeverBecomesStockAndCannotBeStockedAfterTheFact()
+    {
+        await CreateCustomerAsync(SellerSub);
+
+        await offerService.CreateOfferAsync(new CreateOfferDto(
+            SellerSub, "Refactoring", "Martin Fowler", "9780201485677",
+            TestReferenceData.BookTypeId, TestReferenceData.ConditionId, TestReferenceData.GenreId, TestReferenceData.PublisherId,
+            Money.Of(6m)));
+        var offer = Assert.Single(db.Offers);
+
+        // The customer ships the book, but what arrives does not match what was described, so
+        // the store rejects it after receipt rather than before.
+        await offerService.ApproveOfferAsync(offer.Id);
+        await offerService.ConfirmOfferReceiptAsync(offer.Id);
+        await offerService.RejectOfferAsync(offer.Id);
+
+        Assert.Equal(OfferStatus.Rejected, offer.OfferStatus);
+        Assert.Null(offer.PaidOn); // the customer was never paid ...
+        Assert.False(offer.IsStocked); // ... and nothing was ever put up for sale.
+
+        // Any later attempt to stock it is refused, and refused cleanly — no book is created.
+        await Assert.ThrowsAsync<DomainException>(() =>
+            bookService.AddFromOfferAsync(new CreateBookFromOfferDto(offer.Id, null, string.Empty, Money.Of(20m), null!, string.Empty)));
+
+        Assert.Empty(db.Books);
+    }
+
+    // BookTests already pins that Book.CreateFromOffer refuses a second stocking of the same
+    // offer; this checks the same guard through the full service + repository path, where a
+    // careless implementation could still end up writing a duplicate row before the aggregate's
+    // check is reached.
+    [Fact]
+    public async Task APaidOfferCannotBeStockedTwiceAndLeavesNoDuplicateBook()
+    {
+        var (offer, book) = await CreateStockedBookAsync(
+            SellerSub, "Clean Code", "9780132350884", buyPrice: 5m, salePrice: 18m);
+
+        await Assert.ThrowsAsync<DomainException>(() =>
+            bookService.AddFromOfferAsync(new CreateBookFromOfferDto(offer.Id, null, string.Empty, Money.Of(30m), null!, string.Empty)));
+
+        // Exactly the one book the first, successful stocking produced — the failed retry left no
+        // partial or duplicate row behind, and did not touch the one that already exists.
+        Assert.Same(book, Assert.Single(db.Books));
+        Assert.Equal(Money.Of(18m), book.Price);
+    }
+
+    // --- A failure mode that stays entirely inside the selling (hanbai) flow. ------------------
+
+    // ISSUE-15's state machine, not ISSUE-13's tolerant-cancel policy, has to govern here: a
+    // *found* order in the wrong state must fail loudly. ISSUE-16 only returns stock as a side
+    // effect of a cancellation that actually happens — a copy already on its way to the customer
+    // must not reappear as sellable stock because someone called cancel on it anyway.
+    [Fact]
+    public async Task ShippingAnOrderPreventsCancellationFromClawingBackSoldStock()
+    {
+        await CreateCustomerAsync(BuyerSub);
+        var (_, book) = await CreateStockedBookAsync(
+            SellerSub, "Domain-Driven Design", "9780321125217", buyPrice: 8m, salePrice: 25m);
+
+        await cartService.AddToShoppingCartAsync(new AddToShoppingCartDto("cart", book.Id, Quantity.One));
+        var result = await orderService.CreateOrderAsync(new CreateOrderDto(BuyerSub, "cart", AddressId));
+        var order = db.Orders.Single(x => x.Id == result.OrderId);
+
+        await orderService.AcceptOrderAsync(order.Id);
+        await orderService.ShipOrderAsync(order.Id);
+
+        await Assert.ThrowsAsync<DomainException>(() =>
+            orderService.CancelOrderAsync(new CancelOrderDto(BuyerSub, order.Id)));
+
+        Assert.Equal(OrderStatus.Shipped, order.OrderStatus);
+        Assert.Equal(Quantity.None, book.Quantity);
+    }
+
+    // --- A more complex handoff: one order pulling stock from two independent purchases. -------
+
+    // Two unrelated offers, stocked at two different margins, bought together in one order. If
+    // pricing or cost data were ever accidentally shared between order items (e.g. a loop
+    // variable captured by reference, or a service reusing one Money instance), this is the shape
+    // of scenario that would show it — a single-book purchase could not.
+    [Fact]
+    public async Task AnOrderWithTwoOfferSourcedBooksKeepsEachLinesPriceAndCostIndependent()
+    {
+        var (_, firstBook) = await CreateStockedBookAsync(
+            SellerSub, "Clean Code", "9780132350884", buyPrice: 5m, salePrice: 18m);
+        var (_, secondBook) = await CreateStockedBookAsync(
+            SellerSub, "Refactoring", "9780201485677", buyPrice: 9m, salePrice: 24m);
+
+        await CreateCustomerAsync(BuyerSub);
+        await cartService.AddToShoppingCartAsync(new AddToShoppingCartDto("cart", firstBook.Id, Quantity.One));
+        await cartService.AddToShoppingCartAsync(new AddToShoppingCartDto("cart", secondBook.Id, Quantity.One));
+
+        var result = await orderService.CreateOrderAsync(new CreateOrderDto(BuyerSub, "cart", AddressId));
+
+        Assert.Empty(result.SkippedItems);
+        var order = db.Orders.Single(x => x.Id == result.OrderId);
+        var firstItem = order.OrderItems.Single(x => x.BookId == firstBook.Id);
+        var secondItem = order.OrderItems.Single(x => x.BookId == secondBook.Id);
+
+        Assert.Equal(Money.Of(18m), firstItem.Price);
+        Assert.Equal(Money.Of(5m), firstItem.Cost);
+        Assert.Equal(13m, firstItem.GrossProfit);
+
+        Assert.Equal(Money.Of(24m), secondItem.Price);
+        Assert.Equal(Money.Of(9m), secondItem.Cost);
+        Assert.Equal(15m, secondItem.GrossProfit);
+
+        // RULE-ORDER-02/ISSUE-02: the two lines aggregate correctly rather than one overwriting
+        // or being dropped from the other's total.
+        Assert.Equal(Money.Of(42m), order.SubTotal);
+        Assert.Equal(Money.Of(4.2m), order.Tax);
+        Assert.Equal(Money.Of(46.2m), order.Total);
+
+        Assert.Equal(Quantity.None, firstBook.Quantity);
+        Assert.Equal(Quantity.None, secondBook.Quantity);
+    }
+
     private async Task CreateCustomerAsync(string sub)
     {
         await customerService.FindOrCreateAsync(sub);
         await unitOfWork.CompleteAsync();
+    }
+
+    // Drives one offer all the way from submission to sellable stock — the "buy" half every
+    // scenario above builds on. Returns both the offer and the book so a test can assert on
+    // whichever side of the ISSUE-06 handoff it cares about. Safe to call more than once for the
+    // same seller: CustomerService.FindOrCreateAsync is itself idempotent.
+    private async Task<(Offer Offer, Book Book)> CreateStockedBookAsync(
+        string sellerSub, string bookName, string isbn, decimal buyPrice, decimal salePrice)
+    {
+        await CreateCustomerAsync(sellerSub);
+
+        await offerService.CreateOfferAsync(new CreateOfferDto(
+            sellerSub, bookName, "test author", isbn,
+            TestReferenceData.BookTypeId, TestReferenceData.ConditionId, TestReferenceData.GenreId, TestReferenceData.PublisherId,
+            Money.Of(buyPrice)));
+        var offer = db.Offers.Last();
+
+        await offerService.ApproveOfferAsync(offer.Id);
+        await offerService.ConfirmOfferReceiptAsync(offer.Id);
+        await offerService.RecordOfferPaymentAsync(offer.Id);
+
+        await bookService.AddFromOfferAsync(new CreateBookFromOfferDto(offer.Id, null, string.Empty, Money.Of(salePrice), null!, string.Empty));
+        var book = db.Books.Last();
+
+        return (offer, book);
     }
 }
