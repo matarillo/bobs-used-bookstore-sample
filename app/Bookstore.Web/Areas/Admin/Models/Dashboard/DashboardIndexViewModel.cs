@@ -36,7 +36,9 @@
 
         public int OutOfStock { get; set; }
 
-        public int LowStock { get; set; }
+        // ISSUE-01: books still selling but approaching the low-stock threshold — mutually
+        // exclusive of OutOfStock above. See BookStatistics.LowStockStillAvailable.
+        public int LowStockStillAvailable { get; set; }
 
         public int StockTotal { get; set; }
     }

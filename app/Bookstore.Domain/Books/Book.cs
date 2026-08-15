@@ -144,6 +144,15 @@ namespace Bookstore.Domain.Books
 
         public bool IsInStock => !Quantity.IsNone;
 
+        // ISSUE-01: "low in stock" is the procurement concern — whether this book needs a
+        // restocking decision — and a book that has completely sold out needs that decision as
+        // much as one that is merely running low. So this deliberately includes zero.
+        //
+        // The statistics read model (12 §2, BookStatistics.LowStockStillAvailable) asks a
+        // different question — how many books are selling but have not yet run out, which is an
+        // analytics concern about approaching a stockout, not a procurement trigger — and for
+        // that question zero has to be excluded. Same words, two bounded contexts, two answers;
+        // giving the read-side concept its own name keeps them from colliding.
         public bool IsLowInStock => Quantity.Value <= LowBookThreshold;
 
         // INV-BOOK-01, revised by ISSUE-03: a withdrawal that would take the stock level below

@@ -14,6 +14,12 @@
 
         public int? ConditionId { get; set; }
 
+        // The procurement concern (Book.IsLowInStock): books at or below the threshold,
+        // including ones that have completely sold out.
         public bool LowStock { get; set; }
+
+        // ISSUE-01: a book with none left, offered as its own filter so a caller after only
+        // stockouts is not handed every merely-low book along with them.
+        public bool OutOfStock { get; set; }
     }
 }

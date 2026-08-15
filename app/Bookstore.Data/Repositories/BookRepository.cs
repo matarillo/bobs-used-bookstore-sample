@@ -64,6 +64,14 @@ namespace Bookstore.Data.Repositories
                 query = query.Where(x => x.StockQuantity <= Book.LowBookThreshold);
             }
 
+            // ISSUE-01: a filter of its own, so "which books are out of stock" does not have to
+            // be answered by way of "which books need reordering" (LowStock above, which includes
+            // these along with everything merely running low).
+            if (filters.OutOfStock)
+            {
+                query = query.Where(x => x.StockQuantity == 0);
+            }
+
             query = query
                 .Include(x => x.Genre)
                 .Include(x => x.Publisher)
@@ -121,7 +129,7 @@ namespace Bookstore.Data.Repositories
                 .GroupBy(x => 1)
                 .Select(x => new BookStatistics
                 {
-                    LowStock = x.Count(y => y.StockQuantity > 0 && y.StockQuantity <= Book.LowBookThreshold),
+                    LowStockStillAvailable = x.Count(y => y.StockQuantity > 0 && y.StockQuantity <= Book.LowBookThreshold),
                     OutOfStock = x.Count(y => y.StockQuantity == 0),
                     StockTotal = x.Count()
                 }).SingleOrDefaultAsync();

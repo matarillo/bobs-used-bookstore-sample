@@ -44,7 +44,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 PurchasesThisMonth = offerStats.PurchasesThisMonth,
                 PurchasesTotal = offerStats.PurchasesTotal,
 
-                LowStock = inventoryStats.LowStock,
+                LowStockStillAvailable = inventoryStats.LowStockStillAvailable,
                 OutOfStock = inventoryStats.OutOfStock,
                 StockTotal = inventoryStats.StockTotal
             };
