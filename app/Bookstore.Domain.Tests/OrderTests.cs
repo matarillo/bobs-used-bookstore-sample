@@ -208,16 +208,64 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(10, book.Quantity);
         }
 
-        // Pinned before ISSUE-25. RULE-ORDER-01 puts the delivery date seven days out, but takes
-        // "now" from the local time of the machine, while its only reader — the past-due
-        // statistic — compares it against UTC. The two are only comparable where the machine
-        // happens to run on UTC.
+        // Changed by ISSUE-25, having been pinned as "seven days after the local time". The
+        // delivery date is now counted from UTC, the basis IsPastDue compares it against.
         [Fact]
-        public void DeliveryDate_IsSevenDaysAfterTheLocalTime_When_TheOrderIsCreated()
+        public void DeliveryDate_IsSevenDaysAfterTheCurrentUtcTime_When_TheOrderIsCreated()
         {
             var order = new Order(1, 1);
 
-            Assert.Equal(DateTime.Now.AddDays(7), order.DeliveryDate, TimeSpan.FromMinutes(1));
+            Assert.Equal(DateTime.UtcNow.AddDays(7), order.DeliveryDate, TimeSpan.FromMinutes(1));
+        }
+
+        // ISSUE-25: an order that has passed its delivery date without reaching the customer.
+        [Theory]
+        [InlineData(OrderStatus.Pending, true)]
+        [InlineData(OrderStatus.Ordered, true)]
+        [InlineData(OrderStatus.Shipped, true)]
+        [InlineData(OrderStatus.Delivered, false)]
+        [InlineData(OrderStatus.Cancelled, false)]
+        public void IsPastDue_ReportsAnUndeliveredOrderPastItsDeliveryDate(OrderStatus status, bool expectedResult)
+        {
+            var order = OrderInState(status);
+            order.DeliveryDate = new DateTime(2026, 1, 1);
+
+            Assert.Equal(expectedResult, order.IsPastDue(new DateTime(2026, 1, 2)));
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Pending)]
+        [InlineData(OrderStatus.Ordered)]
+        [InlineData(OrderStatus.Shipped)]
+        public void IsPastDue_ReturnsFalse_When_TheDeliveryDateHasNotPassed(OrderStatus status)
+        {
+            var order = OrderInState(status);
+            order.DeliveryDate = new DateTime(2026, 1, 2);
+
+            Assert.False(order.IsPastDue(new DateTime(2026, 1, 1)));
+        }
+
+        // ISSUE-25: the read side asks the aggregate for the rule. This holds the query form of it
+        // to the same answers as the aggregate itself, so a dashboard count cannot quietly come to
+        // mean something other than what the order says.
+        [Theory]
+        [InlineData(OrderStatus.Pending)]
+        [InlineData(OrderStatus.Ordered)]
+        [InlineData(OrderStatus.Shipped)]
+        [InlineData(OrderStatus.Delivered)]
+        [InlineData(OrderStatus.Cancelled)]
+        public void PastDueAsOf_AgreesWithIsPastDue(OrderStatus status)
+        {
+            var asOf = new DateTime(2026, 1, 2);
+            var pastDue = Order.PastDueAsOf(asOf).Compile();
+
+            foreach (var deliveryDate in new[] { new DateTime(2026, 1, 1), new DateTime(2026, 1, 3) })
+            {
+                var order = OrderInState(status);
+                order.DeliveryDate = deliveryDate;
+
+                Assert.Equal(order.IsPastDue(asOf), pastDue(order));
+            }
         }
 
         // Drives the order through the transitions needed to reach the given state, so each

@@ -1,4 +1,5 @@
-﻿using Bookstore.Domain.Addresses;
+﻿using System.Linq.Expressions;
+using Bookstore.Domain.Addresses;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Customers;
 
@@ -22,7 +23,11 @@ namespace Bookstore.Domain.Orders
 
         public IEnumerable<OrderItem> OrderItems => orderItems;
 
-        public DateTime DeliveryDate { get; set; } = DateTime.Now.AddDays(7);
+        // RULE-ORDER-01, revised by ISSUE-25: seven days out, counted from UTC. The date used to
+        // be taken from the local time of the machine while the only thing that read it — the
+        // past-due count — compared it against UTC, so the two ends of that comparison did not
+        // share a basis (ISSUE-09).
+        public DateTime DeliveryDate { get; set; } = DateTime.UtcNow.AddDays(7);
 
         // INV-ORDER-02/03/04, revised by ISSUE-15: the status only moves through the behaviours
         // below, which each check the current state before transitioning.
@@ -37,6 +42,30 @@ namespace Bookstore.Domain.Orders
         public void AddOrderItem(Book book, int quantity)
         {
             orderItems.Add(new OrderItem(this, book, quantity));
+        }
+
+        // ISSUE-25: "past due" used to exist only as a line on the dashboard, with its rule
+        // written into the query that counted it. The order decides what it means: the delivery
+        // date promised by RULE-ORDER-01 has passed and the order has still not reached the
+        // customer. A cancelled order is not past due — it is never going to be delivered, and
+        // nothing about it is waiting to be chased.
+        //
+        // "Now" is passed in rather than read here, so the rule is testable and so the caller
+        // decides the basis (UTC, as DeliveryDate is).
+        public bool IsPastDue(DateTime asOfUtc)
+        {
+            return DeliveryDate < asOfUtc
+                && OrderStatus != OrderStatus.Delivered
+                && OrderStatus != OrderStatus.Cancelled;
+        }
+
+        // The same rule, in the form the read side needs to hand to the database. OrderTests pins
+        // this to IsPastDue so the two cannot drift apart.
+        public static Expression<Func<Order, bool>> PastDueAsOf(DateTime asOfUtc)
+        {
+            return order => order.DeliveryDate < asOfUtc
+                && order.OrderStatus != OrderStatus.Delivered
+                && order.OrderStatus != OrderStatus.Cancelled;
         }
 
         // The store accepts a pending order.

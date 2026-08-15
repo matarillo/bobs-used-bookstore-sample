@@ -56,17 +56,26 @@ namespace Bookstore.Data.Repositories
 
         async Task<OrderStatistics> IOrderRepository.GetStatisticsAsync()
         {
-            var startOfMonth = DateTime.UtcNow.StartOfMonth();
+            var now = DateTime.UtcNow;
+            var startOfMonth = now.StartOfMonth();
 
-            return await dbContext.Orders
+            var statistics = await dbContext.Orders
                 .GroupBy(x => 1)
                 .Select(x => new OrderStatistics
                 {
                     PendingOrders = x.Count(y => y.OrderStatus == OrderStatus.Pending),
-                    PastDueOrders = x.Count(y => y.OrderStatus == OrderStatus.Ordered && y.DeliveryDate < DateTime.UtcNow),
                     OrdersThisMonth = x.Count(y => y.CreatedOn >= startOfMonth),
                     OrdersTotal = x.Count()
                 }).SingleOrDefaultAsync();
+
+            if (statistics == null) return null;
+
+            // ISSUE-25: the rule for "past due" belongs to the order, not to this query. Counted
+            // separately because the aggregate's predicate cannot be applied inside the grouped
+            // projection above.
+            statistics.PastDueOrders = await dbContext.Orders.CountAsync(Order.PastDueAsOf(now));
+
+            return statistics;
         }
 
         async Task<IPaginatedList<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
@@ -86,6 +95,13 @@ namespace Bookstore.Data.Repositories
             if (filters.OrderDateToFilter.HasValue)
             {
                 query = query.Where(x => x.CreatedOn < filters.OrderDateToFilter.Value.OneSecondToMidnight());
+            }
+
+            // ISSUE-25: now that the domain defines "past due", the dashboard's past-due count is
+            // something staff can open and work through.
+            if (filters.PastDueFilter == true)
+            {
+                query = query.Where(Order.PastDueAsOf(DateTime.UtcNow));
             }
 
             query = query
