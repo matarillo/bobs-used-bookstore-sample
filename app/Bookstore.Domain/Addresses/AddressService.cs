@@ -53,9 +53,15 @@ namespace Bookstore.Domain.Addresses
             await addressRepository.SaveChangesAsync();
         }
 
+        // ISSUE-13: updating one specifically-identified address is a strict update.
         public async Task UpdateAddressAsync(UpdateAddressDto dto)
         {
             var address = await addressRepository.GetAsync(dto.CustomerSub, dto.AddressId);
+
+            if (address == null)
+            {
+                throw new DomainException($"Address {dto.AddressId} was not found.");
+            }
 
             address.AddressLine1 = dto.AddressLine1;
             address.AddressLine2 = dto.AddressLine2;
@@ -67,9 +73,16 @@ namespace Bookstore.Domain.Addresses
             await addressRepository.SaveChangesAsync();
         }
 
+        // ISSUE-13: deleting one specifically-identified address is a strict update too, the
+        // same policy already used for a shopping cart item (RemoveShoppingCartItemById).
         public async Task DeleteAddressAsync(DeleteAddressDto dto)
         {
-            await addressRepository.DeleteAsync(dto.CustomerSub, dto.AddressId);
+            var deleted = await addressRepository.DeleteAsync(dto.CustomerSub, dto.AddressId);
+
+            if (!deleted)
+            {
+                throw new DomainException($"Address {dto.AddressId} was not found.");
+            }
 
             await addressRepository.SaveChangesAsync();
         }

@@ -29,16 +29,22 @@ namespace Bookstore.Web.ViewModel.Checkout
                 ZipCode = x.ZipCode
             }).ToList();
 
-            ShoppingCartItems = shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Select(x => new CheckoutItemViewModel
+            // ISSUE-13: reading a cart that does not exist yet is treated as an empty cart, the
+            // same tolerant-read policy ShoppingCartIndexViewModel and WishlistIndexViewModel
+            // already apply, rather than crashing on a first-time visitor who lands here directly.
+            if (shoppingCart != null)
             {
-                BookName = x.Book.Name,
-                ImageUrl = x.Book.CoverImageUrl,
-                Price = x.Book.Price,
-                Quantity = x.Quantity,
-                OutOfStock = x.Book.Quantity <= 0
-            }).ToList();
+                ShoppingCartItems = shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Select(x => new CheckoutItemViewModel
+                {
+                    BookName = x.Book.Name,
+                    ImageUrl = x.Book.CoverImageUrl,
+                    Price = x.Book.Price,
+                    Quantity = x.Quantity,
+                    OutOfStock = x.Book.Quantity <= 0
+                }).ToList();
 
-            Total = shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems);
+                Total = shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems);
+            }
 
             SelectedAddressId = Addresses.Count > 0 ? Addresses.First().Id : 0;
         }

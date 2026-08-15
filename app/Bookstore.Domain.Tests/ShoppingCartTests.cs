@@ -97,6 +97,22 @@ namespace Bookstore.Domain.Tests
         }
 
         [Fact]
+        public void MoveWishListItemToShoppingCart_Throws_When_TheItemDoesNotExist()
+        {
+            var shoppingCart = new ShoppingCartBuilder().Build();
+
+            Assert.Throws<DomainException>(() => shoppingCart.MoveWishListItemToShoppingCart(999));
+        }
+
+        [Fact]
+        public void RemoveShoppingCartItemById_Throws_When_TheItemDoesNotExist()
+        {
+            var shoppingCart = new ShoppingCartBuilder().Build();
+
+            Assert.Throws<DomainException>(() => shoppingCart.RemoveShoppingCartItemById(999));
+        }
+
+        [Fact]
         public void GetSubTotal_MultipliesThePriceByTheQuantity_When_Executed()
         {
             var book = new BookBuilder().Id(1).Price(10m).Quantity(100).Build();

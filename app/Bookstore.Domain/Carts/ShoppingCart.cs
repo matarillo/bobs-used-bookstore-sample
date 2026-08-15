@@ -47,11 +47,16 @@
             ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, 1, false));
         }
 
+        // ISSUE-13: a specifically-identified item that is not there is a failure, the same
+        // policy already applied to RemoveShoppingCartItemById below.
         public void MoveWishListItemToShoppingCart(int shoppingCartItemId)
         {
             var wishListItem = ShoppingCartItems.SingleOrDefault(x => x.Id == shoppingCartItemId);
 
-            if (wishListItem == null) return;
+            if (wishListItem == null)
+            {
+                throw new DomainException($"Wish list item {shoppingCartItemId} was not found.");
+            }
 
             var existingItem = ShoppingCartItems.FirstOrDefault(x => x.BookId == wishListItem.BookId && x.WantToBuy);
 
@@ -68,9 +73,16 @@
             }
         }
 
+        // ISSUE-13: deleting a specifically-identified item that is not there fails, rather than
+        // silently doing nothing (the policy chosen for single-item updates generally).
         public void RemoveShoppingCartItemById(int shoppingCartItemId)
         {
-            var shoppingCartItem = ShoppingCartItems.Single(x => x.Id == shoppingCartItemId);
+            var shoppingCartItem = ShoppingCartItems.SingleOrDefault(x => x.Id == shoppingCartItemId);
+
+            if (shoppingCartItem == null)
+            {
+                throw new DomainException($"Shopping cart item {shoppingCartItemId} was not found.");
+            }
 
             ShoppingCartItems.Remove(shoppingCartItem);
         }

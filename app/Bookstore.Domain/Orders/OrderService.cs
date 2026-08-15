@@ -75,7 +75,19 @@ namespace Bookstore.Domain.Orders
         {
             var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
+            // ISSUE-13: placing an order is a strict update targeting one specific cart and one
+            // specific customer; either missing is a failure rather than a silent no-op.
+            if (shoppingCart == null)
+            {
+                throw new DomainException($"Shopping cart \"{dto.CorrelationId}\" was not found.");
+            }
+
             var customer = await customerRepository.GetAsync(dto.CustomerSub);
+
+            if (customer == null)
+            {
+                throw new DomainException($"Customer \"{dto.CustomerSub}\" was not found.");
+            }
 
             // INV-ORDER-06, revised by ISSUE-11: throws if there is nothing in stock to order,
             // instead of silently placing an order with zero items. Items skipped because they
@@ -133,6 +145,10 @@ namespace Bookstore.Domain.Orders
             await orderRepository.SaveChangesAsync();
         }
 
+        // ISSUE-13: deliberately kept tolerant, unlike the strict lookups elsewhere in this
+        // class. Cancelling is idempotent by nature — the design doc calls it out by name as the
+        // exception to "updates are strict" — so an order that is already gone or was never the
+        // caller's is treated as already cancelled rather than as an error.
         public async Task CancelOrderAsync(CancelOrderDto dto)
         {
             var order = await orderRepository.GetAsync(dto.OrderId, dto.CustomerSub);
