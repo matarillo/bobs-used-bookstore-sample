@@ -53,7 +53,7 @@ namespace Bookstore.Domain.Tests
         }
 
         [Fact]
-        public void SubTotal_Changes_When_TheBookPriceIsChangedAfterTheOrderIsPlaced()
+        public void SubTotal_IsUnchanged_When_TheBookPriceIsChangedAfterTheOrderIsPlaced()
         {
             var book = new BookBuilder().Id(1).Price(10m).Build();
 
@@ -62,7 +62,18 @@ namespace Bookstore.Domain.Tests
 
             book.Price = 25m;
 
-            Assert.Equal(25m, order.SubTotal);
+            Assert.Equal(10m, order.SubTotal);
+        }
+
+        [Fact]
+        public void AddOrderItem_RecordsThePriceOfTheBook_When_TheOrderItemIsAdded()
+        {
+            var book = new BookBuilder().Id(1).Price(10m).Build();
+
+            var order = new Order(1, 1);
+            order.AddOrderItem(book, 1);
+
+            Assert.Equal(10m, order.OrderItems.Single().Price);
         }
 
         [Fact]

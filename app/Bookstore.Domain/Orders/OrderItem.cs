@@ -14,6 +14,7 @@ namespace Bookstore.Domain.Orders
             BookId = book.Id;
             Book = book;
             Quantity = quantity;
+            Price = book.Price;
         }
 
         public int OrderId { get; set; }
@@ -24,7 +25,11 @@ namespace Bookstore.Domain.Orders
 
         public int Quantity { get; set; }
 
-        // RULE-ORDER-02: the price of the book multiplied by the quantity ordered.
-        public decimal SubTotal => Book.Price * Quantity;
+        // RULE-ORDER-03: the price agreed when the order was placed. An order is the record
+        // of an agreement, so it must not follow later changes to the price of the book.
+        public decimal Price { get; private set; }
+
+        // RULE-ORDER-02: the agreed price multiplied by the quantity ordered.
+        public decimal SubTotal => Price * Quantity;
     }
 }

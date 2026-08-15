@@ -30,7 +30,7 @@ namespace Bookstore.Web.ViewModel.Orders
                 BookId = x.BookId,
                 BookName = x.Book.Name,
                 ImageUrl = x.Book.CoverImageUrl,
-                Price = x.Book.Price,
+                Price = x.Price,
                 Quantity = x.Quantity
             }).ToList();
         }

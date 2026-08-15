@@ -14,7 +14,7 @@ namespace Bookstore.Web.ViewModel.Checkout
             {
                 BookId = x.Book.Id,
                 Bookname = x.Book.Name,
-                Price = x.Book.Price,
+                Price = x.Price,
                 Quantity = x.Quantity,
                 Url = x.Book.CoverImageUrl
             });
