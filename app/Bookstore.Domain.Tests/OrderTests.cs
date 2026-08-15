@@ -83,5 +83,19 @@ namespace Bookstore.Domain.Tests
 
             Assert.Equal(OrderStatus.Pending, order.OrderStatus);
         }
+
+        [Fact]
+        public void OrderStatus_CanBeSetToAnyValue_When_AssignedDirectly()
+        {
+            // INV-ORDER-02/03/04 are not enforced: a delivered order can be pushed back to
+            // pending, with no notion of a valid or an invalid transition. Recorded here so the
+            // change is visible when ISSUE-15 replaces the setter with guarded behaviours.
+            var order = new Order(1, 1);
+
+            order.OrderStatus = OrderStatus.Delivered;
+            order.OrderStatus = OrderStatus.Pending;
+
+            Assert.Equal(OrderStatus.Pending, order.OrderStatus);
+        }
     }
 }
