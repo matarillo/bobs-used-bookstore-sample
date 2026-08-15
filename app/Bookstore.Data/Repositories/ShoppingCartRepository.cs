@@ -18,12 +18,16 @@ namespace Bookstore.Data.Repositories
             await dbContext.ShoppingCart.AddAsync(shoppingCart);
         }
 
+        // Returns null when no matching cart exists; callers check for that (see
+        // ShoppingCartService), even though the interface keeps the return type non-nullable
+        // (see IOfferRepository.GetAsync(string, int) for the same shape). The null-forgiving
+        // operator here just matches that existing, deliberate contract.
         async Task<ShoppingCart> IShoppingCartRepository.GetAsync(string correlationId)
         {
-            return await dbContext.ShoppingCart
+            return (await dbContext.ShoppingCart
                 .Include(x => x.ShoppingCartItems)
                 .ThenInclude(x => x.Book)
-                .SingleOrDefaultAsync(x => x.CorrelationId == correlationId);
+                .SingleOrDefaultAsync(x => x.CorrelationId == correlationId))!;
         }
 
     }

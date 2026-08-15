@@ -18,14 +18,17 @@ namespace Bookstore.Data.Repositories
             await dbContext.Customer.AddAsync(customer);
         }
 
+        // Both overloads return null when no matching customer exists; the interface keeps the
+        // return type non-nullable (see IOfferRepository.GetAsync(string, int) for the same
+        // shape), so the null-forgiving operator just restates that on purpose.
         async Task<Customer> ICustomerRepository.GetAsync(int id)
         {
-            return await dbContext.Customer.FindAsync(id);
+            return (await dbContext.Customer.FindAsync(id))!;
         }
 
         async Task<Customer> ICustomerRepository.GetAsync(string sub)
         {
-            return await dbContext.Customer.SingleOrDefaultAsync(x => x.Sub == sub);
+            return (await dbContext.Customer.SingleOrDefaultAsync(x => x.Sub == sub))!;
         }
 
     }

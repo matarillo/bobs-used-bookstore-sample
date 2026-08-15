@@ -23,25 +23,28 @@ namespace Bookstore.Data.Repositories
             await dbContext.Orders.AddAsync(order);
         }
 
+        // Both overloads return null when no matching order exists, by design (see
+        // IOfferRepository.GetAsync(string, int) for the same shape); the null-forgiving
+        // operator just restates that on purpose.
         async Task<Order> IOrderRepository.GetAsync(int id)
         {
-            return await dbContext.Orders
+            return (await dbContext.Orders
                 .Include(x => x.Customer)
                 .Include(x => x.Address)
                 .Include(x => x.OrderItems).ThenInclude(x => x.Book).ThenInclude(x => x.BookType)
                 .Include(x => x.OrderItems).ThenInclude(x => x.Book).ThenInclude(x => x.Condition)
                 .Include(x => x.OrderItems).ThenInclude(x => x.Book).ThenInclude(x => x.Genre)
                 .Include(x => x.OrderItems).ThenInclude(x => x.Book).ThenInclude(x => x.Publisher)
-                .SingleOrDefaultAsync(x => x.Id == id);
+                .SingleOrDefaultAsync(x => x.Id == id))!;
         }
 
         async Task<Order> IOrderRepository.GetAsync(int id, string sub)
         {
             // OrderItems and their Book are needed here so Order.Cancel() (ISSUE-16) can return
             // the withdrawn stock to each book.
-            return await dbContext.Orders
+            return (await dbContext.Orders
                 .Include(x => x.OrderItems).ThenInclude(x => x.Book)
-                .SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
+                .SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub))!;
         }
 
         async Task<IEnumerable<Book>> IOrderRepository.ListBestSellingBooksAsync(int count)
@@ -68,7 +71,10 @@ namespace Bookstore.Data.Repositories
                     OrdersTotal = x.Count()
                 }).SingleOrDefaultAsync();
 
-            if (statistics == null) return null;
+            // SingleOrDefaultAsync can only return null if the Orders table is empty; the
+            // null-forgiving operator matches that existing assumption rather than adding a new
+            // empty-store code path.
+            if (statistics == null) return null!;
 
             // ISSUE-25: the rule for "past due" belongs to the order, not to this query. Counted
             // separately because the aggregate's predicate cannot be applied inside the grouped
@@ -98,9 +104,12 @@ namespace Bookstore.Data.Repositories
         // Only the items whose cost the domain knows — see OrderStatistics.GrossProfitTotal.
         private static Task<decimal> SumGrossProfitAsync(IQueryable<Order> orders)
         {
+            // The preceding Where already excludes null CostAmount; EF translates both to SQL, so
+            // the compiler cannot see the two are linked. The null-forgiving Value access matches
+            // that existing guarantee.
             return orders.SelectMany(x => x.OrderItems)
                 .Where(x => x.CostAmount != null)
-                .SumAsync(x => (x.PriceAmount - x.CostAmount.Value) * x.QuantityValue);
+                .SumAsync(x => (x.PriceAmount - x.CostAmount!.Value) * x.QuantityValue);
         }
 
         private static Task<decimal> SumSubTotalWithKnownCostAsync(IQueryable<Order> orders)
