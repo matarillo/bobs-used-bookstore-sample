@@ -55,7 +55,7 @@ Bob's Used Bookstore は**中古書籍を顧客から買い取り、顧客に売
 | 在庫切れ | Out Of Stock | 在庫数が0 | — |
 | 在庫僅少（販売可） | Low Stock Still Available | 在庫数が1以上しきい値以下。**在庫切れに近づいている書籍を測る分析上の概念** | 含まない |
 
-> 「在庫僅少」が二つあるのは意図的である。**仕入担当**にとって「補充が必要な本」には売り切れた本も含まれるが、**分析**にとって「売り切れそうな本」に売り切れた本は含まれない。同じ問いではないため、別の名前を与えている（[13-read-models-and-statistics.md](design/domain/read-models.md) §2.1）。
+> 「在庫僅少」が二つあるのは意図的である。**仕入担当**にとって「補充が必要な本」には売り切れた本も含まれるが、**分析**にとって「売り切れそうな本」に売り切れた本は含まれない。同じ問いではないため、別の名前を与えている（[読み取りモデル](design/domain/read-models.md) §2.1）。
 
 ## 5. 金額と数量の語彙
 
@@ -106,10 +106,10 @@ Bob's Used Bookstore は**中古書籍を顧客から買い取り、顧客に売
 
 ## 8. 操作方針の語彙
 
-サービス層の「対象が見つからなかったとき」の扱いには、二つの方針が使い分けられている（[10-domain-services-and-policies.md](design/domain/services-and-policies.md) §3）。
+サービス層の「対象が見つからなかったとき」の扱いには、二つの方針が使い分けられている（[ドメインサービスとポリシー](design/domain/services-and-policies.md) §3）。
 
 | 日本語 | 英語 | 意味 |
 | --- | --- | --- |
 | 厳格な更新 | Strict update | 個別に指定された対象が存在しなければ失敗させる |
 | 寛容な操作 | Tolerant operation | 対象が存在しなければ「すでにその状態である」とみなして成功させる |
-| 単位作業 | Unit of Work | まとめて成功するかまとめて失敗するかの範囲（[03-building-blocks.md](design/domain/building-blocks.md) §5） |
+| 単位作業 | Unit of Work | まとめて成功するかまとめて失敗するかの範囲（[共通構成要素](design/domain/building-blocks.md) §5） |

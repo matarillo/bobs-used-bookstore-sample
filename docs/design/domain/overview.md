@@ -67,13 +67,13 @@ graph TB
 
 | 識別子 | 集約 | ルート | 内部エンティティ | 識別の鍵 | 文書 |
 | --- | --- | --- | --- | --- | --- |
-| `AGG-REFDATA` | 参照データ項目 | ReferenceDataItem | — | 識別子 | [04](aggregate-reference-data.md) |
-| `AGG-BOOK` | 書籍 | Book | — | 識別子 | [05](aggregate-book.md) |
-| `AGG-CUSTOMER` | 顧客 | Customer | — | 主体識別子 (Sub) | [06](aggregate-customer-address.md) |
-| `AGG-ADDRESS` | 住所 | Address | — | 識別子 ＋ 所有顧客 | [06](aggregate-customer-address.md) |
-| `AGG-CART` | 買い物かご | ShoppingCart | ShoppingCartItem | かご相関識別子 | [07](aggregate-shopping-cart.md) |
-| `AGG-ORDER` | 注文 | Order | OrderItem | 識別子 | [08](aggregate-order.md) |
-| `AGG-OFFER` | 買取オファー | Offer | — | 識別子 | [09](aggregate-offer.md) |
+| `AGG-REFDATA` | 参照データ項目 | ReferenceDataItem | — | 識別子 | [AGG-REFDATA](aggregate-reference-data.md) |
+| `AGG-BOOK` | 書籍 | Book | — | 識別子 | [AGG-BOOK](aggregate-book.md) |
+| `AGG-CUSTOMER` | 顧客 | Customer | — | 主体識別子 (Sub) | [AGG-CUSTOMER / AGG-ADDRESS](aggregate-customer-address.md) |
+| `AGG-ADDRESS` | 住所 | Address | — | 識別子 ＋ 所有顧客 | [AGG-CUSTOMER / AGG-ADDRESS](aggregate-customer-address.md) |
+| `AGG-CART` | 買い物かご | ShoppingCart | ShoppingCartItem | かご相関識別子 | [AGG-CART](aggregate-shopping-cart.md) |
+| `AGG-ORDER` | 注文 | Order | OrderItem | 識別子 | [AGG-ORDER](aggregate-order.md) |
+| `AGG-OFFER` | 買取オファー | Offer | — | 識別子 | [AGG-OFFER](aggregate-offer.md) |
 
 ## 5. アクター
 
@@ -93,11 +93,11 @@ graph TB
 
 | インタフェース | 責務 | ドメイン上の位置づけ |
 | --- | --- | --- |
-| `IUnitOfWork` | 一連の変更をまとめて確定する | 整合性境界の宣言（[03](building-blocks.md) §5） |
+| `IUnitOfWork` | 一連の変更をまとめて確定する | 整合性境界の宣言（[共通構成要素](building-blocks.md) §5） |
 | `IFileService` | 表紙画像の保存・削除 | 外部資源参照の管理 |
 | `IImageResizeService` | 画像の寸法調整 | 表示都合の変換 |
 | `IImageValidationService` | 画像の安全性判定 | 差し替え可能なポリシー [POL-IMAGE-SAFETY](services-and-policies.md) |
-| 各 `I*Repository` | 集約の取得と登録 | 永続化の抽象（[10](services-and-policies.md) §4） |
+| 各 `I*Repository` | 集約の取得と登録 | 永続化の抽象（[ドメインサービスとポリシー](services-and-policies.md) §4） |
 
 ## 7. 二つの流れの詳細
 
