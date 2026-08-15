@@ -13,7 +13,7 @@ namespace Bookstore.Domain.Orders
 
         Task<OrderStatistics> GetStatisticsAsync();
 
-        Task<int> CreateOrderAsync(CreateOrderDto createOrderDto);
+        Task<CreateOrderResult> CreateOrderAsync(CreateOrderDto createOrderDto);
 
         Task AcceptOrderAsync(int orderId);
 
@@ -59,30 +59,40 @@ namespace Bookstore.Domain.Orders
             return (await orderRepository.GetStatisticsAsync()) ?? new OrderStatistics();
         }
 
-        public async Task<int> CreateOrderAsync(CreateOrderDto dto)
+        public async Task<CreateOrderResult> CreateOrderAsync(CreateOrderDto dto)
         {
             var shoppingCart = await shoppingCartRepository.GetAsync(dto.CorrelationId);
 
             var customer = await customerRepository.GetAsync(dto.CustomerSub);
 
+            // INV-ORDER-06, revised by ISSUE-11: throws if there is nothing in stock to order,
+            // instead of silently placing an order with zero items. Items skipped because they
+            // are out of stock are reported back so the caller can tell the customer.
+            var itemsToOrder = shoppingCart.GetItemsForNewOrder();
+            var skippedItems = shoppingCart.GetOutOfStockWantedItems();
+
             var order = new Order(customer.Id, dto.AddressId);
 
             await orderRepository.AddAsync(order);
 
-            shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.ExcludeOutOfStockItems).ToList().ForEach(x =>
+            foreach (var item in itemsToOrder)
             {
-                order.AddOrderItem(x.Book, x.Quantity);
+                order.AddOrderItem(item.Book, item.Quantity);
 
-                x.Book.ReduceStockLevel(x.Quantity);
+                item.Book.ReduceStockLevel(item.Quantity);
 
-                shoppingCart.RemoveShoppingCartItemById(x.Id);
-            });
+                shoppingCart.RemoveShoppingCartItemById(item.Id);
+            }
 
-            // Because each repository implements a unit of work, changes to the shopping cart and to stock levels 
+            // Because each repository implements a unit of work, changes to the shopping cart and to stock levels
             // are captured by the unit of work and can be persisted by called SaveChangesAsync on _any_ repository.
             await orderRepository.SaveChangesAsync();
 
-            return order.Id;
+            var skippedItemDtos = skippedItems
+                .Select(x => new SkippedOrderItemDto(x.BookId, x.Book.Name, x.Quantity))
+                .ToList();
+
+            return new CreateOrderResult(order.Id, skippedItemDtos);
         }
 
         public async Task AcceptOrderAsync(int orderId)

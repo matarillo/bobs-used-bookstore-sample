@@ -79,6 +79,31 @@
         {
             return GetShoppingCartItems(filter).Sum(x => x.SubTotal);
         }
+
+        // INV-ORDER-06, revised by ISSUE-11: the items eligible for a new order are those the
+        // customer wants to buy and that are currently in stock. An order needs at least one
+        // item, so this throws instead of handing back an empty list — whether the cart itself
+        // is empty or everything in it is out of stock amounts to the same "nothing to order".
+        public IReadOnlyList<ShoppingCartItem> GetItemsForNewOrder()
+        {
+            var items = GetShoppingCartItems(ShoppingCartItemFilter.ExcludeOutOfStockItems).ToList();
+
+            if (items.Count == 0)
+            {
+                throw new DomainException("There are no items in stock to place an order with.");
+            }
+
+            return items;
+        }
+
+        // RULE-CART-02, revised by ISSUE-11: the items the customer wants to buy that were left
+        // out of a new order because they are out of stock, so the caller can tell the customer
+        // which items were skipped. They stay in the cart rather than being removed — the
+        // customer may still want them once the book is back in stock.
+        public IReadOnlyList<ShoppingCartItem> GetOutOfStockWantedItems()
+        {
+            return ShoppingCartItems.Where(x => x.WantToBuy && x.Book.Quantity <= 0).ToList();
+        }
     }
 
     public enum ShoppingCartItemFilter
