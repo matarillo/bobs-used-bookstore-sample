@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>SCR-HOME — トップ</title>
+<meta name="layer" content="spec">
+<meta name="status" content="derived">
+<meta name="derived-from" content="4412aa1">
+<link rel="stylesheet" href="../wireframe.css">
+
+<div class="doc">
+
+<h1>SCR-HOME — トップ</h1>
+
+<table class="meta">
+  <tr><th>経路</th><td>/</td></tr>
+  <tr><th>定めるユースケース</th><td>
+    <a href="../../use-cases/customer-browse.md#uc-cust-01--トップページで売れ筋を見る">UC-CUST-01</a></td></tr>
+  <tr><th>フレーム</th><td>店頭</td></tr>
+</table>
+
+<h2>版面</h2>
+
+<div class="body-area">
+
+  <div class="split">
+    <div class="media"><span class="img wide"></span></div>
+    <div class="body">
+      <p class="screen-title">ようこそ</p>
+      <p>店の紹介（どんな本を扱うか）</p>
+      <p>本を売ることもできるという案内</p>
+      <span class="btn">本を探す</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <p class="screen-title">売れ筋</p>
+
+  <div class="cards">
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div><span class="link">見る</span></div>
+    </div>
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div><span class="link">見る</span></div>
+    </div>
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div><span class="link">見る</span></div>
+    </div>
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div><span class="link">見る</span></div>
+    </div>
+  </div>
+  <p class="empty"><span class="cond">0 件のとき</span> 近日ご紹介します</p>
+
+  <hr>
+
+  <div class="split reverse">
+    <div class="media"><span class="img wide"></span></div>
+    <div class="body">
+      <p class="screen-title">欲しい物リスト</p>
+      <p>後で買う本を控えておけるという案内</p>
+      <div class="row">
+        <span class="btn">欲しい物リスト</span>
+        <span class="btn">本を探す</span>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="cards">
+    <div class="card">
+      <div><b>新しい書名</b></div>
+      <div class="note">在庫は充実</div>
+      <div class="note">説明</div>
+    </div>
+    <div class="card">
+      <div><b>2 週間で届く</b></div>
+      <div class="note">配送は迅速</div>
+      <div class="note">説明</div>
+    </div>
+    <div class="card">
+      <div><b>問い合わせ対応</b></div>
+      <div class="note">担当がいます</div>
+      <div class="note">説明</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="split">
+    <div class="media"><span class="img wide"></span></div>
+    <div class="body">
+      <p class="screen-title">プライバシーポリシー</p>
+      <p>個人情報の扱いについての案内</p>
+      <span class="btn">プライバシー</span>
+    </div>
+  </div>
+
+</div>
+
+<h2>配置の意図</h2>
+
+<ul>
+  <li>売れ筋は<b>この画面の主役ではない</b>。紹介・売れ筋・欲しい物・特長・プライバシーの
+      5 つの節が同じ重みで縦に並び、売れ筋はその 2 番目に置かれる</li>
+  <li>紹介・欲しい物・プライバシーの 3 節は画像と文章の 2 段組で、
+      <b>画像の左右を交互に入れ替える</b>。同じ形の節が続くことを版面で示すため</li>
+  <li>売れ筋は 4 枚を横一列に並べ、縦に積まない。件数が固定であることを版面の形で示すため</li>
+  <li>売れ筋のカードに<b>売価を出さない</b>。ここは品揃えの印象を伝える場であり、
+      値段は書籍の詳細（<code>SCR-BOOK</code>）で見せる</li>
+  <li>特長の 3 枚だけは画像を持たず、見出し・副見出し・説明の 3 段で揃える</li>
+  <li>本を探す導線を紹介と欲しい物の 2 か所に置く。節を読み終えるたびに次へ進めるようにする</li>
+</ul>
+
+<h2>状態による差分</h2>
+
+<table class="diff">
+  <tr><th>状態</th><th>版面の変化</th></tr>
+  <tr><td>売れ筋が 4 件に満たない</td><td>ある分だけ枠が並ぶ。空の枠で埋めない</td></tr>
+  <tr><td>売れ筋が 0 件</td><td>枠が消え、「近日ご紹介します」だけが残る。他の 4 節は変わらない</td></tr>
+</table>
+
+</div>

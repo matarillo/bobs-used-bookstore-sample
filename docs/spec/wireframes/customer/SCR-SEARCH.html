@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>SCR-SEARCH — 書籍を探す</title>
+<meta name="layer" content="spec">
+<meta name="status" content="derived">
+<meta name="derived-from" content="4412aa1">
+<link rel="stylesheet" href="../wireframe.css">
+
+<div class="doc">
+
+<h1>SCR-SEARCH — 書籍を探す</h1>
+
+<table class="meta">
+  <tr><th>経路</th><td>/Search</td></tr>
+  <tr><th>定めるユースケース</th><td>
+    <a href="../../use-cases/customer-browse.md#uc-cust-02--書籍を探す">UC-CUST-02</a></td></tr>
+  <tr><th>フレーム</th><td>店頭</td></tr>
+</table>
+
+<h2>版面</h2>
+
+<div class="body-area">
+
+  <p class="screen-title">書籍を探す</p>
+
+  <div class="row">
+    <span class="grow"><span class="field"></span></span>
+    <span class="select short">書名</span>
+    <span class="btn">検索</span>
+  </div>
+
+  <p class="screen-title">検索結果</p>
+
+  <div class="cards">
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div>売価</div>
+    </div>
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div>在庫切れ</div>
+    </div>
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div>売価</div>
+    </div>
+    <div class="card">
+      <span class="img"></span>
+      <div>書名</div>
+      <div>売価</div>
+    </div>
+  </div>
+  <p><span class="repeat">同じ形の枠が並ぶ</span></p>
+
+  <p class="pager">‹ 1 2 3 ›</p>
+
+  <p class="empty"><span class="cond">0 件のとき</span> 見つかりません</p>
+
+</div>
+
+<h2>配置の意図</h2>
+
+<ul>
+  <li>検索語・並び順・「検索」を 1 行に収め、結果の直上に置く。
+      条件を変えて何度も引き直す画面であるため</li>
+  <li>行の中では<b>検索語の欄を最も広く取る</b>。並び順は既定のまま使われることが多く、
+      手が入るのは検索語であるため</li>
+  <li>結果は表ではなく<b>枠を並べた格子</b>にする。1 件あたり表紙画像が主で、
+      文字は書名と値段しかないため、行に並べるより面で並べるほうが数を見渡せる</li>
+  <li><b>売価の位置に「在庫切れ」を出す。</b>買えるかどうかは値段と同じ場所で判断されるので、
+      在庫の断りを別の欄に分けない</li>
+  <li>ページ送りは結果の<b>下だけ</b>に置く。上には検索の行があり、条件を変える手と
+      頁を送る手を同じ高さに並べない</li>
+  <li>0 件のときは結果の見出しごと消し、その場所に文言を出す</li>
+</ul>
+
+<h2>状態による差分</h2>
+
+<table class="diff">
+  <tr><th>状態</th><th>版面の変化</th></tr>
+  <tr><td>在庫切れの書籍</td><td>売価の位置が「在庫切れ」に替わる。枠は除かれない</td></tr>
+  <tr><td>0 件</td><td>「検索結果」の見出し・格子・ページ送りが消え、「見つかりません」だけが残る。
+      検索の行は残る</td></tr>
+</table>
+
+</div>
