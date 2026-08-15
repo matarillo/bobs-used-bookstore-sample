@@ -28,7 +28,7 @@ namespace Bookstore.Domain.Orders
 
         public decimal Tax => SubTotal * 0.1m;
 
-        public decimal SubTotal => OrderItems.Sum(x => x.Book.Price);
+        public decimal SubTotal => OrderItems.Sum(x => x.SubTotal);
 
         public decimal Total => SubTotal + Tax;
 

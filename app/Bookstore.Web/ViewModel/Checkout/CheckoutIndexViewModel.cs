@@ -34,6 +34,7 @@ namespace Bookstore.Web.ViewModel.Checkout
                 BookName = x.Book.Name,
                 ImageUrl = x.Book.CoverImageUrl,
                 Price = x.Book.Price,
+                Quantity = x.Quantity,
                 OutOfStock = x.Book.Quantity <= 0
             }).ToList();
 
@@ -67,6 +68,10 @@ namespace Bookstore.Web.ViewModel.Checkout
         public string BookName { get; set; }
 
         public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
+
+        public decimal SubTotal => Price * Quantity;
 
         public string ImageUrl { get; set; }
 

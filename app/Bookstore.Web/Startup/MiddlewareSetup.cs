@@ -51,12 +51,15 @@ namespace Bookstore.Web.Startup
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 await context.Database.EnsureCreatedAsync();
 
-                // Check if RowVersion columns exist, if not recreate database
+                // EnsureCreated does not alter an existing schema, so a database created by an
+                // earlier version of the application can be missing a column (RowVersion, or the
+                // OrderItem.Price added for ISSUE-17). SQL Server reports that as error 207,
+                // "Invalid column name"; the database is recreated in that case.
                 try
                 {
                     await context.OrderItem.FirstOrDefaultAsync();
                 }
-                catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Message.Contains("RowVersion"))
+                catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Number == 207)
                 {
                     await context.Database.EnsureDeletedAsync();
                     await context.Database.EnsureCreatedAsync();

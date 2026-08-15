@@ -4,6 +4,7 @@ namespace Bookstore.Domain.Tests.Builders;
 
 public class BookBuilder
 {
+    private int id;
     private string name = "test";
     private string author = "author";
     private string isbn = "12345678";
@@ -20,9 +21,18 @@ public class BookBuilder
     public Book Build()
     {
         return new Book(name, author, isbn, publisherId, bookTypeId, genreId, conditionId, price, quantity, year,
-            summary, coverImageUrl);
+            summary, coverImageUrl)
+        {
+            Id = id
+        };
     }
-    
+
+    public BookBuilder Id(int value)
+    {
+        id = value;
+        return this;
+    }
+
     public BookBuilder Name(string value)
     {
         name = value;

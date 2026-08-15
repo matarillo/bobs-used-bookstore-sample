@@ -63,7 +63,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
                     Condition = orderItem.Book.Condition.Text,
                     Genre = orderItem.Book.Genre.Text,
                     Name = orderItem.Book.Name,
-                    Price = orderItem.Book.Price,
+                    Price = orderItem.Price,
+                    Quantity = orderItem.Quantity,
                     Publisher = orderItem.Book.Publisher.Text
                 });
             }
@@ -85,5 +86,9 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
         public string Condition { get; set; }
 
         public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
+
+        public decimal SubTotal => Price * Quantity;
     }
 }

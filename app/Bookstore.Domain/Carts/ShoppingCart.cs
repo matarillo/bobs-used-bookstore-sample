@@ -23,13 +23,27 @@
             return ShoppingCartItems.Where(x => x.WantToBuy == false);
         }
 
+        // INV-CART-04: a book occupies a single line of the shopping cart. Adding it again
+        // increases the quantity of the existing line rather than creating a second one.
         public void AddItemToShoppingCart(int bookId, int quantity)
         {
-            ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, quantity, true));
+            var existingItem = ShoppingCartItems.FirstOrDefault(x => x.BookId == bookId && x.WantToBuy);
+
+            if (existingItem == null)
+            {
+                ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, quantity, true));
+            }
+            else
+            {
+                existingItem.Quantity += quantity;
+            }
         }
 
+        // INV-CART-03 keeps the quantity of a wish list item at 1, so a duplicate is simply not added.
         public void AddItemToWishlist(int bookId)
         {
+            if (ShoppingCartItems.Any(x => x.BookId == bookId && x.WantToBuy == false)) return;
+
             ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, 1, false));
         }
 
@@ -39,7 +53,19 @@
 
             if (wishListItem == null) return;
 
-            wishListItem.WantToBuy = true;
+            var existingItem = ShoppingCartItems.FirstOrDefault(x => x.BookId == wishListItem.BookId && x.WantToBuy);
+
+            if (existingItem == null)
+            {
+                wishListItem.WantToBuy = true;
+            }
+            else
+            {
+                // Merging into the existing line keeps INV-CART-04 intact.
+                existingItem.Quantity += wishListItem.Quantity;
+
+                ShoppingCartItems.Remove(wishListItem);
+            }
         }
 
         public void RemoveShoppingCartItemById(int shoppingCartItemId)
@@ -51,7 +77,7 @@
 
         public decimal GetSubTotal(ShoppingCartItemFilter filter)
         {
-            return GetShoppingCartItems(filter).Sum(x => x.Book.Price);
+            return GetShoppingCartItems(filter).Sum(x => x.SubTotal);
         }
     }
 

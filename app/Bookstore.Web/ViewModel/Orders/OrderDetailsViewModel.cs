@@ -30,7 +30,8 @@ namespace Bookstore.Web.ViewModel.Orders
                 BookId = x.BookId,
                 BookName = x.Book.Name,
                 ImageUrl = x.Book.CoverImageUrl,
-                Price = x.Book.Price
+                Price = x.Price,
+                Quantity = x.Quantity
             }).ToList();
         }
     }
@@ -44,5 +45,9 @@ namespace Bookstore.Web.ViewModel.Orders
         public string BookName { get; set; }
 
         public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
+
+        public decimal SubTotal => Price * Quantity;
     }
 }

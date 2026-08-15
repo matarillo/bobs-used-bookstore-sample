@@ -63,6 +63,12 @@
                                 @item.Price.ToString("C")
                             </td>
                             <td>
+                                &times; @item.Quantity
+                            </td>
+                            <td>
+                                @item.SubTotal.ToString("C")
+                            </td>
+                            <td>
                                 <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-shoppingCartItemId="@item.ShoppingCartItemId">Remove</button>
                             </td>
                         </tr>

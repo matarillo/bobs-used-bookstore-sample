@@ -6,7 +6,7 @@ namespace Bookstore.Web.ViewModel.ShoppingCart
 {
     public class ShoppingCartIndexViewModel
     {
-        public decimal TotalPrice => ShoppingCartItems.Sum(x => x.Price);
+        public decimal TotalPrice => ShoppingCartItems.Sum(x => x.SubTotal);
 
         public List<ShoppingCartIndexItemViewModel> ShoppingCartItems { get; set; } = new List<ShoppingCartIndexItemViewModel>();
 
@@ -21,6 +21,7 @@ namespace Bookstore.Web.ViewModel.ShoppingCart
                         BookId = c.Book.Id,
                         ImageUrl = c.Book.CoverImageUrl,
                         Price = c.Book.Price,
+                        Quantity = c.Quantity,
                         BookName = c.Book.Name,
                         ShoppingCartItemId = c.Id,
                         StockLevel = c.Book.Quantity
@@ -37,6 +38,10 @@ namespace Bookstore.Web.ViewModel.ShoppingCart
         public string BookName { get; set; }
 
         public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
+
+        public decimal SubTotal => Price * Quantity;
 
         public string ImageUrl { get; set; }
 
