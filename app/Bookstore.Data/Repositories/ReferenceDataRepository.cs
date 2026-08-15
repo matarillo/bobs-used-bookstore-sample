@@ -21,9 +21,12 @@ namespace Bookstore.Data.Repositories
             await dbContext.ReferenceData.AddAsync(item);
         }
 
+        // Returns null when no matching item exists; the interface keeps the return type
+        // non-nullable (see IOfferRepository.GetAsync(string, int) for the same shape), so the
+        // null-forgiving operator just restates that on purpose.
         async Task<ReferenceDataItem> IReferenceDataRepository.GetAsync(int id)
         {
-            return await dbContext.ReferenceData.FindAsync(id);
+            return (await dbContext.ReferenceData.FindAsync(id))!;
         }
 
         async Task<IEnumerable<ReferenceDataItem>> IReferenceDataRepository.FullListAsync()

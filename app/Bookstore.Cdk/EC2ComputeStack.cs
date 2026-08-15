@@ -14,24 +14,28 @@ using Constructs;
 
 public class EC2ComputeStackProps : StackProps
 {
-    public IVpc Vpc { get; set; }
+    // Always supplied by the caller (see Program.cs); there is no meaningful default.
+    public IVpc Vpc { get; set; } = null!;
 
-    public DatabaseInstance Database { get; set; }
+    public DatabaseInstance Database { get; set; } = null!;
 
-    public Bucket ImageBucket { get; set; }
+    public Bucket ImageBucket { get; set; } = null!;
 
-    public UserPool WebAppUserPool { get; set; }
+    public UserPool WebAppUserPool { get; set; } = null!;
 }
 
 public class EC2ComputeStack : Stack
 {
-    private Role Ec2Role;
-    private Asset ServerConfigScriptAsset;
-    private Asset WebAppAsset;
-    private Asset SslConfigAsset;
-    private Asset WebAppVirtualHostConfigAsset;
-    private Asset KestrelServiceAsset;
-    private Instance_ Instance;
+    // Assigned by the Create*/Upload* helpers called from the constructor below, not by
+    // field initializers or the constructor body itself, so nullable analysis cannot see they
+    // are always set before the constructor returns.
+    private Role Ec2Role = null!;
+    private Asset ServerConfigScriptAsset = null!;
+    private Asset WebAppAsset = null!;
+    private Asset SslConfigAsset = null!;
+    private Asset WebAppVirtualHostConfigAsset = null!;
+    private Asset KestrelServiceAsset = null!;
+    private Instance_ Instance = null!;
 
     internal EC2ComputeStack(Construct scope, string id, EC2ComputeStackProps props) : base(scope, id, props)
     {

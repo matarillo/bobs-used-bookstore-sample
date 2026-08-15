@@ -45,11 +45,11 @@ namespace Bookstore.Web.ViewModel.Search
             GenreName = book.Genre.Text;
             TypeName = book.BookType.Text;
             ConditionName = book.Condition.Text;
-            Url = book.CoverImageUrl;
+            Url = book.CoverImageUrl!;
             MinPrice = book.Price.Amount;
             Quantity = book.Quantity.Value;
             BookId = book.Id;
-            Summary = book.Summary;
+            Summary = book.Summary!;
         }
     }
 }

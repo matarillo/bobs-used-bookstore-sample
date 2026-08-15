@@ -16,13 +16,16 @@ public class CoreStack : Stack
 {
     private const string userPoolCallbackUrlRoot = "https://localhost:5000";
 
-    public Bucket ImageBucket { get; private set; }
+    // Assigned by the Create* helpers called from the constructor below, not by field/property
+    // initializers or the constructor body itself, so nullable analysis cannot see they are
+    // always set before the constructor returns.
+    public Bucket ImageBucket { get; private set; } = null!;
 
-    public UserPool WebAppUserPool { get; private set; }
+    public UserPool WebAppUserPool { get; private set; } = null!;
 
-    private CfnUserPoolGroup CognitoAdminUserGroup;
+    private CfnUserPoolGroup CognitoAdminUserGroup = null!;
 
-    internal CoreStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
+    internal CoreStack(Construct scope, string id, IStackProps? props = null) : base(scope, id, props)
     {
         this.CreateImageS3Bucket();
         this.CreateCloudFrontDistribution();
@@ -179,7 +182,7 @@ public class CoreStack : Stack
 
         var adminUserAttachment = new CfnUserPoolUserToGroupAttachment(this, "AttachAdminUserToAdministratorsGroup", new CfnUserPoolUserToGroupAttachmentProps
         {
-            GroupName = this.CognitoAdminUserGroup.GroupName,
+            GroupName = this.CognitoAdminUserGroup.GroupName!,
             Username = UserName,
             UserPoolId = this.WebAppUserPool.UserPoolId
         });

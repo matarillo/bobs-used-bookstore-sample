@@ -16,7 +16,9 @@ namespace Bookstore.Domain.ReferenceData
         // already filed under could quietly become a publisher.
         public ReferenceDataType DataType { get; private set; }
 
-        public string Text { get; private set; }
+        // The empty constructor above (required by EF Core) leaves this unset; the real
+        // constructor and Rename are the only places that assign it.
+        public string Text { get; private set; } = null!;
 
         // The only thing about an item that can change: what it is called.
         public void Rename(string text)

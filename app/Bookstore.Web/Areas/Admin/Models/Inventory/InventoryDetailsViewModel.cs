@@ -11,7 +11,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Author = book.Author;
             BookType = book.BookType.Text;
             Condition = book.Condition.Text;
-            CoverImageUrl = book.CoverImageUrl;
+            CoverImageUrl = book.CoverImageUrl!;
             Genre = book.Genre.Text;
             Id = book.Id;
             ISBN = book.ISBN;
@@ -19,7 +19,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Price = book.Price.Amount;
             Publisher = book.Publisher.Text;
             Quantity = book.Quantity.Value;
-            Summary = book.Summary;
+            Summary = book.Summary!;
             Year = book.Year.GetValueOrDefault();
             SourceOfferId = book.SourceOfferId;
             PurchaseCost = book.PurchaseCost?.Amount;
@@ -28,25 +28,25 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
         public int Year { get; set; }
 
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } = null!;
 
-        public string BookType { get; set; }
+        public string BookType { get; set; } = null!;
 
-        public string Genre { get; set; }
+        public string Genre { get; set; } = null!;
 
-        public string Condition { get; set; }
+        public string Condition { get; set; } = null!;
 
-        public string CoverImageUrl { get; set; }
+        public string CoverImageUrl { get; set; } = null!;
 
-        public string Summary { get; set; }
+        public string Summary { get; set; } = null!;
 
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = null!;
 
         public decimal Price { get; set; }
 

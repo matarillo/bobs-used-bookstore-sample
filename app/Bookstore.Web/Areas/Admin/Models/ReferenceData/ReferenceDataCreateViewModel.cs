@@ -19,7 +19,7 @@ namespace Bookstore.Web.Areas.Admin.Models.ReferenceData
 
         public ReferenceDataType SelectedReferenceDataType { get; set; }
 
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         // Nullable for the same reason as the other server-filled SelectListItem collections in
         // this codebase (see InventoryCreateUpdateViewModel/ResaleCreateViewModel): nothing ever

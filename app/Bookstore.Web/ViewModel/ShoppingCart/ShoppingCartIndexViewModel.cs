@@ -19,7 +19,7 @@ namespace Bookstore.Web.ViewModel.ShoppingCart
                 .Select(c => new ShoppingCartIndexItemViewModel
                     {
                         BookId = c.Book.Id,
-                        ImageUrl = c.Book.CoverImageUrl,
+                        ImageUrl = c.Book.CoverImageUrl!,
                         Price = c.Book.Price.Amount,
                         Quantity = c.Quantity.Value,
                         BookName = c.Book.Name,
@@ -35,7 +35,7 @@ namespace Bookstore.Web.ViewModel.ShoppingCart
 
         public long BookId { get; set; }
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
         public decimal Price { get; set; }
 
@@ -43,7 +43,7 @@ namespace Bookstore.Web.ViewModel.ShoppingCart
 
         public decimal SubTotal => Price * Quantity;
 
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = null!;
 
         public int StockLevel { get; set; }
 

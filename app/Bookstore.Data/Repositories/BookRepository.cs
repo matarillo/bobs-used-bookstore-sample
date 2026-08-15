@@ -112,27 +112,33 @@ namespace Bookstore.Data.Repositories
 
         async Task IBookRepository.UpdateAsync(Book book)
         {
+            // FindAsync(book.Id) is null-checked against nothing here because updating an id that
+            // does not exist is not a case this method has ever handled; the null-forgiving
+            // operator just keeps that pre-existing behaviour instead of introducing a new guard.
             var existing = await dbContext.Book.FindAsync(book.Id);
 
-            dbContext.Entry(existing).CurrentValues.SetValues(book);
+            dbContext.Entry(existing!).CurrentValues.SetValues(book);
 
             if (string.IsNullOrWhiteSpace(book.CoverImageUrl))
             {
-                dbContext.Entry(existing).Property(x => x.CoverImageUrl).IsModified = false;
+                dbContext.Entry(existing!).Property(x => x.CoverImageUrl).IsModified = false;
             }
         }
 
 
         async Task<BookStatistics> IBookRepository.GetStatisticsAsync()
         {
-            return await dbContext.Book
+            // SingleOrDefaultAsync can only return null if the Book table is empty, which never
+            // happens once the store has stocked anything; the null-forgiving operator matches
+            // the existing assumption rather than adding a new empty-store code path.
+            return (await dbContext.Book
                 .GroupBy(x => 1)
                 .Select(x => new BookStatistics
                 {
                     LowStockStillAvailable = x.Count(y => y.StockQuantity > 0 && y.StockQuantity <= Book.LowBookThreshold),
                     OutOfStock = x.Count(y => y.StockQuantity == 0),
                     StockTotal = x.Count()
-                }).SingleOrDefaultAsync();
+                }).SingleOrDefaultAsync())!;
         }
     }
 }

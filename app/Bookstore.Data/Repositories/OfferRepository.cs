@@ -22,7 +22,10 @@ namespace Bookstore.Data.Repositories
         {
             var startOfMonth = DateTime.UtcNow.StartOfMonth();
 
-            return await dbContext.Offer
+            // SingleOrDefaultAsync can only return null if the Offer table is empty; the
+            // null-forgiving operator matches that existing assumption rather than adding a new
+            // empty-store code path.
+            return (await dbContext.Offer
                 .GroupBy(x => 1)
                 .Select(x => new OfferStatistics
                 {
@@ -36,7 +39,7 @@ namespace Bookstore.Data.Repositories
                     PendingOffersValue = x.Sum(y => y.OfferStatus == OfferStatus.PendingApproval ? y.BookPriceAmount : 0),
                     PurchasesThisMonth = x.Sum(y => y.PaidOn >= startOfMonth ? y.BookPriceAmount : 0),
                     PurchasesTotal = x.Sum(y => y.PaidOn != null ? y.BookPriceAmount : 0)
-                }).SingleOrDefaultAsync();
+                }).SingleOrDefaultAsync())!;
         }
 
         async Task IOfferRepository.AddAsync(Offer offer)
@@ -44,19 +47,24 @@ namespace Bookstore.Data.Repositories
             await dbContext.Offer.AddAsync(offer);
         }
 
-        Task<Offer> IOfferRepository.GetAsync(int id)
+        // Both overloads return null when no matching offer exists, by design (see
+        // IOfferRepository.GetAsync(string, int) above); the null-forgiving operator just
+        // restates that on purpose. Rewritten as async/await (instead of returning the
+        // EF Task<Offer?> directly) because the null-forgiving operator cannot bridge
+        // Task<Offer?> to Task<Offer> the way it can for a plain value.
+        async Task<Offer> IOfferRepository.GetAsync(int id)
         {
-            return dbContext.Offer.Include(x => x.Customer).SingleOrDefaultAsync(x => x.Id == id);
+            return (await dbContext.Offer.Include(x => x.Customer).SingleOrDefaultAsync(x => x.Id == id))!;
         }
 
-        Task<Offer> IOfferRepository.GetAsync(string sub, int id)
+        async Task<Offer> IOfferRepository.GetAsync(string sub, int id)
         {
-            return dbContext.Offer
+            return (await dbContext.Offer
                 .Include(x => x.BookType)
                 .Include(x => x.Genre)
                 .Include(x => x.Condition)
                 .Include(x => x.Publisher)
-                .SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub);
+                .SingleOrDefaultAsync(x => x.Id == id && x.Customer.Sub == sub))!;
         }
 
         async Task<PagedResult<Offer>> IOfferRepository.ListAsync(OfferFilters filters, int pageIndex, int pageSize)

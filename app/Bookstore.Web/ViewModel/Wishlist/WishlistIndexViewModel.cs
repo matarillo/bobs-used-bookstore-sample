@@ -17,7 +17,7 @@ namespace Bookstore.Web.ViewModel.Wishlist
                 {
                     ShoppingCartItemId = x.Id,
                     BookName = x.Book.Name,
-                    ImageUrl = x.Book.CoverImageUrl,
+                    ImageUrl = x.Book.CoverImageUrl!,
                     Price = x.Book.Price.Amount
                 }).ToList();
         }
@@ -27,9 +27,9 @@ namespace Bookstore.Web.ViewModel.Wishlist
     {
         public int ShoppingCartItemId { get; set; }
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = null!;
 
         public decimal Price { get; set; }
     }
