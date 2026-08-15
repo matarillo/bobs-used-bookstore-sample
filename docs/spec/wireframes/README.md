@@ -109,8 +109,11 @@ wireframes/
 | ボタン | `<span class="btn">保存</span>` |
 | 主たるボタン | `<span class="btn primary">注文する</span>` |
 | リンク | `<span class="link">詳細</span>` |
-| 自由入力 | `<span class="field"></span>`（短い欄は `field short`） |
+| 自由入力 | `<span class="field"></span>`（短い欄は `field short`、複数行は `field multiline`） |
 | 選択 | `<span class="select">選択</span>` |
+| 書き換えられない欄 | `field readonly` ／ `select disabled` |
+| ファイルを選ぶ欄 | `<span class="file">ファイルを選ぶ</span>` |
+| 印（納期超過など） | `<span class="badge">納期超過</span>` |
 | ラジオ | `<span class="radio">…</span>`（選択済は `radio on`） |
 | チェック | `<span class="check">…</span>`（チェック済は `check on`） |
 | 画像 | `<span class="img"></span>` |
@@ -130,13 +133,14 @@ wireframes/
 | 領域 | `<section class="region"><span class="label">配送先</span>…</section>` |
 | 横並び | `<div class="row">` ／ 伸びる要素に `grow` ／ 右端に寄せる要素に `right` |
 | 縦積み | `<div class="stack">` |
-| 同じ形のものを横に並べる | `<div class="cards"><div class="card">…</div></div>` |
+| 同じ形のものを横に並べる | `<div class="cards"><div class="card">…</div></div>`。3 列に折り返すときは `cards cols3`、見出し付きの札は `<span class="label">` |
 | 主従の 2 段組 | `<div class="split"><div class="media">…</div><div class="body">…</div></div>`。画像を右に置くときは `split reverse` |
 | 明細表 | `<table>`。列の重みは `u1`〜`u8`（12 分割）、右寄せは `num` |
 | 合計 | `<p class="total">` |
 | ページ送り | `<p class="pager">‹ 1 2 3 ›</p>` |
 | 進行の表示 | `<ol class="steps">`。現在地に `aria-current="step"` |
-| 入力フォーム | `<div class="form-group"><span class="name">項目</span>…`。**ラベルは欄の上**。2 列に割るときは `<div class="form-pair">` で包む |
+| 入力フォーム | `<div class="form-group"><span class="name">項目</span>…`。**ラベルは欄の上**。項目を 2 列に割るときは `<div class="form-pair">` で包む |
+| 対等な 2 段組 | `<div class="cols2">`。中にそれぞれ複数の項目を持てる |
 | ラベルと値の対（表示専用） | `<div class="kv"><span class="name">状態</span><span>受付待ち</span></div>` |
 | 区切り | `<hr>` |
 | 確認ダイアログ | `<div class="dialog">` を本文の後に置く |

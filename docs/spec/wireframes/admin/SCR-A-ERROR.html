@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>SCR-A-ERROR — エラー（管理）</title>
+<meta name="layer" content="spec">
+<meta name="status" content="derived">
+<meta name="derived-from" content="4412aa1">
+<link rel="stylesheet" href="../wireframe.css">
+
+<div class="doc">
+
+<h1>SCR-A-ERROR — エラー（管理）</h1>
+
+<table class="meta">
+  <tr><th>経路</th><td>/Admin/Error</td></tr>
+  <tr><th>定めるユースケース</th><td><span class="empty">無い（下記）</span></td></tr>
+  <tr><th>フレーム</th><td>管理</td></tr>
+</table>
+
+<p class="note"><b>この画面にユースケースは無い。</b>アクターが目指して来る画面ではなく、
+<a href="../../conventions.md">横断的な約束事</a> §5 の「想定外の失敗」の落ち先であるため。
+どの操作がここへ落ちるかは同 §5 が定める。</p>
+
+<h2>版面</h2>
+
+<div class="body-area">
+
+  <p class="actions center">
+    <b>おっと</b><br>
+    エラーコード　値<br>
+    エラーが発生しました
+  </p>
+
+  <div class="actions center">
+    <span class="btn">前の画面へ戻る</span>
+    <span class="btn">トップへ</span>
+  </div>
+
+</div>
+
+<h2>配置の意図</h2>
+
+<ul>
+  <li><b>店頭のエラー画面（<code>SCR-ERROR</code>）と作りが違う。</b>
+      こちらは中央寄せの短い面で、開発者向けの説明を持たない。
+      使うのが店の中の人だけであり、詳しい情報は記録側で追うためである</li>
+  <li>エラーコードを見出しと本文の間に置く。<b>問い合わせのときに読み上げられる値</b>であり、
+      3 行のうち唯一その場に固有の情報である</li>
+  <li><b>出口を 2 つ、中央に並べて置く。</b>店頭側は出口を持たないが、
+      こちらは仕事の途中で落ちた人を戻す必要がある</li>
+  <li>「トップへ」の行き先は<b>店頭のトップ</b>であり、管理画面ではない。
+      版面はその区別を示さないが、押した先が管理の外へ出ることは意図した振る舞いではない
+      （<a href="../../../product/open-questions.md">Q-07</a> の一部として扱う）</li>
+</ul>
+
+<h2>状態による差分</h2>
+
+<table class="diff">
+  <tr><th>状態</th><th>版面の変化</th></tr>
+  <tr><td>エラーコードの値</td><td>2 行目の値だけが替わる。版面の形は変わらない</td></tr>
+</table>
+
+</div>

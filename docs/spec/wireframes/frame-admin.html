@@ -26,13 +26,17 @@
     <span>参照データ</span>
     <span class="right">
       <span>利用者名</span>
-      <span>ログアウト</span>
+      <span><span class="link">店頭へ</span></span>
+      <span><span class="link">ログアウト</span></span>
     </span>
   </div>
   <div class="frame-banner">
     <span class="cond">直前の操作が成功したとき</span> 通知バナー
   </div>
   <div class="body-area"></div>
+  <div class="frame-footer">
+    <div class="note">© 年 Bob's Used Books ｜ <span class="link">プライバシー</span></div>
+  </div>
 </div>
 
 <h2>配置の意図</h2>
@@ -43,6 +47,12 @@
   <li>参照データは仕事の対象ではなく設定であるため、右端に離す</li>
   <li>通知バナーの居場所は店頭と同じ位置に固定する。見た目は別だが役割は同じ
       （<a href="../conventions.md">横断的な約束事</a> §1）</li>
+  <li><b>利用者名は導線を兼ねない。</b>店頭では自分の住所へ行けるが、
+      管理では名前を出すだけである。代わりに「店頭へ」を隣に置く</li>
+  <li>店章の行き先は注文一覧である（ダッシュボードではない）。
+      <b>管理画面を開いたときの既定画面</b>と同じ場所へ戻す</li>
+  <li>フッタは著作権表示 1 行だけで、案内の列を持たない。
+      仕事の導線はヘッダに揃っており、面の下端に重ねる必要がないため</li>
 </ul>
 
 </div>

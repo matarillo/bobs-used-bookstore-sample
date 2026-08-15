@@ -52,8 +52,9 @@ derived-from: 4412aa1
 | `SCR-A-REFDATA-EDIT` | 参照データの登録／改名 | `/Admin/ReferenceData/Create`, `/Update/{id}` | [UC-STAFF-18〜19](use-cases/staff-catalog.md) |
 | `SCR-A-ERROR` | エラー（管理） | `/Admin/Error` | [横断的な約束事](conventions.md) §5 |
 
-> **`SCR-A-BOOK-EDIT` は 1 画面 3 モード**である。「新規登録」「更新」「オファーからの棚入れ」で
-> 入力できる項目が変わる。ワイヤーフレームでは 3 モードを描き分けること（[ユースケース](use-cases/staff-catalog.md) §3）。
+> **`SCR-A-BOOK-EDIT` は 1 画面 3 モード**である。ただし**版面は 2 つ**でよい。
+> 「新規登録」と「更新」は同じ見出し・同じ項目で、初期値の有無だけが違う。
+> 「オファーからの棚入れ」だけが書き換えられる項目を変える（[ユースケース](use-cases/staff-catalog.md) §2）。
 
 ## 2. 画面遷移
 

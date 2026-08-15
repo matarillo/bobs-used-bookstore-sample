@@ -60,7 +60,7 @@ docs/
       frame-customer.html          共通フレーム（店頭）
       frame-admin.html             共通フレーム（管理）
       customer/                    店頭の画面
-      admin/                       管理の画面            … 未作成
+      admin/                       管理の画面
 
   design/                      【設計】内部構造
     README.md

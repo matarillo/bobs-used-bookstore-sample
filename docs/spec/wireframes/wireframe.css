@@ -67,6 +67,10 @@ hr { border: 0; border-top: 1px solid var(--line-weak); margin: 1.25rem 0; }
 .cards { display: flex; gap: .75rem; flex-wrap: wrap; }
 .cards > .card { flex: 1; border: 1px solid var(--line-weak); padding: .75rem; text-align: center; }
 .cards > .card .img { width: 100%; height: 5rem; }
+/* 3 列に折り返す。4 枚以上を横一列にしない */
+.cards.cols3 > .card { flex: 0 0 calc(33.333% - .5rem); text-align: left; }
+.card > .label { display: block; font-weight: 600; padding-bottom: .35rem; margin-bottom: .5rem;
+                 border-bottom: 1px solid var(--line-weak); }
 
 /* 主従の 2 段組（画像と説明など）。reverse で画像を右に置く */
 .split { display: flex; gap: 1.5rem; align-items: flex-start; }
@@ -92,6 +96,11 @@ hr { border: 0; border-top: 1px solid var(--line-weak); margin: 1.25rem 0; }
 .select { padding: 0 .4rem; color: var(--ink-weak); font-size: .9rem; }
 .select::after { content: "▾"; float: right; }
 .field.short, .select.short { width: 8rem; }
+.field.multiline { height: 4.5rem; }
+.field.readonly, .select.disabled { background: var(--fill); color: var(--ink-weak); }
+.file { display: block; border: 1px dashed var(--line); background: var(--fill-weak);
+        padding: .1rem .4rem; font-size: .9rem; color: var(--ink-weak); }
+.badge { display: inline-block; border: 1px solid var(--line); padding: 0 .4rem; font-size: .8rem; }
 
 .radio::before { content: "( )　"; }
 .radio.on::before { content: "(o)　"; }
@@ -144,6 +153,9 @@ th { background: var(--fill); font-size: .9rem; font-weight: 600; white-space: n
 .form-group > .name { display: block; font-size: .9rem; margin-bottom: .15rem; }
 .form-pair { display: flex; gap: 1.5rem; }
 .form-pair > .form-group { flex: 1; }
+/* 対等な 2 段組。中に複数の項目を持てる */
+.cols2 { display: flex; gap: 1.5rem; align-items: flex-start; }
+.cols2 > * { flex: 1; }
 .actions { margin-top: 1.5rem; }
 .actions.center { text-align: center; }
 

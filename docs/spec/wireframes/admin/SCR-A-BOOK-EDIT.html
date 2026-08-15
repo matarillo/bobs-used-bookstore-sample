@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>SCR-A-BOOK-EDIT — 書籍の登録／更新／棚入れ</title>
+<meta name="layer" content="spec">
+<meta name="status" content="derived">
+<meta name="derived-from" content="4412aa1">
+<link rel="stylesheet" href="../wireframe.css">
+
+<div class="doc">
+
+<h1>SCR-A-BOOK-EDIT — 書籍の登録／更新／棚入れ</h1>
+
+<table class="meta">
+  <tr><th>経路</th><td>/Admin/Inventory/Create, /Update/{id}, /CreateFromOffer/{id}</td></tr>
+  <tr><th>定めるユースケース</th><td>
+    <a href="../../use-cases/staff-catalog.md#uc-staff-14--書籍を手入力で登録する">UC-STAFF-14</a> /
+    <a href="../../use-cases/staff-catalog.md#uc-staff-15--書籍を更新する">UC-STAFF-15</a> /
+    <a href="../../use-cases/staff-catalog.md#uc-staff-16--支払済のオファーを棚入れする">UC-STAFF-16</a></td></tr>
+  <tr><th>フレーム</th><td>管理</td></tr>
+</table>
+
+<p class="note"><b>版面は 2 つである。</b>登録と更新は同じ見出し・同じ項目で、初期値の有無だけが違う
+（同じ作業の別状態）。棚入れは<b>書き換えられる項目が入れ替わる</b>ため別の版面とする
+（<a href="../README.md">書式</a> §4）。</p>
+
+<h2>版面 1 — 登録／更新</h2>
+
+<div class="body-area">
+
+  <p class="screen-title">書籍の登録／更新</p>
+
+  <p class="note"><span class="cond">保存できなかったとき</span> <span class="warn">メッセージ</span></p>
+
+  <div class="cols2">
+    <div>
+      <div class="form-group">
+        <span class="name">書名</span>
+        <span class="field"></span>
+        <span class="note"><span class="cond">入力に不備があるとき</span> <span class="warn">メッセージ</span></span>
+      </div>
+      <div class="form-group"><span class="name">著者</span><span class="field"></span></div>
+      <div class="form-group"><span class="name">ISBN</span><span class="field"></span></div>
+      <div class="form-pair">
+        <div class="form-group"><span class="name">売価</span><span class="field"></span></div>
+        <div class="form-group"><span class="name">在庫数</span><span class="field"></span></div>
+      </div>
+      <div class="form-group"><span class="name">概要</span><span class="field multiline"></span></div>
+    </div>
+
+    <div>
+      <div class="form-group">
+        <span class="name">出版社</span>
+        <div class="row"><span class="select grow">出版社を選ぶ</span><span class="btn">追加</span></div>
+      </div>
+      <div class="form-group">
+        <span class="name">ジャンル</span>
+        <div class="row"><span class="select grow">ジャンルを選ぶ</span><span class="btn">追加</span></div>
+      </div>
+      <div class="form-group">
+        <span class="name">書籍種別</span>
+        <div class="row"><span class="select grow">書籍種別を選ぶ</span><span class="btn">追加</span></div>
+      </div>
+      <div class="form-group">
+        <span class="name">状態</span>
+        <div class="row"><span class="select grow">状態を選ぶ</span><span class="btn">追加</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <span class="name">表紙画像</span>
+    <span class="file">ファイルを選ぶ</span>
+    <span class="note"><span class="cond">選んだとき・既にあるとき</span></span>
+    <div><span class="img"></span></div>
+  </div>
+
+  <div class="actions">
+    <span class="btn primary">保存</span>
+    <span class="btn">戻る</span>
+  </div>
+
+</div>
+
+<h2>版面 2 — オファーからの棚入れ</h2>
+
+<div class="body-area">
+
+  <p class="screen-title">オファーから棚入れ</p>
+
+  <p class="note">オファー番号を仕入原価〈金額〉で棚入れする旨、本の内容はオファーの通りである旨、
+    売る値段を決める旨、1 冊を棚入れする旨の案内</p>
+
+  <div class="cols2">
+    <div>
+      <div class="form-group"><span class="name">書名</span><span class="field readonly"></span></div>
+      <div class="form-group"><span class="name">著者</span><span class="field readonly"></span></div>
+      <div class="form-group"><span class="name">ISBN</span><span class="field readonly"></span></div>
+      <div class="form-pair">
+        <div class="form-group">
+          <span class="name">売価</span>
+          <span class="field"></span>
+          <span class="note"><span class="cond">入力に不備があるとき</span> <span class="warn">メッセージ</span></span>
+        </div>
+        <div class="form-group"><span class="name">在庫数</span><span class="field readonly"></span></div>
+      </div>
+      <div class="form-group"><span class="name">概要</span><span class="field multiline"></span></div>
+    </div>
+
+    <div>
+      <div class="form-group">
+        <span class="name">出版社</span>
+        <div class="row"><span class="select disabled grow">出版社</span><span class="btn">追加</span></div>
+      </div>
+      <div class="form-group">
+        <span class="name">ジャンル</span>
+        <div class="row"><span class="select disabled grow">ジャンル</span><span class="btn">追加</span></div>
+      </div>
+      <div class="form-group">
+        <span class="name">書籍種別</span>
+        <div class="row"><span class="select disabled grow">書籍種別</span><span class="btn">追加</span></div>
+      </div>
+      <div class="form-group">
+        <span class="name">状態</span>
+        <div class="row"><span class="select disabled grow">状態</span><span class="btn">追加</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <span class="name">表紙画像</span>
+    <span class="file">ファイルを選ぶ</span>
+  </div>
+
+  <div class="actions">
+    <span class="btn primary">保存</span>
+    <span class="btn">戻る</span>
+  </div>
+
+</div>
+
+<h2>配置の意図</h2>
+
+<ul>
+  <li><b>左に書誌と数、右に分類を置く。</b>左は打ち込む欄、右は選ぶ欄であり、
+      手の動きが列で分かれる</li>
+  <li>売価と在庫数だけを左の中で 2 列に割る。<b>どちらも短い数値</b>であり、
+      1 項目 1 行にすると空きが目立つ。並べることで「値段と冊数」の対として読める</li>
+  <li>概要を左の最下段に置く。<b>複数行の欄は縦を食う</b>ため、
+      他の欄の並びを崩さない位置に落とす</li>
+  <li>分類 4 軸はそれぞれ選択欄の右に「追加」を添える。
+      選ぼうとして選択肢が無いと気づく場所が、その欄自身であるため</li>
+  <li>表紙画像だけを 2 段組の外、全幅に置く。左右どちらの列にも属さない項目であり、
+      <b>選んだ画像がその場で縮小表示される</b>ため場所が要る</li>
+  <li>棚入れの版面では、<b>書き換えられない欄も同じ位置に同じ形で残す</b>。
+      消すのではなく読み取り専用にすることで、オファーが何を決めているかが見える</li>
+  <li>棚入れの案内は見出しの直下に置く。<b>何をいくらで棚入れするのか</b>が
+      売価を決める前提であるため、入力欄より先に読ませる</li>
+</ul>
+
+<h2>状態による差分</h2>
+
+<table class="diff">
+  <tr><th>状態</th><th>版面の変化</th></tr>
+  <tr><td>登録</td><td>版面 1。入力欄は空</td></tr>
+  <tr><td>更新</td><td>版面 1。既存の値が入り、現在の表紙画像が出る。<b>見出しは変わらない</b></td></tr>
+  <tr><td>棚入れ</td><td>版面 2。見出しが替わり、案内が出て、書名・著者・ISBN・在庫数と分類 4 軸が
+      書き換えられなくなる</td></tr>
+  <tr><td>入力に不備がある</td><td>該当する欄の直下に ⚠ が出る。<b>入力内容と選択肢は保たれる</b></td></tr>
+  <tr><td>表紙画像が安全でないと判定された</td><td>表紙画像の欄に ⚠ が出る。<b>書籍も画像も保存されない</b></td></tr>
+</table>
+
+</div>
