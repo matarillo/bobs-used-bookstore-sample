@@ -28,11 +28,11 @@ namespace Bookstore.Domain.Tests
                 bookRepository, orderRepository, offerRepository, referenceDataRepository, unitOfWork);
         }
 
-        // ISSUE-22, pinned before the fix: the safety check ran on the image as uploaded, while
-        // what got saved was the resized image handed back by ResizeImageAsync. The two could
-        // differ, and only the unchecked one ever reached the shelf.
+        // ISSUE-22: the safety check has to guard what actually ends up on the shelf, so it runs
+        // against the resized image — the stream that gets saved — rather than the one that was
+        // uploaded. Previously pinned the other way round.
         [Fact]
-        public async Task AddAsync_ValidatesTheUploadedImage_NotTheResizedOne()
+        public async Task AddAsync_ValidatesTheResizedImage_NotTheOneThatWasUploaded()
         {
             using var uploaded = new MemoryStream();
             using var resized = new MemoryStream();
@@ -43,8 +43,8 @@ namespace Bookstore.Domain.Tests
 
             await sut.AddAsync(dto);
 
-            await imageValidationService.Received(1).IsSafeAsync(uploaded);
-            await imageValidationService.DidNotReceive().IsSafeAsync(resized);
+            await imageValidationService.Received(1).IsSafeAsync(resized);
+            await imageValidationService.DidNotReceive().IsSafeAsync(uploaded);
         }
 
         [Fact]

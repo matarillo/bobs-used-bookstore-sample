@@ -141,7 +141,10 @@ namespace Bookstore.Domain.Books
         {
             var resizedCoverImage = await ResizeImageAsync(coverImage);
 
-            var imageIsSafe = await imageValidationService.IsSafeAsync(coverImage);
+            // ISSUE-22: the safety check has to guard what actually ends up on the shelf. It used
+            // to run against the image as uploaded, while the resized image — a different stream —
+            // was what got saved; resizing was silently trusted not to introduce anything unsafe.
+            var imageIsSafe = await imageValidationService.IsSafeAsync(resizedCoverImage);
 
             if (!imageIsSafe) return new BookResult(false, "The image failed the safety check. Please try another image.");
 
