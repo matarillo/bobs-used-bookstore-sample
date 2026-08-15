@@ -9,14 +9,17 @@ using Constructs;
 
 public class DatabaseStackProps : StackProps
 {
-    public Vpc Vpc { get; set; }
+    // Always supplied by the caller (see Program.cs); there is no meaningful default.
+    public Vpc Vpc { get; set; } = null!;
 }
 
 public class DatabaseStack : Stack
 {
     private const int DatabasePort = 1433;
 
-    public DatabaseInstance Database { get; set; }
+    // Assigned in the constructor body below; nullable analysis cannot see that because the
+    // assignment happens partway through, not via a field/property initializer.
+    public DatabaseInstance Database { get; set; } = null!;
 
     internal DatabaseStack(Construct scope, string id, DatabaseStackProps props) : base(scope, id, props)
     {
@@ -60,7 +63,7 @@ public class DatabaseStack : Stack
         _ = new StringParameter(this, $"{Constants.AppName}DbSecret", new StringParameterProps
         {
             ParameterName = $"/{Constants.AppName}/dbsecretsname",
-            StringValue = this.Database.Secret.SecretName
+            StringValue = this.Database.Secret!.SecretName
         });
     }
 }
