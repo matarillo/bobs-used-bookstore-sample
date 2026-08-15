@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # スタッフ：在庫と分類を保守する
 
-対象画面: `SCR-A-BOOKS`, `SCR-A-BOOK`, `SCR-A-BOOK-EDIT`, `SCR-A-REFDATA`, `SCR-A-REFDATA-EDIT`
+対象画面: [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html), [`SCR-A-BOOK`](../wireframes/admin/SCR-A-BOOK.html), [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html), [`SCR-A-REFDATA`](../wireframes/admin/SCR-A-REFDATA.html), [`SCR-A-REFDATA-EDIT`](../wireframes/admin/SCR-A-REFDATA-EDIT.html)
 **管理者グループに属していること**が条件。
 
 > **書籍が在庫に載る道は二つある。**
@@ -23,7 +23,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-BOOKS` |
+| 画面 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) |
 | ドメイン対応 | [RM-BOOK-LIST](../../design/domain/read-models.md) |
 | 目的 | 補充が要る本を見つける。売価や分類を直す本を探す |
 
@@ -31,7 +31,7 @@ derived-from: 4412aa1
 
 - 絞り込み条件: 書名、著者、出版社、ジャンル、書籍種別、コンディション、**「在庫僅少」**、**「在庫切れ」**
 - 表示項目: 書名、著者、出版社、ジャンル、種別、コンディション、売価、**在庫数**、更新日、「詳細」「更新」
-- 操作: 「新しい書籍」（→ `SCR-A-BOOK-EDIT` 新規モード）
+- 操作: 「新しい書籍」（→ [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html) 新規モード）
 - ページ送りあり
 
 **【Controller：手順】**
@@ -39,7 +39,7 @@ derived-from: 4412aa1
 1. 絞り込み条件と頁番号を受け取る。
 2. 条件に合う書籍の頁を問い合わせる。
 3. 参照データを取得し、絞り込みの選択肢として渡す。
-4. `SCR-A-BOOKS` に渡して描画する。
+4. [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -55,7 +55,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-BOOK` |
+| 画面 | [`SCR-A-BOOK`](../wireframes/admin/SCR-A-BOOK.html) |
 | ドメイン対応 | [AGG-BOOK](../../design/domain/aggregate-book.md) の照会 |
 | 目的 | この 1 冊で儲かっているかを確かめる |
 
@@ -82,20 +82,21 @@ derived-from: 4412aa1
 
 ## 2. 書籍を登録・更新する
 
-`SCR-A-BOOK-EDIT` は 1 画面 3 モードである。**ワイヤーフレームでは 3 つを描き分けること。**
+[`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html) は 1 画面 3 モードだが、**版面は 2 つである。**
+新規と更新は同じ見出し・同じ項目で、初期値の有無だけが違う。棚入れだけが書き換えられる項目を変える。
 
 | モード | 入口 | 見出し | 編集できる項目 |
 | --- | --- | --- | --- |
-| 新規 | `SCR-A-BOOKS` の「新しい書籍」 | 「書籍の登録／更新」 | すべて |
-| 更新 | `SCR-A-BOOKS` の「更新」 | 「書籍の登録／更新」 | すべて（仕入原価を除く） |
-| **棚入れ** | `SCR-A-OFFERS` の「在庫に追加」 | 「オファーから棚入れ」 | **売価・出版年・概要・表紙画像のみ** |
+| 新規 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) の「新しい書籍」 | 「書籍の登録／更新」 | すべて |
+| 更新 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) の「更新」 | 「書籍の登録／更新」 | すべて（仕入原価を除く） |
+| **棚入れ** | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) の「在庫に追加」 | 「オファーから棚入れ」 | **売価・概要・表紙画像のみ** |
 
 ### UC-STAFF-14 — 書籍を手入力で登録する
 
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-BOOK-EDIT`（新規モード） |
+| 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（新規モード） |
 | ドメイン対応 | [OP-STAFF-04](../../design/domain/operations.md) |
 | 目的 | 買取以外の経路で入ってきた本を売り物にする |
 
@@ -108,15 +109,14 @@ derived-from: 4412aa1
   | 書名 | ● | 自由入力 |
   | 著者 | ● | 自由入力 |
   | ISBN | ● | 自由入力 |
-  | 出版年 | ○ | 数値 |
   | 出版社・ジャンル・書籍種別・コンディション | ● | 選択（参照データから）。**それぞれの隣に「追加」** |
   | 売価 | ● | 金額。0 以上 1,000,000 以下 |
   | 在庫数 | ● | 整数。0 以上。**既定は 1** |
   | 概要 | ○ | 複数行 |
   | 表紙画像 | ○ | png / jpg / jpeg、**2MB 以下**。選ぶとその場で縮小表示される |
 
-- 操作: 「保存」／「戻る」／分類ごとの「追加」（→ `SCR-A-REFDATA-EDIT`）
-- 成功時: `SCR-A-BOOKS` へ戻り、通知バナー「〈書名〉を在庫に追加しました」
+- 操作: 「保存」／「戻る」／分類ごとの「追加」（→ [`SCR-A-REFDATA-EDIT`](../wireframes/admin/SCR-A-REFDATA-EDIT.html)）
+- 成功時: [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) へ戻り、通知バナー「〈書名〉を在庫に追加しました」
 - 失敗時: この画面に留まり、項目ごとにメッセージ。**選択肢と入力内容は保たれる**
 
 **【Controller：手順】**
@@ -126,7 +126,7 @@ derived-from: 4412aa1
 3. 書籍の登録を依頼する。**表紙画像の処理はこの中で行われる**（§3 の画像の扱い）。
 4. 画像が安全でないと判定された場合は、その旨を**表紙画像の欄のメッセージ**にしてこの画面を描き直す。
 5. 単位作業を完了する。
-6. `SCR-A-BOOKS` へ遷移し、通知バナーを出す。
+6. [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) へ遷移し、通知バナーを出す。
 
 **【Entity：ルール】**
 
@@ -155,7 +155,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-BOOK-EDIT`（更新モード） |
+| 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（更新モード） |
 | ドメイン対応 | [OP-STAFF-05](../../design/domain/operations.md) |
 | 目的 | 値付けの見直し、記載の訂正、在庫数の修正 |
 
@@ -163,7 +163,7 @@ derived-from: 4412aa1
 
 - [UC-STAFF-14](#uc-staff-14--書籍を手入力で登録する) と同じ項目。既存の値が初期表示される
 - 現在の表紙画像が表示される。新しい画像を選べば差し替わる
-- 成功時: `SCR-A-BOOKS` へ戻り、通知バナー「〈書名〉を更新しました」
+- 成功時: [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) へ戻り、通知バナー「〈書名〉を更新しました」
 
 **【Controller：手順】**
 
@@ -187,7 +187,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-BOOK-EDIT`（棚入れモード） |
+| 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（棚入れモード） |
 | ドメイン対応 | [OP-STAFF-10](../../design/domain/operations.md) |
 | 目的 | 買い取って代金を払った本に値段をつけて、売り場に出す |
 
@@ -201,11 +201,10 @@ derived-from: 4412aa1
   | 項目 | 必須 | 内容 |
   | --- | --- | --- |
   | 売価 | ● | **店が決める。買取価格からは導かれない** |
-  | 出版年 | ○ | オファーには無い情報 |
   | 概要 | ○ | オファーの概要が初期表示される |
   | 表紙画像 | ○ | ここで初めて用意する |
 
-- 成功時: `SCR-A-BOOKS` へ戻り、通知バナー「〈書名〉をオファー〈番号〉から棚入れしました」
+- 成功時: [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) へ戻り、通知バナー「〈書名〉をオファー〈番号〉から棚入れしました」
 
 **【Controller：手順】**
 
@@ -215,7 +214,7 @@ derived-from: 4412aa1
 4. 棚入れを依頼する（**書籍の生成とオファーの棚入れ済化は集約側で連動する** — [docs 10 §6.2](../../design/domain/services-and-policies.md)）。
 5. 表紙画像を処理する（§3）。
 6. 単位作業を完了する。
-7. `SCR-A-BOOKS` へ遷移し、通知バナーを出す。
+7. [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) へ遷移し、通知バナーを出す。
 
 **【Entity：ルール】**
 
@@ -242,7 +241,7 @@ derived-from: 4412aa1
 
 ---
 
-## 3. 表紙画像の扱い（`SCR-A-BOOK-EDIT` 共通）
+## 3. 表紙画像の扱い（[`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html) 共通）
 
 [POL-IMAGE-SAFETY](../rules.md) に従う。順序が重要である。
 
@@ -265,7 +264,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
-| 画面 | `SCR-A-REFDATA` |
+| 画面 | [`SCR-A-REFDATA`](../wireframes/admin/SCR-A-REFDATA.html) |
 | ドメイン対応 | [OP-STAFF-03](../../design/domain/operations.md) / [RM-REFDATA-LIST](../../design/domain/read-models.md) |
 
 **【Boundary：画面】**
@@ -280,7 +279,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
-| 画面 | `SCR-A-REFDATA-EDIT` |
+| 画面 | [`SCR-A-REFDATA-EDIT`](../wireframes/admin/SCR-A-REFDATA-EDIT.html) |
 | ドメイン対応 | [OP-STAFF-01](../../design/domain/operations.md) |
 | 目的 | 新しい出版社やジャンルを、選べるようにする |
 
@@ -288,15 +287,15 @@ derived-from: 4412aa1
 
 - 入力項目: **種別**（選択）、**名称**
 - 書籍編集画面の「追加」から来たときは、**その軸の種別が初期選択される**
-- 操作: 「保存」
-- 保存後: **`SCR-A-REFDATA` へ移る。書籍編集画面には戻らない**（[Q-25](../../product/open-questions.md)）
+- 操作: 「保存」／「戻る」（→ [`SCR-A-REFDATA`](../wireframes/admin/SCR-A-REFDATA.html)）
+- 保存後: **[`SCR-A-REFDATA`](../wireframes/admin/SCR-A-REFDATA.html) へ移る。書籍編集画面には戻らない**（[Q-25](../../product/open-questions.md)）
 
 **【Controller：手順】**
 
 1. （書籍編集画面から来たときは）指定された種別を初期値にして画面を描く。
 2. 参照データ項目の登録を依頼する。
 3. 単位作業を完了する。
-4. `SCR-A-REFDATA` へ遷移する。
+4. [`SCR-A-REFDATA`](../wireframes/admin/SCR-A-REFDATA.html) へ遷移する。
 
 **【Entity：ルール】**
 
@@ -308,14 +307,14 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
-| 画面 | `SCR-A-REFDATA-EDIT` |
+| 画面 | [`SCR-A-REFDATA-EDIT`](../wireframes/admin/SCR-A-REFDATA-EDIT.html) |
 | ドメイン対応 | [OP-STAFF-02](../../design/domain/operations.md) |
 | 目的 | 表記のゆれや誤字を直す |
 
 **【Boundary：画面】**
 
 - **種別は読み取り専用**。名称だけが書き換えられる
-- 保存後: `SCR-A-REFDATA` へ移る
+- 保存後: [`SCR-A-REFDATA`](../wireframes/admin/SCR-A-REFDATA.html) へ移る
 
 **【Entity：ルール】**
 

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>SCR-ERROR — エラー</title>
+<meta name="layer" content="spec">
+<meta name="status" content="derived">
+<meta name="derived-from" content="4412aa1">
+<link rel="stylesheet" href="../wireframe.css">
+
+<div class="doc">
+
+<h1>SCR-ERROR — エラー</h1>
+
+<table class="meta">
+  <tr><th>経路</th><td>/Home/Error ほか</td></tr>
+  <tr><th>定めるユースケース</th><td><span class="empty">無い（下記）</span></td></tr>
+  <tr><th>フレーム</th><td>店頭</td></tr>
+</table>
+
+<p class="note"><b>この画面にユースケースは無い。</b>アクターが目指して来る画面ではなく、
+<a href="../../conventions.md">横断的な約束事</a> §5 の「想定外の失敗」の落ち先であるため。
+どの操作がここへ落ちるかは同 §5 が定める。</p>
+
+<h2>版面</h2>
+
+<div class="body-area">
+
+  <p class="screen-title">エラー</p>
+  <p>要求の処理中にエラーが発生しました</p>
+
+  <p class="note"><span class="cond">要求 ID があるとき</span> 要求 ID　値</p>
+
+  <p class="screen-title">開発モード</p>
+  <p>開発環境では詳しい情報が出るという説明</p>
+  <p>本番環境で開発モードを有効にしてはならないという注意</p>
+
+</div>
+
+<h2>配置の意図</h2>
+
+<ul>
+  <li>見出しと 1 文だけを最上段に置く。<b>利用者が受け取るべきはこの 2 行だけ</b>であり、
+      以降は読まなくてよいものとして下に置く</li>
+  <li>要求 ID を 2 行の直下に置く。問い合わせのときに読み上げられる値であり、
+      説明文より先に目に入る位置に要るため</li>
+  <li>「開発モード」以下は<b>開発者に向けた面</b>である。利用者向けの 2 行と
+      見出しで切り分け、混ざらないようにする</li>
+  <li>やり直しの導線を版面に持たない。<b>入力内容は失われており、戻る先が定まらない</b>
+      （同 §5）。共通フレームの導線だけが出口である</li>
+</ul>
+
+<h2>状態による差分</h2>
+
+<table class="diff">
+  <tr><th>状態</th><th>版面の変化</th></tr>
+  <tr><td>要求 ID が取れないとき</td><td>要求 ID の行が消える。他は変わらない</td></tr>
+  <tr><td>かごの明細を他人が消そうとしたとき</td>
+      <td><b>別の版面になる。</b>見出し 1 行だけの面で、
+          「自分がかごに入れた品物しか取り除けません」とだけ出る。
+          要求 ID も開発モードの説明も無い</td></tr>
+</table>
+
+</div>

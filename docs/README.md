@@ -54,9 +54,13 @@ docs/
     screens.md                   画面一覧 SCR- と画面遷移
     rules.md                     業務ルール RULE-
     use-cases/                   ユースケース UC-（機能グループ単位）
-    wireframes/                  ワイヤーフレーム（画面単位）… 未作成
-      customer/
-      admin/
+    wireframes/                  ワイヤーフレーム（画面単位）。書式は HTML
+      README.md                    版面の書式
+      wireframe.css                共通の描画規約。寸法・色・書体・余白はここだけ
+      frame-customer.html          共通フレーム（店頭）
+      frame-admin.html             共通フレーム（管理）
+      customer/                    店頭の画面
+      admin/                       管理の画面
 
   design/                      【設計】内部構造
     README.md
@@ -88,6 +92,7 @@ docs/
 | [spec/conventions.md](spec/conventions.md) | 仕様 | 通知・確認・ページ送り・エラー・権限の共通作法 |
 | [spec/rules.md](spec/rules.md) | 仕様 | 税率、しきい値、状態遷移など**顧客が決めるルール** |
 | [spec/use-cases/](spec/use-cases/) | 仕様 | アクター起点の操作。Boundary / Controller / Entity で記述 |
+| [spec/wireframes/README.md](spec/wireframes/README.md) | 仕様 | 画面の姿。版面の書式と共通フレーム |
 | [design/README.md](design/README.md) | 設計 | この層の読み方と論理設計の記法 |
 | [design/domain/](design/domain/) | 設計 | 集約、値オブジェクト、不変条件、ドメイン操作 |
 | [design/issues.md](design/issues.md) | 設計 | モデルの歪みと改善方針 |
@@ -200,6 +205,14 @@ derived-from: 4412aa1
 
 `status` と `derived-from` は、製品を記述する文書に付ける。本書のような規約の文書は `layer` だけを持つ。
 
+**HTML の文書（ワイヤーフレーム）は同じ項目を `<meta>` で表す。**
+
+```html
+<meta name="layer" content="spec">
+<meta name="status" content="derived">
+<meta name="derived-from" content="4412aa1">
+```
+
 **スナップショットはフォルダ名で表さない。** 現在の版だけを置き、`derived-from` で導出元を示す。
 凍結して残す必要がある版は `archive/` へ退避し、他の文書から参照しない。
 
@@ -247,6 +260,10 @@ derived-from: 4412aa1
 
 `spec/wireframes/` は**画面単位で 1 ファイル**とし、ファイル名を `SCR-` 識別子に一致させる。
 ユースケースは機能グループ単位、ワイヤーフレームは画面単位で、粒度が異なる。両者は `SCR-` で結ばれる。
+
+**ワイヤーフレームだけは書式が HTML である。** 版面は文章では表せず、描画して確かめるものであるため。
+1 枚がメタデータ・版面・配置の意図・状態による差分を持つ（[書式](spec/wireframes/README.md) §2）。
+**GitHub 上では描画されない。読み合わせはブラウザで行う。**
 
 | 定めるもの | どちらが正か |
 | --- | --- |

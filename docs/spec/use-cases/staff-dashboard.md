@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # スタッフ：状況を把握する
 
-対象画面: `SCR-A-DASH`
+対象画面: [`SCR-A-DASH`](../wireframes/admin/SCR-A-DASH.html)
 **管理者グループに属していること**が条件。
 
 ---
@@ -16,7 +16,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-DASH` |
+| 画面 | [`SCR-A-DASH`](../wireframes/admin/SCR-A-DASH.html) |
 | ドメイン対応 | [OP-STAFF-16](../../design/domain/operations.md) / [13-read-models-and-statistics.md](../../design/domain/read-models.md) |
 | 目的 | 今日の仕事の量と、事業が成り立っているかを一目で見る |
 
@@ -29,10 +29,10 @@ derived-from: 4412aa1
 
 | 表示 | リンク先 |
 | --- | --- |
-| 受付待ちの注文が N 件 | `SCR-A-ORDERS`（状態＝受付待ちで絞る） |
-| 納期超過の注文が N 件 | `SCR-A-ORDERS`（納期超過で絞る） |
-| 今月の注文が N 件 | `SCR-A-ORDERS`（注文日 From ＝当月 1 日で絞る） |
-| 累計の注文が N 件 | `SCR-A-ORDERS`（絞り込みなし） |
+| 受付待ちの注文が N 件 | [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html)（状態＝受付待ちで絞る） |
+| 納期超過の注文が N 件 | [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html)（納期超過で絞る） |
+| 今月の注文が N 件 | [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html)（注文日 From ＝当月 1 日で絞る） |
+| 累計の注文が N 件 | [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html)（絞り込みなし） |
 
 ### 区画 2: 売上
 
@@ -46,10 +46,10 @@ derived-from: 4412aa1
 
 | 表示 | リンク先 |
 | --- | --- |
-| 承認待ちの申込が N 件 | `SCR-A-OFFERS`（状態＝承認待ちで絞る） |
-| 今月の申込が N 件 | `SCR-A-OFFERS`（**申込日の絞り込みは効かない** — 下記異常系） |
-| 累計の申込が N 件 | `SCR-A-OFFERS`（絞り込みなし） |
-| **承認待ちをすべて受け入れた場合に支払う額** | `SCR-A-OFFERS`（状態＝承認待ちで絞る） |
+| 承認待ちの申込が N 件 | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html)（状態＝承認待ちで絞る） |
+| 今月の申込が N 件 | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html)（**申込日の絞り込みは効かない** — 下記異常系） |
+| 累計の申込が N 件 | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html)（絞り込みなし） |
+| **承認待ちをすべて受け入れた場合に支払う額** | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html)（状態＝承認待ちで絞る） |
 | 今月の買取支出 | なし |
 | 累計の買取支出 | なし |
 
@@ -57,14 +57,14 @@ derived-from: 4412aa1
 
 | 表示 | リンク先 |
 | --- | --- |
-| 在庫切れの書籍が N 冊 | `SCR-A-BOOKS`（在庫切れで絞る） |
-| 在庫僅少の書籍が N 冊 | `SCR-A-BOOKS`（在庫僅少で絞る） |
-| 在庫の総冊数 N 冊 | `SCR-A-BOOKS`（絞り込みなし） |
+| 在庫切れの書籍が N 冊 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html)（在庫切れで絞る） |
+| 在庫僅少の書籍が N 冊 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html)（在庫僅少で絞る） |
+| 在庫の総冊数 N 冊 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html)（絞り込みなし） |
 
 **【Controller：手順】**
 
 1. 注文統計・買取統計・在庫統計を、それぞれ問い合わせる。
-2. `SCR-A-DASH` に渡して描画する。
+2. [`SCR-A-DASH`](../wireframes/admin/SCR-A-DASH.html) に渡して描画する。
 
 **【Entity：ルール】**
 

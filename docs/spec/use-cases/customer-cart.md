@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # 顧客：かごと欲しい物リスト
 
-対象画面: `SCR-CART`, `SCR-WISH`
+対象画面: [`SCR-CART`](../wireframes/customer/SCR-CART.html), [`SCR-WISH`](../wireframes/customer/SCR-WISH.html)
 **両方ともログイン不要**である。かごの中身は「かご相関識別子」で特定される（[アクター](../../product/actors.md) §2）。
 
 > **かごと欲しい物リストは同じ一つの入れ物である。**
@@ -21,7 +21,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-CART` |
+| 画面 | [`SCR-CART`](../wireframes/customer/SCR-CART.html) |
 | ドメイン対応 | [AGG-CART](../../design/domain/aggregate-shopping-cart.md) の照会 |
 | 目的 | 今いくら分を買おうとしているのかを確かめる |
 
@@ -31,6 +31,7 @@ derived-from: 4412aa1
 
   | 項目 | 内容 |
   | --- | --- |
+  | 進行の表示 | 「かご → 配送先 → 完了」の 3 段。**かごが現在地** |
   | 合計 | 明細の小計の合計 |
   | 明細ごと | 表紙画像、書名、売価、数量、小計 |
   | 在庫の警告 | 在庫切れなら「在庫切れ」、残りわずかなら「残り N 冊」を**書名の下に赤字で**出す |
@@ -39,7 +40,7 @@ derived-from: 4412aa1
 
   | 操作 | 条件 |
   | --- | --- |
-  | 「注文へ進む」（→ `SCR-CHECKOUT`） | **ログイン済みのときのみ** |
+  | 「注文へ進む」（→ [`SCR-CHECKOUT`](../wireframes/customer/SCR-CHECKOUT.html)） | **ログイン済みのときのみ** |
   | 「ログイン」 | **未ログインのときのみ**。「注文するにはログインしてください」と添える |
   | 「取り除く」 | 明細ごと。確認ダイアログを挟む（→ [UC-CUST-07](#uc-cust-07--かごから取り除く)） |
 
@@ -49,7 +50,7 @@ derived-from: 4412aa1
 
 1. かご相関識別子を得る。
 2. `AGG-CART` をかご相関識別子で取得する。**かごが無ければ空のかごとして扱う**（失敗にしない）。
-3. `SCR-CART` に渡して描画する。
+3. [`SCR-CART`](../wireframes/customer/SCR-CART.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -57,7 +58,7 @@ derived-from: 4412aa1
 - `RULE-UI-02`（**ドメイン未定義**）: 残り **5 冊以下**の書籍に「残りわずか」の警告を出す。
   → *【問い】* この 5 は、仕入判断の在庫僅少しきい値（[RULE-STOCK-04](../rules.md)）と同じ 5 だが、**問いが違う**（「補充が要るか」と「顧客を急かすか」）。連動させるのか、別々に決めるのか（[Q-16](../../product/open-questions.md)）
 - `RULE-UI-03`（**ドメイン未定義**）: この画面の合計は**在庫切れの明細も含めて**計算する。
-  → *【問い】* 次の `SCR-CHECKOUT` では在庫切れを**除いた**額を出すため、**画面をまたぐと合計が下がる**。どちらを顧客に見せるべきか（[Q-17](../../product/open-questions.md)）
+  → *【問い】* 次の [`SCR-CHECKOUT`](../wireframes/customer/SCR-CHECKOUT.html) では在庫切れを**除いた**額を出すため、**画面をまたぐと合計が下がる**。どちらを顧客に見せるべきか（[Q-17](../../product/open-questions.md)）
 
 **【異常系】**
 
@@ -73,21 +74,21 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-CART` |
+| 画面 | [`SCR-CART`](../wireframes/customer/SCR-CART.html) |
 | ドメイン対応 | [OP-CUST-10](../../design/domain/operations.md) |
 | 目的 | 買うのをやめた本をかごから外す |
 
 **【Boundary：画面】**
 
 - 操作: 明細の「取り除く」→ **確認ダイアログ**「この本をかごから取り除きますか？」→「はい」
-- フィードバック: `SCR-CART` に戻り、通知バナー「かごから取り除きました」
+- フィードバック: [`SCR-CART`](../wireframes/customer/SCR-CART.html) に戻り、通知バナー「かごから取り除きました」
 
 **【Controller：手順】**
 
 1. かご相関識別子と、対象の明細を受け取る。
 2. `AGG-CART` に、その明細の除去を依頼する。
 3. 単位作業を完了する。
-4. `SCR-CART` へ戻し、通知バナーを出す。
+4. [`SCR-CART`](../wireframes/customer/SCR-CART.html) へ戻し、通知バナーを出す。
 
 **【Entity：ルール】**
 
@@ -107,7 +108,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-WISH` |
+| 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [AGG-CART](../../design/domain/aggregate-shopping-cart.md) の照会 |
 | 目的 | 後で買おうと思っていた本を思い出す |
 
@@ -127,7 +128,7 @@ derived-from: 4412aa1
 
 1. かご相関識別子を得る。
 2. `AGG-CART` を取得する。無ければ空として扱う。
-3. 欲しい物明細だけを `SCR-WISH` に渡して描画する。
+3. 欲しい物明細だけを [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -146,21 +147,21 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-WISH` |
+| 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [OP-CUST-08](../../design/domain/operations.md) |
 | 目的 | 「やっぱり買う」と決めた本をかごに移す |
 
 **【Boundary：画面】**
 
 - 操作: 明細の「かごへ移す」（確認ダイアログなし）
-- フィードバック: `SCR-WISH` に戻り、通知バナー「かごへ移しました」。移した明細は一覧から消える
+- フィードバック: [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) に戻り、通知バナー「かごへ移しました」。移した明細は一覧から消える
 
 **【Controller：手順】**
 
 1. かご相関識別子と、対象の明細を受け取る。
 2. `AGG-CART` に、その明細をかごへ移すよう依頼する。
 3. 単位作業を完了する。
-4. `SCR-WISH` へ戻し、通知バナーを出す。
+4. [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) へ戻し、通知バナーを出す。
 
 **【Entity：ルール】**
 
@@ -183,21 +184,21 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-WISH` |
+| 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [OP-CUST-09](../../design/domain/operations.md) |
 | 目的 | まとめて買うと決めたときに、一度で済ませる |
 
 **【Boundary：画面】**
 
 - 操作: 「すべてかごへ移す」（確認ダイアログなし）
-- フィードバック: `SCR-WISH` に戻り、通知バナー「すべてかごへ移しました」。一覧は空になる
+- フィードバック: [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) に戻り、通知バナー「すべてかごへ移しました」。一覧は空になる
 
 **【Controller：手順】**
 
 1. かご相関識別子を受け取る。
 2. `AGG-CART` に、欲しい物明細をすべてかごへ移すよう依頼する。
 3. 単位作業を完了する。
-4. `SCR-WISH` へ戻し、通知バナーを出す。
+4. [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) へ戻し、通知バナーを出す。
 
 **【Entity：ルール】**
 
@@ -220,14 +221,14 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-WISH` |
+| 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [OP-CUST-10](../../design/domain/operations.md) |
 | 目的 | もう欲しくない本を控えから消す |
 
 **【Boundary：画面】**
 
 - 操作: 明細の「取り除く」→ **確認ダイアログ**「欲しい物リストから取り除きますか？」→「はい」
-- フィードバック: `SCR-WISH` に戻り、通知バナー「欲しい物リストから取り除きました」
+- フィードバック: [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) に戻り、通知バナー「欲しい物リストから取り除きました」
 
 **【Controller：手順】**
 

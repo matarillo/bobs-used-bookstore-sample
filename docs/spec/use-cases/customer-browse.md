@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # 顧客：書籍を探す
 
-対象画面: `SCR-HOME`, `SCR-SEARCH`, `SCR-BOOK`
+対象画面: [`SCR-HOME`](../wireframes/customer/SCR-HOME.html), [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html), [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html)
 **すべてログイン不要**である。来店者は、ログインせずに本を探し、かごに入れるところまで進める。
 
 ---
@@ -16,20 +16,38 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-HOME` |
+| 画面 | [`SCR-HOME`](../wireframes/customer/SCR-HOME.html) |
 | ドメイン対応 | [RM-BESTSELLERS](../../design/domain/read-models.md) |
 | 目的 | 何を売っている店かを、来た人にひと目で伝える |
 
 **【Boundary：画面】**
 
-- 表示項目: 売れ筋書籍 **4 件**（表紙画像、書名、売価）
-- 操作: 書籍を選ぶ → `SCR-BOOK` へ
+- 表示項目: **5 つの節が縦に並ぶ。売れ筋はその 2 番目である。**
+
+  | 節 | 内容 |
+  | --- | --- |
+  | 店の紹介 | 画像と、扱う本・本を売れることの案内 |
+  | 売れ筋 | 売れ筋書籍 **4 件**（表紙画像、書名）。**売価は出さない** |
+  | 欲しい物リストの案内 | 画像と、後で買う本を控えておけることの案内 |
+  | 店の特長 | 3 件（見出し、副見出し、説明） |
+  | プライバシーの案内 | 画像と、個人情報の扱いについての案内 |
+
+- 操作:
+
+  | 操作 | 遷移先 |
+  | --- | --- |
+  | 売れ筋の書籍を選ぶ | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
+  | 「本を探す」（紹介と欲しい物の案内に 1 つずつ、計 2 か所） | [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) |
+  | 「欲しい物リスト」 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
+  | 「プライバシー」 | [`SCR-PRIVACY`](../wireframes/customer/SCR-PRIVACY.html) |
+
 - 入力: なし
+- 売れ筋が 0 件のとき: 近日紹介する旨を伝える
 
 **【Controller：手順】**
 
 1. 売れ筋書籍を **4 件** 問い合わせる。
-2. `SCR-HOME` に渡して描画する。
+2. [`SCR-HOME`](../wireframes/customer/SCR-HOME.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -42,6 +60,7 @@ derived-from: 4412aa1
 | 起きること | 画面の振る舞い |
 | --- | --- |
 | 売れ筋が 4 件に満たない | あるだけ表示する |
+| 売れ筋が 0 件 | 売れ筋の節だけが案内文に替わる。**他の 4 節は変わらない** |
 
 ---
 
@@ -50,7 +69,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-SEARCH` |
+| 画面 | [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) |
 | ドメイン対応 | [OP-CUST-05](../../design/domain/operations.md) / [RM-BOOK-SEARCH](../../design/domain/read-models.md) |
 | 目的 | 買いたい本があるかを確かめる |
 
@@ -63,7 +82,7 @@ derived-from: 4412aa1
   | 検索語 | 任意 | 空のままでも検索できる（全件が対象になる） |
   | 並び順 | 任意 | 書名／価格の安い順／価格の高い順。既定は書名 |
 
-- 操作: 「検索」／ページを送る／書籍を選ぶ（→ `SCR-BOOK`）
+- 操作: 「検索」／ページを送る／書籍を選ぶ（→ [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html)）
 - 表示項目（1 件あたり）: 表紙画像、書名、**売価。ただし在庫切れの書籍は売価の代わりに「在庫切れ」と表示する**
 - 結果が 0 件のとき: 「見つかりません」と伝える
 
@@ -71,7 +90,7 @@ derived-from: 4412aa1
 
 1. 検索語・並び順・頁番号を受け取る。
 2. 条件に合う書籍の頁を問い合わせる（[横断的な約束事](../conventions.md) §3 のページ送り）。
-3. `SCR-SEARCH` に渡して描画する。
+3. [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -92,7 +111,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-BOOK` |
+| 画面 | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
 | ドメイン対応 | [OP-CUST-05](../../design/domain/operations.md) |
 | 目的 | 買うかどうかを判断できるだけの情報を得る |
 
@@ -105,7 +124,7 @@ derived-from: 4412aa1
 **【Controller：手順】**
 
 1. 書籍を識別子で取得する。
-2. `SCR-BOOK` に渡して描画する。
+2. [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -127,7 +146,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-BOOK` |
+| 画面 | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
 | ドメイン対応 | [OP-CUST-06](../../design/domain/operations.md) |
 | 目的 | 買うつもりの本を取り置く |
 
@@ -135,14 +154,14 @@ derived-from: 4412aa1
 
 - 入力項目: なし。**数量は常に 1**（画面から指定できない）
 - 操作: 「かごに入れる」
-- フィードバック: `SCR-SEARCH` へ戻り、通知バナー「かごに入れました」
+- フィードバック: [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) へ戻り、通知バナー「かごに入れました」
 
 **【Controller：手順】**
 
 1. かご相関識別子を得る（未発行なら発行し、ブラウザに保持させる — [アクター](../../product/actors.md) §2）。
 2. `AGG-CART` に、この書籍を数量 1 で投入するよう依頼する（かごが無ければ生成される）。
 3. 単位作業を完了する。
-4. `SCR-SEARCH` へ遷移し、通知バナーを出す。
+4. [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) へ遷移し、通知バナーを出す。
 
 **【Entity：ルール】**
 
@@ -164,7 +183,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 来店者・顧客 |
-| 画面 | `SCR-BOOK` |
+| 画面 | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
 | ドメイン対応 | [OP-CUST-07](../../design/domain/operations.md) |
 | 目的 | 「今は買わないが忘れたくない」本を控えておく |
 
@@ -172,14 +191,14 @@ derived-from: 4412aa1
 
 - 入力項目: なし
 - 操作: 「欲しい物リストに入れる」
-- フィードバック: `SCR-SEARCH` へ戻り、通知バナー「欲しい物リストに入れました」
+- フィードバック: [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) へ戻り、通知バナー「欲しい物リストに入れました」
 
 **【Controller：手順】**
 
 1. かご相関識別子を得る。
 2. `AGG-CART` に、この書籍を欲しい物として登録するよう依頼する。
 3. 単位作業を完了する。
-4. `SCR-SEARCH` へ遷移し、通知バナーを出す。
+4. [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) へ遷移し、通知バナーを出す。
 
 **【Entity：ルール】**
 

@@ -6,8 +6,8 @@ derived-from: 4412aa1
 
 # スタッフ：注文を履行する
 
-対象画面: `SCR-A-ORDERS`, `SCR-A-ORDER`
-**管理者グループに属していること**が条件。`SCR-A-ORDERS` は**管理画面を開いたときの既定画面**である。
+対象画面: [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html), [`SCR-A-ORDER`](../wireframes/admin/SCR-A-ORDER.html)
+**管理者グループに属していること**が条件。[`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html) は**管理画面を開いたときの既定画面**である。
 
 > 在庫は**注文が確定した時点ですでに引き当てられている**。
 > したがってこの章の操作は在庫を動かさない（[docs 11 OP-STAFF-12〜14](../../design/domain/operations.md)）。
@@ -19,7 +19,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-ORDERS` |
+| 画面 | [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html) |
 | ドメイン対応 | [OP-STAFF-15](../../design/domain/operations.md) / [RM-ORDER-LIST](../../design/domain/read-models.md) |
 | 目的 | 今日出すべき荷物と、遅れている注文を見つける |
 
@@ -42,7 +42,7 @@ derived-from: 4412aa1
 
 1. 絞り込み条件と頁番号を受け取る。
 2. 条件に合う注文の頁を問い合わせる。
-3. `SCR-A-ORDERS` に渡して描画する。
+3. [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -66,7 +66,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-ORDER` |
+| 画面 | [`SCR-A-ORDER`](../wireframes/admin/SCR-A-ORDER.html) |
 | ドメイン対応 | [OP-STAFF-15](../../design/domain/operations.md) |
 | 目的 | 何を、どこへ、いくらで送るのかを確認する |
 
@@ -94,7 +94,7 @@ derived-from: 4412aa1
 **【Controller：手順】**
 
 1. 注文識別子で注文を取得する（**絞り込みなし。スタッフ専用の照会**）。
-2. `SCR-A-ORDER` に渡して描画する。
+2. [`SCR-A-ORDER`](../wireframes/admin/SCR-A-ORDER.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -123,7 +123,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-ORDER` |
+| 画面 | [`SCR-A-ORDER`](../wireframes/admin/SCR-A-ORDER.html) |
 | ドメイン対応 | [OP-STAFF-12〜14](../../design/domain/operations.md) |
 | 目的 | 注文を受け、荷を作り、届いたことを記録する |
 

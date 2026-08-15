@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # 顧客：注文を確定する
 
-対象画面: `SCR-CHECKOUT`, `SCR-CHECKOUT-DONE`, `SCR-ADDRESSES`, `SCR-ADDRESS-EDIT`
+対象画面: [`SCR-CHECKOUT`](../wireframes/customer/SCR-CHECKOUT.html), [`SCR-CHECKOUT-DONE`](../wireframes/customer/SCR-CHECKOUT-DONE.html), [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html), [`SCR-ADDRESS-EDIT`](../wireframes/customer/SCR-ADDRESS-EDIT.html)
 **すべてログインが必要**である。
 
 > **この章の中心は [UC-CUST-12](#uc-cust-12--配送先を選んで注文する) である。**
@@ -20,7 +20,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-CHECKOUT` |
+| 画面 | [`SCR-CHECKOUT`](../wireframes/customer/SCR-CHECKOUT.html) |
 | ドメイン対応 | [OP-CUST-11](../../design/domain/operations.md) |
 | 目的 | かごの中身を、届け先を決めて注文にする |
 
@@ -41,8 +41,8 @@ derived-from: 4412aa1
   | 操作 | 条件・遷移先 |
   | --- | --- |
   | 「注文する」 | **住所が 1 件以上あるときのみ押せる** |
-  | 「住所を追加」 | → `SCR-ADDRESS-EDIT`。登録後この画面に戻る |
-  | 住所の「編集」 | → `SCR-ADDRESS-EDIT`。更新後この画面に戻る |
+  | 「住所を追加」 | → [`SCR-ADDRESS-EDIT`](../wireframes/customer/SCR-ADDRESS-EDIT.html)。登録後この画面に戻る |
+  | 住所の「編集」 | → [`SCR-ADDRESS-EDIT`](../wireframes/customer/SCR-ADDRESS-EDIT.html)。更新後この画面に戻る |
 
 - 住所が 0 件のとき: 「注文する」を押せない状態にし、**「注文するには住所を追加してください」**と示す
 - 失敗時: **この画面に留まり**、画面上部にメッセージを出す。選んでいた配送先は保つ
@@ -55,7 +55,7 @@ derived-from: 4412aa1
    （手順の詳細は [docs 10 §6.1](../../design/domain/services-and-policies.md)）。
 4. **想定内の失敗**（かご不在・顧客不在・注文できる品物が 0 件）なら、2. をやり直して同じ画面に戻し、メッセージを出す。
 5. 成功したら、**在庫切れで見送られた明細があれば**その書名を並べて通知バナーに出す。
-6. `SCR-CHECKOUT-DONE` へ遷移する。
+6. [`SCR-CHECKOUT-DONE`](../wireframes/customer/SCR-CHECKOUT-DONE.html) へ遷移する。
 
 **【Entity：ルール】**
 
@@ -93,7 +93,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-CHECKOUT-DONE` |
+| 画面 | [`SCR-CHECKOUT-DONE`](../wireframes/customer/SCR-CHECKOUT-DONE.html) |
 | ドメイン対応 | [OP-CUST-12](../../design/domain/operations.md) |
 | 目的 | 注文が通ったことと、その中身を確かめて安心する |
 
@@ -107,7 +107,7 @@ derived-from: 4412aa1
 **【Controller：手順】**
 
 1. 主体識別子と注文識別子で注文を取得する。**本人の注文でなければ「見つかりません」とする**。
-2. `SCR-CHECKOUT-DONE` に渡して描画する。
+2. [`SCR-CHECKOUT-DONE`](../wireframes/customer/SCR-CHECKOUT-DONE.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -126,7 +126,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-ADDRESSES` |
+| 画面 | [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) |
 | ドメイン対応 | [RM-ADDRESS-BY-CUSTOMER](../../design/domain/read-models.md) |
 | 目的 | 届け先の控えを見直す |
 
@@ -139,7 +139,7 @@ derived-from: 4412aa1
 **【Controller：手順】**
 
 1. 主体識別子で自分の**有効な**住所を取得する。
-2. `SCR-ADDRESSES` に渡して描画する。
+2. [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -152,7 +152,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-ADDRESS-EDIT` |
+| 画面 | [`SCR-ADDRESS-EDIT`](../wireframes/customer/SCR-ADDRESS-EDIT.html) |
 | ドメイン対応 | [OP-CUST-02](../../design/domain/operations.md) |
 | 目的 | 届け先を用意する |
 
@@ -170,7 +170,7 @@ derived-from: 4412aa1
   | 郵便番号 | ● | 数字 |
 
 - 操作: 「保存」／「取消」
-- 保存後の遷移: **呼び出し元の画面に戻る**（`SCR-ADDRESSES` または `SCR-CHECKOUT`）
+- 保存後の遷移: **呼び出し元の画面に戻る**（[`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) または [`SCR-CHECKOUT`](../wireframes/customer/SCR-CHECKOUT.html)）
 - 入力に不備があるとき: この画面に留まり、項目ごとにメッセージを出す。**入力内容は保たれる**
 
 **【Controller：手順】**
@@ -202,14 +202,14 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-ADDRESS-EDIT` |
+| 画面 | [`SCR-ADDRESS-EDIT`](../wireframes/customer/SCR-ADDRESS-EDIT.html) |
 | ドメイン対応 | [OP-CUST-03](../../design/domain/operations.md) |
 | 目的 | 引っ越しや誤りを直す |
 
 **【Boundary：画面】**
 
 - [UC-CUST-15](#uc-cust-15--住所を登録する) と**同じ画面・同じ項目**。既存の値が初期表示される
-- 保存後の遷移: 呼び出し元（`SCR-ADDRESSES` または `SCR-CHECKOUT`）
+- 保存後の遷移: 呼び出し元（[`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) または [`SCR-CHECKOUT`](../wireframes/customer/SCR-CHECKOUT.html)）
 
 **【Controller：手順】**
 
@@ -236,21 +236,21 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-ADDRESSES` |
+| 画面 | [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) |
 | ドメイン対応 | [OP-CUST-04](../../design/domain/operations.md) |
 | 目的 | 使わなくなった届け先を選択肢から消す |
 
 **【Boundary：画面】**
 
 - 操作: 行の「削除」→ **確認ダイアログ**「この住所を削除しますか？」→「はい」
-- フィードバック: `SCR-ADDRESSES` に戻り、通知バナー「住所を削除しました」。一覧から消える
+- フィードバック: [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) に戻り、通知バナー「住所を削除しました」。一覧から消える
 
 **【Controller：手順】**
 
 1. 主体識別子と住所識別子を受け取る。
 2. 住所の削除を依頼する。
 3. 単位作業を完了する。
-4. `SCR-ADDRESSES` へ戻し、通知バナーを出す。
+4. [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) へ戻し、通知バナーを出す。
 
 **【Entity：ルール】**
 

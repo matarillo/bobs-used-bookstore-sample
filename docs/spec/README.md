@@ -20,7 +20,7 @@ Web アプリケーション `app/Bookstore.Web` が来店者と店舗スタッ�
 | [conventions.md](conventions.md) | 全画面に共通する入出力・通知・エラーの作法 |
 | [rules.md](rules.md) | 業務ルール `RULE-` |
 | [use-cases/](use-cases/) | ユースケース `UC-`。下表のとおり |
-| `wireframes/` | 画面ごとのワイヤーフレーム |
+| [wireframes/](wireframes/README.md) | 画面ごとのワイヤーフレーム。書式は同 README |
 
 ### 1.1 ユースケース
 

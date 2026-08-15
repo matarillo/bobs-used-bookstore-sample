@@ -37,18 +37,18 @@ derived-from: 4412aa1
 
 | 画面 | 確認する操作 |
 | --- | --- |
-| `SCR-CART` | かごから取り除く |
-| `SCR-WISH` | 欲しい物リストから取り除く |
-| `SCR-ADDRESSES` | 住所を削除する |
+| [`SCR-CART`](wireframes/customer/SCR-CART.html) | かごから取り除く |
+| [`SCR-WISH`](wireframes/customer/SCR-WISH.html) | 欲しい物リストから取り除く |
+| [`SCR-ADDRESSES`](wireframes/customer/SCR-ADDRESSES.html) | 住所を削除する |
 
-**確認を挟んでいない取り消し操作が 1 つある**: 自分の注文の取消（`SCR-ORDERS`）。
+**確認を挟んでいない取り消し操作が 1 つある**: 自分の注文の取消（[`SCR-ORDERS`](wireframes/customer/SCR-ORDERS.html)）。
 確認なしで即座に取り消される（[Q-08](../product/open-questions.md)）。
 
 ## 3. 一覧のページ送り
 
 | 事項 | 内容 |
 | --- | --- |
-| 対象 | `SCR-SEARCH`, `SCR-A-ORDERS`, `SCR-A-OFFERS`, `SCR-A-BOOKS`, `SCR-A-REFDATA` |
+| 対象 | [`SCR-SEARCH`](wireframes/customer/SCR-SEARCH.html), [`SCR-A-ORDERS`](wireframes/admin/SCR-A-ORDERS.html), [`SCR-A-OFFERS`](wireframes/admin/SCR-A-OFFERS.html), [`SCR-A-BOOKS`](wireframes/admin/SCR-A-BOOKS.html), [`SCR-A-REFDATA`](wireframes/admin/SCR-A-REFDATA.html) |
 | 1 ページの件数 | 10 件（利用者は変更できない） |
 | ページ番号 | 1 始まり |
 | 画面が受け取るもの | その頁の行、頁番号、頁サイズ、**条件に合致する総件数** |
@@ -59,13 +59,13 @@ derived-from: 4412aa1
 
 ## 4. 絞り込みのある一覧
 
-管理側の一覧（`SCR-A-ORDERS`, `SCR-A-OFFERS`, `SCR-A-BOOKS`, `SCR-A-REFDATA`）は、
+管理側の一覧（[`SCR-A-ORDERS`](wireframes/admin/SCR-A-ORDERS.html), [`SCR-A-OFFERS`](wireframes/admin/SCR-A-OFFERS.html), [`SCR-A-BOOKS`](wireframes/admin/SCR-A-BOOKS.html), [`SCR-A-REFDATA`](wireframes/admin/SCR-A-REFDATA.html)）は、
 一覧の上に絞り込み条件の帯を持ち、「絞り込む」と「解除」の 2 操作を備える。
 
 - 条件は**画面の状態として保たれ**、ページを送っても外れない。
 - 条件を空にした「解除」は、無条件の一覧に戻る。
 
-> 現行、`SCR-A-OFFERS` だけは絞り込んだ**条件が入力欄に残らない**（結果は正しく絞られる）。
+> 現行、[`SCR-A-OFFERS`](wireframes/admin/SCR-A-OFFERS.html) だけは絞り込んだ**条件が入力欄に残らない**（結果は正しく絞られる）。
 > 不具合として扱う（[Q-10](../product/open-questions.md)）。
 
 ## 5. うまくいかなかったときの扱い
@@ -75,7 +75,7 @@ derived-from: 4412aa1
 | 区分 | 例 | 画面の振る舞い |
 | --- | --- | --- |
 | **想定内の失敗** | 入力不備、在庫切れ、住所未登録 | **その場で伝える**。入力内容は保たれ、やり直せる |
-| **想定外の失敗** | 通信・保存の失敗、状態の矛盾 | 共通のエラー画面（`SCR-ERROR` / `SCR-A-ERROR`）へ移る。入力内容は失われる |
+| **想定外の失敗** | 通信・保存の失敗、状態の矛盾 | 共通のエラー画面（[`SCR-ERROR`](wireframes/customer/SCR-ERROR.html) / [`SCR-A-ERROR`](wireframes/admin/SCR-A-ERROR.html)）へ移る。入力内容は失われる |
 
 現行、**想定内として扱われているのは次だけ**である。
 
@@ -102,10 +102,10 @@ derived-from: 4412aa1
 
 | 事項 | 現行 | 備考 |
 | --- | --- | --- |
-| 金額 | 通貨書式で表示 | ただし `SCR-CHECKOUT` のみ通貨記号が固定（[Q-11](../product/open-questions.md)） |
+| 金額 | 通貨書式で表示 | ただし [`SCR-CHECKOUT`](wireframes/customer/SCR-CHECKOUT.html) のみ通貨記号が固定（[Q-11](../product/open-questions.md)） |
 | 日付 | 日付のみ（時刻は出さない） | 内部は UTC 基準（[RULE-PERIOD-01](rules.md)） |
 | 表紙画像がないとき | 既定の表紙画像に差し替える | 画面は「画像なし」を表示しない |
-| 一覧が 0 件のとき | `SCR-SEARCH` は「見つかりません」、`SCR-ORDERS` は「注文はありません」 | 他の一覧は空の表を描く（[Q-12](../product/open-questions.md)） |
+| 一覧が 0 件のとき | [`SCR-SEARCH`](wireframes/customer/SCR-SEARCH.html) は「見つかりません」、[`SCR-ORDERS`](wireframes/customer/SCR-ORDERS.html) は「注文はありません」 | 他の一覧は空の表を描く（[Q-12](../product/open-questions.md)） |
 
 ## 8. 状態を変える操作の作法
 

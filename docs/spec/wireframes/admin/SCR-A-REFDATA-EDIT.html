@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>SCR-A-REFDATA-EDIT — 参照データの登録／改名</title>
+<meta name="layer" content="spec">
+<meta name="status" content="derived">
+<meta name="derived-from" content="4412aa1">
+<link rel="stylesheet" href="../wireframe.css">
+
+<div class="doc">
+
+<h1>SCR-A-REFDATA-EDIT — 参照データの登録／改名</h1>
+
+<table class="meta">
+  <tr><th>経路</th><td>/Admin/ReferenceData/Create, /Update/{id}</td></tr>
+  <tr><th>定めるユースケース</th><td>
+    <a href="../../use-cases/staff-catalog.md#uc-staff-18--参照データ項目を登録する">UC-STAFF-18</a> /
+    <a href="../../use-cases/staff-catalog.md#uc-staff-19--参照データ項目を改名する">UC-STAFF-19</a></td></tr>
+  <tr><th>フレーム</th><td>管理</td></tr>
+</table>
+
+<p class="note">登録と改名は<b>同じ見出し・同じ項目</b>であるため、版面は 1 つとする
+（<a href="../README.md">書式</a> §4）。種別が書き換えられるかどうかだけが違う。</p>
+
+<h2>版面</h2>
+
+<div class="body-area">
+
+  <p class="note"><span class="cond">保存できなかったとき</span> <span class="warn">メッセージ</span></p>
+
+  <p class="screen-title">参照データの登録／改名</p>
+
+  <div class="cols2">
+    <div>
+      <div class="form-group">
+        <span class="name">種別</span>
+        <span class="select">種別</span>
+      </div>
+      <div class="form-group">
+        <span class="name">名称</span>
+        <span class="field"></span>
+      </div>
+      <div class="actions">
+        <span class="btn primary">保存</span>
+        <span class="btn">戻る</span>
+      </div>
+    </div>
+    <div></div>
+  </div>
+
+</div>
+
+<h2>配置の意図</h2>
+
+<ul>
+  <li>項目が 2 つしかないため、<b>面の左半分に寄せて置く</b>。
+      全幅に伸ばすと入力欄が長くなりすぎ、短い名称を入れる欄に見えなくなる</li>
+  <li>種別を先、名称を後に置く。<b>種別が名称の意味を決める</b>ため、
+      一覧（<code>SCR-A-REFDATA</code>）の列の並びと揃える</li>
+  <li>保存できなかったときのメッセージだけは<b>見出しより上</b>に出る。
+      項目ごとの検証を画面が行っていないため、欄の直下に出す場所が無い</li>
+  <li>「保存」と「戻る」を項目のすぐ下に置く。2 項目しかない面であり、
+      最下段まで離すと空きが間延びする</li>
+</ul>
+
+<h2>状態による差分</h2>
+
+<table class="diff">
+  <tr><th>状態</th><th>版面の変化</th></tr>
+  <tr><td>登録</td><td>種別を選べる。名称は空</td></tr>
+  <tr><td>書籍編集の「追加」から来た登録</td><td>その軸の種別が初期選択された状態で描かれる</td></tr>
+  <tr><td>改名</td><td><b>種別が書き換えられなくなる</b>（値は見える）。名称に既存の値が入る</td></tr>
+</table>
+
+<p class="note">名称の検証を画面側で行っていないため、空のまま保存するとエラー画面へ落ちる
+（<a href="../../../product/open-questions.md">Q-25</a>）。</p>
+
+</div>
