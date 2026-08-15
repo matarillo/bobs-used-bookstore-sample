@@ -7,7 +7,8 @@
 
 ## 0. 設計課題定義
 
-docs\snapshot-4412aa1\15-design-issues.md を参照。
+[docs/design/issues.md](docs/design/issues.md) を参照。
+文書体系の全体は [docs/README.md](docs/README.md) にある。
 
 ## 1. ブランチ戦略と命名規則
 
