@@ -6,7 +6,7 @@ namespace Bookstore.Domain.Tests
     public class ShoppingCartTests
     {
         [Fact]
-        public void AddItemToShoppingCart_AddsASecondLine_When_TheSameBookIsAddedTwice()
+        public void AddItemToShoppingCart_IncreasesTheQuantityOfTheExistingLine_When_TheSameBookIsAddedTwice()
         {
             var book = new BookBuilder().Id(1).Build();
 
@@ -15,11 +15,41 @@ namespace Bookstore.Domain.Tests
                 .WithShoppingCartItem(book, 3)
                 .Build();
 
+            var shoppingCartItem = shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single();
+
+            Assert.Equal(5, shoppingCartItem.Quantity);
+        }
+
+        [Fact]
+        public void AddItemToShoppingCart_AddsASeparateLine_When_ADifferentBookIsAdded()
+        {
+            var firstBook = new BookBuilder().Id(1).Build();
+            var secondBook = new BookBuilder().Id(2).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithShoppingCartItem(firstBook, 1)
+                .WithShoppingCartItem(secondBook, 1)
+                .Build();
+
             Assert.Equal(2, shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Count());
         }
 
         [Fact]
-        public void AddItemToWishlist_AddsASecondLine_When_TheSameBookIsAddedTwice()
+        public void AddItemToShoppingCart_LeavesTheWishListItemUntouched_When_TheSameBookIsOnTheWishList()
+        {
+            var book = new BookBuilder().Id(1).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithWishListItem(book)
+                .WithShoppingCartItem(book, 2)
+                .Build();
+
+            Assert.Equal(2, shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single().Quantity);
+            Assert.Single(shoppingCart.GetWishListItems());
+        }
+
+        [Fact]
+        public void AddItemToWishlist_DoesNotAddASecondLine_When_TheSameBookIsAddedTwice()
         {
             var book = new BookBuilder().Id(1).Build();
 
@@ -28,7 +58,42 @@ namespace Bookstore.Domain.Tests
                 .WithWishListItem(book)
                 .Build();
 
-            Assert.Equal(2, shoppingCart.GetWishListItems().Count());
+            Assert.Single(shoppingCart.GetWishListItems());
+        }
+
+        [Fact]
+        public void MoveWishListItemToShoppingCart_MergesIntoTheExistingLine_When_TheBookIsAlreadyInTheShoppingCart()
+        {
+            var book = new BookBuilder().Id(1).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithShoppingCartItem(book, 2)
+                .WithWishListItem(book)
+                .Build();
+
+            var wishListItemId = shoppingCart.GetWishListItems().Single().Id;
+
+            shoppingCart.MoveWishListItemToShoppingCart(wishListItemId);
+
+            Assert.Equal(3, shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single().Quantity);
+            Assert.Empty(shoppingCart.GetWishListItems());
+        }
+
+        [Fact]
+        public void MoveWishListItemToShoppingCart_ConvertsTheItem_When_TheBookIsNotInTheShoppingCart()
+        {
+            var book = new BookBuilder().Id(1).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithWishListItem(book)
+                .Build();
+
+            var wishListItemId = shoppingCart.GetWishListItems().Single().Id;
+
+            shoppingCart.MoveWishListItemToShoppingCart(wishListItemId);
+
+            Assert.Single(shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems));
+            Assert.Empty(shoppingCart.GetWishListItems());
         }
 
         [Fact]

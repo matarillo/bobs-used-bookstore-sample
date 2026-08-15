@@ -77,7 +77,8 @@
 
                 if (shoppingCart == null) return;
 
-            foreach (var wishListItem in shoppingCart.GetWishListItems())
+            // Materialised because moving an item can remove it from the underlying collection.
+            foreach (var wishListItem in shoppingCart.GetWishListItems().ToList())
             {
                 shoppingCart.MoveWishListItemToShoppingCart(wishListItem.Id);
             }
