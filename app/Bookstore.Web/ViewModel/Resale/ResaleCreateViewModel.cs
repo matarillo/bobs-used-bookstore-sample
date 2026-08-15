@@ -11,6 +11,13 @@ namespace Bookstore.Web.ViewModel.Resale
 
         public ResaleCreateViewModel(IEnumerable<ReferenceDataItem> referenceDataItems)
         {
+            AddReferenceData(referenceDataItems);
+        }
+
+        // Named after its counterpart on InventoryCreateUpdateViewModel, so a redisplayed form
+        // can be given its drop-downs back without losing what the customer typed.
+        public void AddReferenceData(IEnumerable<ReferenceDataItem> referenceDataItems)
+        {
             var dataItems = referenceDataItems.ToList();
             BookTypes = dataItems.Where(x => x.DataType == ReferenceDataType.BookType).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
             Publishers = dataItems.Where(x => x.DataType == ReferenceDataType.Publisher).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
@@ -18,13 +25,18 @@ namespace Bookstore.Web.ViewModel.Resale
             Conditions = dataItems.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
         }
 
-        public IEnumerable<SelectListItem> BookTypes { get; internal set; }
+        // Nullable for the same reason as InventoryCreateUpdateViewModel's optional properties:
+        // a non-nullable reference type is implicitly required, and these four are filled in by
+        // the server to render the drop-downs — a submitted form never carries them, and their
+        // setters are internal, so nothing a customer could post would satisfy the requirement.
+        // Every attempt to offer a book therefore failed validation.
+        public IEnumerable<SelectListItem>? BookTypes { get; internal set; }
 
-        public IEnumerable<SelectListItem> Publishers { get; internal set; }
+        public IEnumerable<SelectListItem>? Publishers { get; internal set; }
 
-        public IEnumerable<SelectListItem> Genres { get; internal set; }
+        public IEnumerable<SelectListItem>? Genres { get; internal set; }
 
-        public IEnumerable<SelectListItem> Conditions { get; internal set; }
+        public IEnumerable<SelectListItem>? Conditions { get; internal set; }
 
         public int SelectedBookTypeId { get; set; }
 

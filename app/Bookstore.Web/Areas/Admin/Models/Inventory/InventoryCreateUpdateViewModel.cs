@@ -102,14 +102,20 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         [Required]
         public int Quantity { get; set; } = 1;
 
+        // Nullable because none of the three is required to describe a book, and under
+        // <Nullable>enable</Nullable> MVC treats a non-nullable reference type as implicitly
+        // required: declared as "string"/"IFormFile" they made every submit fail validation.
+        // CoverImageUrl and Summary are not even rendered as inputs, so no submit could satisfy
+        // them. This blocked the pre-existing create and update forms as well as ISSUE-06's
+        // stock-from-offer route.
         [MaxFileSize(2 * 1024 * 1024)]
         [ImageTypes(new[] { ".png", ".jpg", ".jpeg" })]
         [DisplayName("Cover image")]
-        public IFormFile CoverImage { get; set; }
-        
-        public string CoverImageUrl { get; set; }
+        public IFormFile? CoverImage { get; set; }
 
-        public string Summary { get; set; }
+        public string? CoverImageUrl { get; set; }
+
+        public string? Summary { get; set; }
 
         public void AddReferenceData(IEnumerable<ReferenceDataItem> referenceDataItems)
         {
