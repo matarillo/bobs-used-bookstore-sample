@@ -1,4 +1,4 @@
-# 06. AGG-CUSTOMER / AGG-ADDRESS — 顧客・住所集約
+# AGG-CUSTOMER / AGG-ADDRESS — 顧客・住所集約
 
 ## 1. 責務
 
@@ -19,7 +19,7 @@
 | メールアドレス | テキスト | ○ | 可 | |
 | 生年月日 | 日時 | ○ | 可 | |
 | 電話番号 | テキスト | ○ | 可 | |
-| （基底属性） | | | | [03](03-building-blocks.md) §1 |
+| （基底属性） | | | | [03](building-blocks.md) §1 |
 
 ### 2.2 派生属性
 
@@ -69,7 +69,7 @@ stateDiagram-v2
 | **住所の登録** | `FindOrCreateAsync` 経由 | 顧客の最初の住所登録が、その顧客のドメインへの初回接触であることが多いため |
 
 注文と買取オファーは、**顧客がすでに存在することを前提とする**。存在しなければ失敗する
-（[RULE-SERVICE-01](10-domain-services-and-policies.md)）。
+（[RULE-SERVICE-01](services-and-policies.md)）。
 
 ## 3. AGG-ADDRESS — 住所集約
 
@@ -86,7 +86,7 @@ stateDiagram-v2
 | 国 | テキスト | ● | |
 | 郵便番号 | テキスト | ● | |
 | 有効フラグ | 真偽 | ● | 既定 有効 |
-| （基底属性） | | | [03](03-building-blocks.md) §1 |
+| （基底属性） | | | [03](building-blocks.md) §1 |
 
 ### 3.2 振る舞い
 
@@ -146,7 +146,7 @@ graph LR
 
 住所は顧客に属するが、**顧客集約の内部エンティティではない**。
 独自のリポジトリを持ち、独立に取得・更新される。この選択の是非は
-[ISSUE-15](15-design-issues.md) を参照。
+[ISSUE-15](../issues.md) を参照。
 
 ## 5. 未定義の事項
 

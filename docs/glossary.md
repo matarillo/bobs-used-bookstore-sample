@@ -1,4 +1,4 @@
-# 01. ユビキタス言語
+# ユビキタス言語
 
 本書・実装・業務会話が共有する語彙。**同じものを違う言葉で呼ばない／違うものを同じ言葉で呼ばない**ことが、以下の表の目的である。
 
@@ -18,15 +18,15 @@ Bob's Used Bookstore は**中古書籍を顧客から買い取り、顧客に売
 
 | 日本語 | 英語 | 意味 | 対応する集約 |
 | --- | --- | --- | --- |
-| 書籍 | Book | 販売可能な在庫としての1タイトル。中古書店では通常1冊 | [AGG-BOOK](05-aggregate-book.md) |
-| 買取オファー | Offer | 顧客から店への「この本を買い取ってほしい」という申込 | [AGG-OFFER](09-aggregate-offer.md) |
-| 買い物かご | Shopping Cart | 顧客が購入しようとしている書籍の集まり | [AGG-CART](07-aggregate-shopping-cart.md) |
-| 欲しい物リスト | Wish List | 買い物かごの中で「今は買わない」印がついた明細の集まり | [AGG-CART](07-aggregate-shopping-cart.md) |
-| 注文 | Order | 顧客と店の間で成立した売買の合意 | [AGG-ORDER](08-aggregate-order.md) |
-| 注文明細 | Order Item | 注文に含まれる1書籍分の行。価格と原価を注文時点で凍結する | [AGG-ORDER](08-aggregate-order.md) |
-| 顧客 | Customer | 買う側にも売る側にもなりうる相手 | [AGG-CUSTOMER](06-aggregate-customer-address.md) |
-| 住所 | Address | 顧客の配送先 | [AGG-ADDRESS](06-aggregate-customer-address.md) |
-| 参照データ項目 | Reference Data Item | 書籍を分類するための選択肢 | [AGG-REFDATA](04-aggregate-reference-data.md) |
+| 書籍 | Book | 販売可能な在庫としての1タイトル。中古書店では通常1冊 | [AGG-BOOK](design/domain/aggregate-book.md) |
+| 買取オファー | Offer | 顧客から店への「この本を買い取ってほしい」という申込 | [AGG-OFFER](design/domain/aggregate-offer.md) |
+| 買い物かご | Shopping Cart | 顧客が購入しようとしている書籍の集まり | [AGG-CART](design/domain/aggregate-shopping-cart.md) |
+| 欲しい物リスト | Wish List | 買い物かごの中で「今は買わない」印がついた明細の集まり | [AGG-CART](design/domain/aggregate-shopping-cart.md) |
+| 注文 | Order | 顧客と店の間で成立した売買の合意 | [AGG-ORDER](design/domain/aggregate-order.md) |
+| 注文明細 | Order Item | 注文に含まれる1書籍分の行。価格と原価を注文時点で凍結する | [AGG-ORDER](design/domain/aggregate-order.md) |
+| 顧客 | Customer | 買う側にも売る側にもなりうる相手 | [AGG-CUSTOMER](design/domain/aggregate-customer-address.md) |
+| 住所 | Address | 顧客の配送先 | [AGG-ADDRESS](design/domain/aggregate-customer-address.md) |
+| 参照データ項目 | Reference Data Item | 書籍を分類するための選択肢 | [AGG-REFDATA](design/domain/aggregate-reference-data.md) |
 
 ## 3. 分類の語彙
 
@@ -34,7 +34,7 @@ Bob's Used Bookstore は**中古書籍を顧客から買い取り、顧客に売
 
 | 日本語 | 英語 | 意味 |
 | --- | --- | --- |
-| 分類 | Classification | 4軸の組。4軸すべてが揃って初めて意味を持つ（[VO-CLASSIFICATION](03-building-blocks.md)） |
+| 分類 | Classification | 4軸の組。4軸すべてが揃って初めて意味を持つ（[VO-CLASSIFICATION](design/domain/building-blocks.md)） |
 | 出版社 | Publisher | 分類の第1軸 |
 | 書籍種別 | Book Type | 分類の第2軸（ハードカバー／ペーパーバック等） |
 | ジャンル | Genre | 分類の第3軸 |
@@ -55,14 +55,14 @@ Bob's Used Bookstore は**中古書籍を顧客から買い取り、顧客に売
 | 在庫切れ | Out Of Stock | 在庫数が0 | — |
 | 在庫僅少（販売可） | Low Stock Still Available | 在庫数が1以上しきい値以下。**在庫切れに近づいている書籍を測る分析上の概念** | 含まない |
 
-> 「在庫僅少」が二つあるのは意図的である。**仕入担当**にとって「補充が必要な本」には売り切れた本も含まれるが、**分析**にとって「売り切れそうな本」に売り切れた本は含まれない。同じ問いではないため、別の名前を与えている（[13-read-models-and-statistics.md](13-read-models-and-statistics.md) §2.1）。
+> 「在庫僅少」が二つあるのは意図的である。**仕入担当**にとって「補充が必要な本」には売り切れた本も含まれるが、**分析**にとって「売り切れそうな本」に売り切れた本は含まれない。同じ問いではないため、別の名前を与えている（[13-read-models-and-statistics.md](design/domain/read-models.md) §2.1）。
 
 ## 5. 金額と数量の語彙
 
 | 日本語 | 英語 | 意味 |
 | --- | --- | --- |
-| 金額 | Money | 単一通貨・非負・通貨最小単位に丸められた量（[VO-MONEY](03-building-blocks.md)） |
-| 数量 | Quantity | 非負の冊数（[VO-QUANTITY](03-building-blocks.md)） |
+| 金額 | Money | 単一通貨・非負・通貨最小単位に丸められた量（[VO-MONEY](design/domain/building-blocks.md)） |
+| 数量 | Quantity | 非負の冊数（[VO-QUANTITY](design/domain/building-blocks.md)） |
 | 売価 | Price | 店が書籍を売る値段 |
 | 買取価格 | Book Price（オファー上） | 店が顧客に支払う（支払った）値段 |
 | 小計 | SubTotal | 明細単位では 売価 × 数量、注文単位では明細小計の合計 |
@@ -106,10 +106,10 @@ Bob's Used Bookstore は**中古書籍を顧客から買い取り、顧客に売
 
 ## 8. 操作方針の語彙
 
-サービス層の「対象が見つからなかったとき」の扱いには、二つの方針が使い分けられている（[10-domain-services-and-policies.md](10-domain-services-and-policies.md) §3）。
+サービス層の「対象が見つからなかったとき」の扱いには、二つの方針が使い分けられている（[10-domain-services-and-policies.md](design/domain/services-and-policies.md) §3）。
 
 | 日本語 | 英語 | 意味 |
 | --- | --- | --- |
 | 厳格な更新 | Strict update | 個別に指定された対象が存在しなければ失敗させる |
 | 寛容な操作 | Tolerant operation | 対象が存在しなければ「すでにその状態である」とみなして成功させる |
-| 単位作業 | Unit of Work | まとめて成功するかまとめて失敗するかの範囲（[03-building-blocks.md](03-building-blocks.md) §5） |
+| 単位作業 | Unit of Work | まとめて成功するかまとめて失敗するかの範囲（[03-building-blocks.md](design/domain/building-blocks.md) §5） |
