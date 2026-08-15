@@ -9,7 +9,13 @@ namespace Bookstore.Domain.Offers
 
         Task<IEnumerable<Offer>> GetOffersAsync(string sub);
 
+        // Unscoped: for staff use (see IOfferRepository.GetAsync(int)).
         Task<Offer> GetOfferAsync(int offerId);
+
+        // RULE-CUST-01, ISSUE-21: the customer-safe lookup — returns null unless the offer
+        // belongs to the given subject. Customer-facing routes must use this, not the unscoped
+        // overload above.
+        Task<Offer> GetOfferAsync(string sub, int offerId);
 
         Task CreateOfferAsync(CreateOfferDto createOfferDto);
 
@@ -48,6 +54,11 @@ namespace Bookstore.Domain.Offers
         public async Task<Offer> GetOfferAsync(int id)
         {
             return await offerRepository.GetAsync(id);
+        }
+
+        public async Task<Offer> GetOfferAsync(string sub, int id)
+        {
+            return await offerRepository.GetAsync(sub, id);
         }
 
         public async Task CreateOfferAsync(CreateOfferDto dto)

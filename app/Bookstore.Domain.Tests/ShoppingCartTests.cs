@@ -97,6 +97,22 @@ namespace Bookstore.Domain.Tests
         }
 
         [Fact]
+        public void MoveWishListItemToShoppingCart_Throws_When_TheItemDoesNotExist()
+        {
+            var shoppingCart = new ShoppingCartBuilder().Build();
+
+            Assert.Throws<DomainException>(() => shoppingCart.MoveWishListItemToShoppingCart(999));
+        }
+
+        [Fact]
+        public void RemoveShoppingCartItemById_Throws_When_TheItemDoesNotExist()
+        {
+            var shoppingCart = new ShoppingCartBuilder().Build();
+
+            Assert.Throws<DomainException>(() => shoppingCart.RemoveShoppingCartItemById(999));
+        }
+
+        [Fact]
         public void GetSubTotal_MultipliesThePriceByTheQuantity_When_Executed()
         {
             var book = new BookBuilder().Id(1).Price(10m).Quantity(100).Build();
@@ -160,6 +176,82 @@ namespace Bookstore.Domain.Tests
                 .Build();
 
             Assert.Equal(1, shoppingCart.GetWishListItems().Single().Quantity);
+        }
+
+        [Fact]
+        public void GetItemsForNewOrder_ReturnsOnlyInStockItems_When_TheCartHasBoth()
+        {
+            var inStockBook = new BookBuilder().Id(1).Quantity(5).Build();
+            var outOfStockBook = new BookBuilder().Id(2).Quantity(0).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithShoppingCartItem(inStockBook, 1)
+                .WithShoppingCartItem(outOfStockBook, 1)
+                .Build();
+
+            var items = shoppingCart.GetItemsForNewOrder();
+
+            Assert.Equal(inStockBook.Id, Assert.Single(items).BookId);
+        }
+
+        [Fact]
+        public void GetItemsForNewOrder_Throws_When_TheCartIsEmpty()
+        {
+            var shoppingCart = new ShoppingCartBuilder().Build();
+
+            Assert.Throws<DomainException>(() => shoppingCart.GetItemsForNewOrder());
+        }
+
+        [Fact]
+        public void GetItemsForNewOrder_Throws_When_EveryWantedItemIsOutOfStock()
+        {
+            var outOfStockBook = new BookBuilder().Id(1).Quantity(0).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithShoppingCartItem(outOfStockBook, 1)
+                .Build();
+
+            Assert.Throws<DomainException>(() => shoppingCart.GetItemsForNewOrder());
+        }
+
+        [Fact]
+        public void GetItemsForNewOrder_IgnoresWishListItems_When_DecidingWhetherTheCartIsEmpty()
+        {
+            var wishListBook = new BookBuilder().Id(1).Quantity(5).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithWishListItem(wishListBook)
+                .Build();
+
+            Assert.Throws<DomainException>(() => shoppingCart.GetItemsForNewOrder());
+        }
+
+        [Fact]
+        public void GetOutOfStockWantedItems_ReturnsOnlyOutOfStockItems_When_TheCartHasBoth()
+        {
+            var inStockBook = new BookBuilder().Id(1).Quantity(5).Build();
+            var outOfStockBook = new BookBuilder().Id(2).Quantity(0).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithShoppingCartItem(inStockBook, 1)
+                .WithShoppingCartItem(outOfStockBook, 1)
+                .Build();
+
+            var skipped = shoppingCart.GetOutOfStockWantedItems();
+
+            Assert.Equal(outOfStockBook.Id, Assert.Single(skipped).BookId);
+        }
+
+        [Fact]
+        public void GetOutOfStockWantedItems_IgnoresWishListItems_When_Executed()
+        {
+            var outOfStockWishListBook = new BookBuilder().Id(1).Quantity(0).Build();
+
+            var shoppingCart = new ShoppingCartBuilder()
+                .WithWishListItem(outOfStockWishListBook)
+                .Build();
+
+            Assert.Empty(shoppingCart.GetOutOfStockWantedItems());
         }
     }
 }

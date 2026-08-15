@@ -24,7 +24,10 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var order = await orderService.GetOrderAsync(id);
+            // RULE-CUST-01, ISSUE-21: only the owner may see this order.
+            var order = await orderService.GetOrderAsync(User.GetSub(), id);
+
+            if (order == null) return NotFound();
 
             return View(new OrderDetailsViewModel(order));
         }

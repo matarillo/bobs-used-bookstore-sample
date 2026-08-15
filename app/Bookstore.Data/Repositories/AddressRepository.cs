@@ -15,13 +15,15 @@ namespace Bookstore.Data.Repositories
             this.dbContext = dbContext;
         }
 
-        async Task IAddressRepository.DeleteAsync(string sub, int id)
+        async Task<bool> IAddressRepository.DeleteAsync(string sub, int id)
         {
             var address = await dbContext.Address.SingleOrDefaultAsync(x => x.Customer.Sub == sub && x.Id == id);
 
-            if (address == null) return;
+            if (address == null) return false;
 
             address.IsActive = false;
+
+            return true;
         }
 
         async Task<Address> IAddressRepository.GetAsync(string sub, int id)
