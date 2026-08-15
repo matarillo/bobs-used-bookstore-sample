@@ -120,8 +120,8 @@ internal class FakeOfferRepository : IOfferRepository
 
     Task<Offer> IOfferRepository.GetAsync(int id) => Task.FromResult(db.Offers.SingleOrDefault(x => x.Id == id))!;
 
-    // RULE-CUST-01, ISSUE-21: scoped the same way the real repository is — only an offer that
-    // belongs to the given subject is returned.
+    // Scoped the same way the real repository is — only an offer that belongs to the given
+    // subject is returned.
     Task<Offer> IOfferRepository.GetAsync(string sub, int id)
     {
         var customer = db.Customers.SingleOrDefault(x => x.Sub == sub);
@@ -210,7 +210,7 @@ internal class FakeOrderRepository : IOrderRepository
 
     Task<Order> IOrderRepository.GetAsync(int id) => Task.FromResult(db.Orders.SingleOrDefault(x => x.Id == id))!;
 
-    // RULE-CUST-01: scoped to the owner, matching the real repository.
+    // Scoped to the owner, matching the real repository.
     Task<Order> IOrderRepository.GetAsync(int id, string sub)
     {
         var customer = db.Customers.SingleOrDefault(x => x.Sub == sub);

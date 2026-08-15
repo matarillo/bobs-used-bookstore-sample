@@ -9,7 +9,7 @@ namespace Bookstore.Domain.Addresses
         internal protected Task AddAsync(Address address);
 
         // Returns whether an address was found (and deactivated); false lets the caller decide
-        // how to react to a missing target (ISSUE-13).
+        // how to react to a missing target.
         internal protected Task<bool> DeleteAsync(string sub, int id);
 
     }

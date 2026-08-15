@@ -37,7 +37,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Year = book.Year.GetValueOrDefault();
         }
 
-        // ISSUE-06: stocking a paid offer. The book is described by the offer, so only the sale
+        // Stocking a paid offer. The book is described by the offer, so only the sale
         // price and the presentation details are left for the store to fill in.
         public InventoryCreateUpdateViewModel(IEnumerable<ReferenceDataItem> referenceDataItems, Offer offer) : this(referenceDataItems)
         {
@@ -55,7 +55,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         public int Id { get; set; }
 
-        // ISSUE-06: set only when the book is being stocked from an offer.
+        // Set only when the book is being stocked from an offer.
         public int? SourceOfferId { get; set; }
 
         [DisplayName("Purchase cost")]
@@ -96,7 +96,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         [DisplayName("Condition")]
         public int SelectedConditionId { get; set; }
 
-        // ISSUE-07: Money and Quantity reject a negative value by throwing, which is the right
+        // Money and Quantity reject a negative value by throwing, which is the right
         // answer for the model and the wrong one for a form. Caught here so the store sees a
         // validation message instead of an error page.
         [Required]
@@ -109,10 +109,9 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         // Nullable because none of the three is required to describe a book, and under
         // <Nullable>enable</Nullable> MVC treats a non-nullable reference type as implicitly
-        // required: declared as "string"/"IFormFile" they made every submit fail validation.
-        // CoverImageUrl and Summary are not even rendered as inputs, so no submit could satisfy
-        // them. This blocked the pre-existing create and update forms as well as ISSUE-06's
-        // stock-from-offer route.
+        // required: declared as "string"/"IFormFile" they would make every submit fail
+        // validation. CoverImageUrl and Summary are not even rendered as inputs, so no submit
+        // could satisfy them.
         [MaxFileSize(2 * 1024 * 1024)]
         [ImageTypes(new[] { ".png", ".jpg", ".jpeg" })]
         [DisplayName("Cover image")]

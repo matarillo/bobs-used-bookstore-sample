@@ -28,10 +28,10 @@ namespace Bookstore.Data.Repositories
 
         async Task<Address> IAddressRepository.GetAsync(string sub, int id)
         {
-            // Returns null when no active address matches; callers check for that (ISSUE-13/21)
-            // even though the interface keeps the return type non-nullable (see
-            // IOfferRepository.GetAsync(string, int) for the same shape). The null-forgiving
-            // operator here just matches that existing, deliberate contract.
+            // Returns null when no active address matches; callers check for that even though the
+            // interface keeps the return type non-nullable (see IOfferRepository.GetAsync(string,
+            // int) for the same shape). The null-forgiving operator here just matches that
+            // existing, deliberate contract.
             return (await dbContext.Address.SingleOrDefaultAsync(x => x.Customer.Sub == sub && x.Id == id && x.IsActive == true))!;
         }
 

@@ -1,12 +1,12 @@
 namespace Bookstore.Domain
 {
-    // ISSUE-07: an amount of money, rather than a bare decimal. A price, a buying price, a
-    // subtotal, a tax and a total are all the same kind of thing, and that kind of thing has
-    // properties a decimal does not: one currency, a rounding rule, and no negative values.
+    // An amount of money, rather than a bare decimal. A price, a buying price, a subtotal, a tax
+    // and a total are all the same kind of thing, and that kind of thing has properties a decimal
+    // does not: one currency, a rounding rule, and no negative values.
     //
     // Validity is settled at creation (Of), so nothing downstream has to re-check it. Read-side
-    // statistics stay in decimal: they are projections computed by the database (12 §2.4), not
-    // part of the model whose invariants this type carries.
+    // statistics stay in decimal: they are projections computed by the database, not part of the
+    // model whose invariants this type carries.
     public readonly record struct Money : IComparable<Money>
     {
         // The store trades in one currency. Naming it here is the point: an amount that does not
@@ -29,8 +29,7 @@ namespace Bookstore.Domain
 
         public bool IsZero => Amount == 0m;
 
-        // INV-BOOK-06, INV-OFFER-06: money is never negative. A price of minus five is not a
-        // cheap book, it is a mistake, and it used to be storable.
+        // Money is never negative. A price of minus five is not a cheap book, it is a mistake.
         public static Money Of(decimal amount)
         {
             if (amount < 0m)
@@ -45,9 +44,8 @@ namespace Bookstore.Domain
 
         public static Money operator +(Money left, Money right) => new(left.Amount + right.Amount);
 
-        // RULE-CART-03, RULE-ORDER-02: the multiplication ISSUE-02 was about. The type says what
-        // the operation means — a price for one copy, taken so many times, is an amount — so the
-        // two operands can no longer be swapped or forgotten unnoticed.
+        // The type says what the operation means — a price for one copy, taken so many times, is
+        // an amount — so the two operands cannot be swapped or forgotten unnoticed.
         public static Money operator *(Money price, Quantity quantity) => new(Round(price.Amount * quantity.Value));
 
         public static Money operator *(Quantity quantity, Money price) => price * quantity;
@@ -85,8 +83,8 @@ namespace Bookstore.Domain
 
     public static class MoneyEnumerableExtensions
     {
-        // LINQ has no Sum for Money, and adding one here keeps the totals in the type rather than
-        // dropping to decimal to add them up.
+        // LINQ has no Sum for Money; this keeps totals in the type rather than dropping to
+        // decimal to add them up.
         public static Money Sum(this IEnumerable<Money> source) =>
             source.Aggregate(Money.Zero, static (running, next) => running + next);
 

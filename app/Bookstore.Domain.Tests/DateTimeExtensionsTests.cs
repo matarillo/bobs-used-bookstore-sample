@@ -2,8 +2,8 @@ namespace Bookstore.Domain.Tests
 {
     public class DateTimeExtensionsTests
     {
-        // ISSUE-24: the month begins at midnight on the first. It used to begin at the same time
-        // of day the question was asked, so anything recorded earlier on the first fell outside
+        // The month begins at midnight on the first. If it began at the same time of day the
+        // question was asked, anything recorded earlier on the first would fall outside
         // "this month".
         [Fact]
         public void StartOfMonth_IsMidnightOnTheFirstOfTheMonth_When_Executed()

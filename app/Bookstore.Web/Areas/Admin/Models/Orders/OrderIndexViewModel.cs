@@ -15,7 +15,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
 
         public OrderIndexViewModel(PagedResult<Order> orderDtos, OrderFilters filters)
         {
-            // ISSUE-25: read once so every row on the page is judged against the same instant.
+            // Read once so every row on the page is judged against the same instant.
             var now = DateTime.UtcNow;
 
             foreach (var order in orderDtos.Items)
@@ -52,7 +52,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
 
         public decimal Total { get; internal set; }
 
-        // ISSUE-25: Order.IsPastDue, so the list says the same thing the dashboard counts.
+        // Order.IsPastDue, so the list says the same thing the dashboard counts.
         public bool IsPastDue { get; internal set; }
     }
 }

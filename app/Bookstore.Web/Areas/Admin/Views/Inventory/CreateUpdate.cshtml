@@ -3,7 +3,7 @@
 @model Bookstore.Web.Areas.Admin.Models.Inventory.InventoryCreateUpdateViewModel
 
 @{
-    // ISSUE-06: when the book is being stocked from a paid offer, everything the offer already
+    // When the book is being stocked from a paid offer, everything the offer already
     // states about the book is fixed. Only the sale price and the presentation details are the
     // store's to decide.
     var fromOffer = Model.SourceOfferId.HasValue;

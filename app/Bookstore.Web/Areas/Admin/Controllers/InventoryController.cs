@@ -43,7 +43,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
             return View("CreateUpdate", new InventoryCreateUpdateViewModel(referenceDataItemDtos));
         }
 
-        // ISSUE-06: the route from a paid offer to the shelf. The offer describes the book; the
+        // The route from a paid offer to the shelf. The offer describes the book; the
         // store is only asked for the sale price and the presentation details.
         [HttpGet]
         public async Task<IActionResult> CreateFromOffer(int id)

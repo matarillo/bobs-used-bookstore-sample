@@ -52,13 +52,13 @@ namespace Bookstore.Domain.ReferenceData
         {
             var referenceDataItem = await referenceDataRepository.GetAsync(dto.Id);
 
-            // ISSUE-13: updating one specifically-identified item is a strict update.
+            // Updating one specifically-identified item is a strict update.
             if (referenceDataItem == null)
             {
                 throw new DomainException($"Reference data item {dto.Id} was not found.");
             }
 
-            // ISSUE-05: renaming is the whole of it — the type is not the caller's to change.
+            // Renaming is the whole of it — the type is not the caller's to change.
             referenceDataItem.Rename(dto.Text);
 
             await unitOfWork.CompleteAsync();

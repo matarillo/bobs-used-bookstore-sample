@@ -1,11 +1,11 @@
 namespace Bookstore.Domain.ReferenceData
 {
-    // ISSUE-05: the four axes a book (or an offer of one) is classified along, checked to be what
-    // they claim to be.
+    // The four axes a book (or an offer of one) is classified along, checked to be what they
+    // claim to be.
     //
     // All four are drawn from one pool of reference data items, so a publisher's identifier fits
     // the genre position perfectly well as far as the compiler and the database are concerned.
-    // Nothing rejected it, and INV-BOOK-05 and INV-OFFER-07 were invariants in name only.
+    // Only looking the items up can tell the difference.
     //
     // The aggregates still store the four identifiers — they are the foreign keys — but they can
     // only be handed a classification, and a classification can only be made by looking the items
@@ -47,9 +47,9 @@ namespace Bookstore.Domain.ReferenceData
             return new BookClassification(publisherId, bookTypeId, genreId, conditionId);
         }
 
-        // The way across from something already classified — an offer being stocked as a book
-        // (ISSUE-06). Its classification was checked when the offer was made, and the book that
-        // comes out of it is the same book.
+        // The way across from something already classified — an offer being stocked as a book.
+        // Its classification was checked when the offer was made, and the book that comes out of
+        // it is the same book.
         internal static BookClassification AlreadyChecked(int publisherId, int bookTypeId, int genreId, int conditionId) =>
             new(publisherId, bookTypeId, genreId, conditionId);
 

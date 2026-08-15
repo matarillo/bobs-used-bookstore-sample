@@ -112,7 +112,7 @@
 
                                     break;
 
-                                @* ISSUE-06: a paid offer is a book the store now owns; this is where it becomes stock. *@
+                                @* A paid offer is a book the store now owns; this is where it becomes stock. *@
                                 case OfferStatus.Paid when !offer.IsStocked:
                                     <a class="btn btn-link p-0" asp-area="Admin" asp-controller="Inventory" asp-action="CreateFromOffer" asp-route-id="@offer.OfferId">Add to Inventory</a>
 

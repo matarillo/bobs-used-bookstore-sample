@@ -13,9 +13,8 @@ namespace Bookstore.Domain.Offers
         // Unscoped: for staff use (see IOfferRepository.GetAsync(int)).
         Task<Offer> GetOfferAsync(int offerId);
 
-        // RULE-CUST-01, ISSUE-21: the customer-safe lookup — returns null unless the offer
-        // belongs to the given subject. Customer-facing routes must use this, not the unscoped
-        // overload above.
+        // The customer-safe lookup — returns null unless the offer belongs to the given subject.
+        // Customer-facing routes must use this, not the unscoped overload above.
         Task<Offer> GetOfferAsync(string sub, int offerId);
 
         Task CreateOfferAsync(CreateOfferDto createOfferDto);
@@ -70,8 +69,8 @@ namespace Bookstore.Domain.Offers
         {
             var customer = await customerRepository.GetAsync(dto.CustomerSub);
 
-            // ISSUE-05: the four classification identifiers are checked against the reference
-            // data they were chosen from before the offer is made (see BookService.ClassifyAsync).
+            // The four classification identifiers are checked against the reference data they
+            // were chosen from before the offer is made (see BookService.ClassifyAsync).
             var referenceData = await referenceDataRepository.FullListAsync();
 
             var offer = new Offer(

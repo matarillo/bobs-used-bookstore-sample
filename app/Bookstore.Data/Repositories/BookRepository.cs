@@ -64,7 +64,7 @@ namespace Bookstore.Data.Repositories
                 query = query.Where(x => x.StockQuantity <= Book.LowBookThreshold);
             }
 
-            // ISSUE-01: a filter of its own, so "which books are out of stock" does not have to
+            // A filter of its own, so "which books are out of stock" does not have to
             // be answered by way of "which books need reordering" (LowStock above, which includes
             // these along with everything merely running low).
             if (filters.OutOfStock)

@@ -8,12 +8,12 @@ namespace Bookstore.Domain.Offers
 
         internal protected Task<IEnumerable<Offer>> ListAsync(string sub);
 
-        // Unscoped: for staff, who may look up any offer (UC-ADMIN-08/09).
+        // Unscoped: for staff, who may look up any offer.
         internal protected Task<Offer> GetAsync(int id);
 
-        // RULE-CUST-01, ISSUE-21: the customer-safe counterpart of GetAsync(int) above. Returns
-        // null unless the offer belongs to the given subject, the same shape as
-        // IOrderRepository.GetAsync(int, string) and IAddressRepository.GetAsync(string, int).
+        // The customer-safe counterpart of GetAsync(int) above. Returns null unless the offer
+        // belongs to the given subject, the same shape as IOrderRepository.GetAsync(int, string)
+        // and IAddressRepository.GetAsync(string, int).
         internal protected Task<Offer> GetAsync(string sub, int id);
 
         internal protected Task AddAsync(Offer offer);

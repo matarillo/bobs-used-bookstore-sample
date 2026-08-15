@@ -33,7 +33,7 @@ namespace Bookstore.Data.Repositories
                     OffersThisMonth = x.Count(y => y.CreatedOn >= startOfMonth),
                     OffersTotal = x.Count(),
 
-                    // The monetary indicators (12 §2.4): what the waiting offers would cost to
+                    // The monetary indicators: what the waiting offers would cost to
                     // accept, and what the store has actually paid out. A purchase is an offer
                     // that has been paid for, dated by Offer.PaidOn.
                     PendingOffersValue = x.Sum(y => y.OfferStatus == OfferStatus.PendingApproval ? y.BookPriceAmount : 0),

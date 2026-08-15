@@ -40,7 +40,7 @@ namespace Bookstore.Web.Startup
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
 
-            // ISSUE-23: one unit of work per request, shared by every repository in it.
+            // One unit of work per request, shared by every repository in it.
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             if (builder.Environment.IsDevelopment())

@@ -5,10 +5,8 @@ using Bookstore.Domain.Tests.Builders;
 
 namespace Bookstore.Domain.Tests
 {
-    // ISSUE-07: money and quantity used to be plain numbers, so nothing stopped a negative price,
-    // a negative stock level or a line of zero copies, and no rounding rule applied to an amount.
-    // Every test here previously pinned the opposite of what it now asserts — this is a change of
-    // specification, not a fix to a broken implementation.
+    // Money and Quantity carry the rules a plain number cannot: no negative price, no negative
+    // stock level, no line of zero copies, and a rounding rule that applies to every amount.
     public class ValueSemanticsTests
     {
         [Fact]
@@ -38,7 +36,7 @@ namespace Bookstore.Domain.Tests
             Assert.Throws<DomainException>(() => new OfferBuilder().BookPrice(-5m).Build());
         }
 
-        // INV-CART-05: the value rules out a negative count, the cart rules out an empty line.
+        // The value rules out a negative count, the cart rules out an empty line.
         [Fact]
         public void ACartLineCannotBeAddedWithAQuantityOfZero()
         {

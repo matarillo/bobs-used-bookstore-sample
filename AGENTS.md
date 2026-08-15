@@ -7,7 +7,7 @@
 
 ## 0. 設計課題定義
 
-docs\snapshot-398efed\14-design-issues.md を参照。
+docs\snapshot-4412aa1\15-design-issues.md を参照。
 
 ## 1. ブランチ戦略と命名規則
 
@@ -19,16 +19,6 @@ docs\snapshot-398efed\14-design-issues.md を参照。
 
 ### ブランチ命名ルール
 `fix/p<Phase番号>-<概要>` または `refactor/p<Phase番号>-<概要>`
-
-### ロードマップと対象ブランチ
-
-| Phase | ブランチ名 | 対象ISSUE | 主な解決内容 |
-| :--- | :--- | :--- | :--- |
-| **Phase 1** | `fix/p1-price-calculation` | ISSUE-12, ISSUE-02, ISSUE-17 | 明細重複の解消、数量を考慮した小計計算、注文時価格の確定 |
-| **Phase 2** | `fix/p2-inventory-and-state` | ISSUE-03, ISSUE-15, ISSUE-16 | 在庫超過チェック、状態遷移の導入、キャンセル時の在庫返却 |
-| **Phase 3** | `fix/p3-ux-and-security` | ISSUE-11, ISSUE-21, ISSUE-13 | 注文成立時の在庫切れ制御、オファー所有権の検証、対象不在時挙動の統一 |
-| **Phase 4** | `fix/p4-business-domain` | ISSUE-06, ISSUE-25 | 買取オファーの在庫化・仕入追跡、期限超過注文のドメイン定義 |
-| **Phase 5** | `refactor/p5-model-purity` | ISSUE-07, ISSUE-23, ISSUE-26 等 | 金額・数量の値オブジェクト化、作業単位の明示、モデルの純化 |
 
 ---
 
@@ -45,7 +35,7 @@ docs\snapshot-398efed\14-design-issues.md を参照。
 1つのPhase内で課題（ISSUE）を解決するごとにコミットを作成してください。手戻り時のトークン再消費を削減します。
 
 * コミットメッセージ形式: `fix(<ドメイン領域>): resolve ISSUE-XX <簡潔な概要>`
-* 例: `fix(cart): resolve ISSUE-12 merge duplicate cart items`
+* 例: `fix(cart): resolve ISSUE-21 limit the wish list move to wish list items`
 
 ### ③ コスト最小化の原則（トークン節約）
 * 関連性の低いファイルの全件読み込みや、冗長な思考プロセスの出力を避けてください。

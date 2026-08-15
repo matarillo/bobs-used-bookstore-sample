@@ -1,8 +1,7 @@
 namespace Bookstore.Domain
 {
-    // ISSUE-07: a number of copies of a book, rather than a bare int. Two rules apply to it and
-    // neither was expressed anywhere: a count of copies is never negative, and a line of a cart
-    // or an order refers to at least one copy (INV-CART-05).
+    // A number of copies of a book, rather than a bare int. Two rules apply to it: a count of
+    // copies is never negative, and a line of a cart or an order refers to at least one copy.
     //
     // Both rules are settled at creation. Which of the two applies depends on what is being
     // counted, so there are two factories rather than one: stock can legitimately be none, a
@@ -22,7 +21,7 @@ namespace Bookstore.Domain
 
         public bool IsNone => Value == 0;
 
-        // INV-BOOK-01: a count of copies, which may be none — an empty shelf is a real stock level.
+        // A count of copies, which may be none — an empty shelf is a real stock level.
         public static Quantity Of(int value)
         {
             if (value < 0)
@@ -33,8 +32,7 @@ namespace Bookstore.Domain
             return new Quantity(value);
         }
 
-        // INV-CART-05: a line that refers to no copies is not a line. Ordering zero of something
-        // used to be accepted and produced an order line worth nothing.
+        // A line that refers to no copies is not a line.
         public static Quantity OfAtLeastOne(int value)
         {
             if (value < 1)
@@ -48,7 +46,7 @@ namespace Bookstore.Domain
         public static Quantity operator +(Quantity left, Quantity right) => new(left.Value + right.Value);
 
         // Of, not the private constructor: taking more than there is would go below zero, and
-        // that is exactly what ISSUE-03 stopped happening silently.
+        // that must fail rather than happen silently.
         public static Quantity operator -(Quantity left, Quantity right) => Of(left.Value - right.Value);
 
         public static bool operator <(Quantity left, Quantity right) => left.Value < right.Value;

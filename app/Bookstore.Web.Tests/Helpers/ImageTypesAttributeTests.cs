@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Bookstore.Web.Tests.Helpers;
 
-// Guards the one path a customer-supplied image enters the domain through (book covers, and
-// ISSUE-20's offer covers). Bypassing the extension check here is bypassing
-// POL-IMAGE-SAFETY/POL-IMAGE-RESIZE further downstream, so the extension list itself has to hold.
+// Guards the one path a customer-supplied image enters the domain through (book covers and offer
+// covers). Bypassing the extension check here is bypassing the image safety and resize checks
+// further downstream, so the extension list itself has to hold.
 public class ImageTypesAttributeTests
 {
     private readonly ImageTypesAttribute sut = new(new[] { ".png", ".jpg" });

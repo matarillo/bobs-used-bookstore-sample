@@ -18,7 +18,7 @@ namespace Bookstore.Domain.Books
 
         Task<BookResult> AddAsync(CreateBookDto createBookDto);
 
-        // ISSUE-06: puts a paid offer on the shelf, recording it as the source of the stock.
+        // Puts a paid offer on the shelf, recording it as the source of the stock.
         Task<BookResult> AddFromOfferAsync(CreateBookFromOfferDto createBookFromOfferDto);
 
         Task<BookResult> UpdateAsync(UpdateBookDto updateBookDto);
@@ -89,13 +89,13 @@ namespace Bookstore.Domain.Books
             return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }
 
-        // ISSUE-06: the offer and the book it becomes are changed together, which the shared unit
-        // of work behind the repositories allows (see CreateOrderAsync for the same pattern).
+        // The offer and the book it becomes are changed together, which the shared unit of work
+        // behind the repositories allows (see CreateOrderAsync for the same pattern).
         public async Task<BookResult> AddFromOfferAsync(CreateBookFromOfferDto dto)
         {
             var offer = await offerRepository.GetAsync(dto.OfferId);
 
-            // ISSUE-13: stocking is a strict update targeting one specific offer.
+            // Stocking is a strict update targeting one specific offer.
             if (offer == null)
             {
                 throw new DomainException($"Offer {dto.OfferId} was not found.");
@@ -127,9 +127,9 @@ namespace Bookstore.Domain.Books
             return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
         }
 
-        // ISSUE-05: the four identifiers arrive from four dropdowns, and nothing but the shape of
-        // the form ever said the one in the genre position was a genre. Checked here, against the
-        // reference data they were chosen from, before the book is built.
+        // The four identifiers arrive from four dropdowns, and nothing but the shape of the form
+        // says the one in the genre position is a genre. Checked here, against the reference data
+        // they were chosen from, before the book is built.
         private async Task<BookClassification> ClassifyAsync(int publisherId, int bookTypeId, int genreId, int conditionId)
         {
             var referenceData = await referenceDataRepository.FullListAsync();
@@ -141,9 +141,8 @@ namespace Bookstore.Domain.Books
         {
             var resizedCoverImage = await ResizeImageAsync(coverImage);
 
-            // ISSUE-22: the safety check has to guard what actually ends up on the shelf. It used
-            // to run against the image as uploaded, while the resized image — a different stream —
-            // was what got saved; resizing was silently trusted not to introduce anything unsafe.
+            // The safety check has to guard what actually ends up on the shelf, so it runs
+            // against the resized image rather than the one that was uploaded.
             var imageIsSafe = await imageValidationService.IsSafeAsync(resizedCoverImage);
 
             if (!imageIsSafe) return new BookResult(false, "The image failed the safety check. Please try another image.");

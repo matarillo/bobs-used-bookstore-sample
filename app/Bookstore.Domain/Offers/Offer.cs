@@ -5,8 +5,8 @@ namespace Bookstore.Domain.Offers
 {
     public class Offer : Entity
     {
-        // An empty constructor is required by EF Core, which can no longer bind the constructor
-        // below now that the buying price is a value rather than the mapped column.
+        // An empty constructor is required by EF Core, which cannot bind the constructor below
+        // because the buying price is a value rather than the mapped column.
 #pragma warning disable CS8618 // Non-nullable property must contain a non-null value when exiting constructor.
         private Offer() { }
 #pragma warning restore CS8618
@@ -49,8 +49,8 @@ namespace Bookstore.Domain.Offers
         public ReferenceDataItem BookType { get; set; } = null!;
         public int BookTypeId { get; private set; }
 
-        // ISSUE-05: as on Book — the four identifiers are only ever set through a classification
-        // checked against the reference data, so INV-OFFER-07 is now enforced rather than assumed.
+        // As on Book — the four identifiers are only ever set through a classification checked
+        // against the reference data.
         public BookClassification Classification
         {
             get => BookClassification.AlreadyChecked(PublisherId, BookTypeId, GenreId, ConditionId);
@@ -65,8 +65,8 @@ namespace Bookstore.Domain.Offers
 
         public string? Summary { get; set; }
 
-        // INV-OFFER-02/03/04, revised by ISSUE-15: the status only moves through the behaviours
-        // below, which each check the current state before transitioning.
+        // The status only moves through the behaviours below, which each check the current state
+        // before transitioning.
         public OfferStatus OfferStatus { get; private set; } = OfferStatus.PendingApproval;
 
         public string? Comment { get; set; }
@@ -76,7 +76,7 @@ namespace Bookstore.Domain.Offers
 
         public Money BookPrice { get; set; }
 
-        // ISSUE-07: the column behind BookPrice — see Book for why it exists.
+        // The column behind BookPrice — see Book for why it exists.
         internal decimal BookPriceAmount
         {
             get => BookPrice.Amount;
@@ -84,12 +84,12 @@ namespace Bookstore.Domain.Offers
         }
 
         // When the store paid the customer, and so when the money left the business. The buying
-        // side of the monetary indicators (12 §2.4) is dated by this, not by when the offer was
-        // made — an offer made in one month and paid in the next is spending in the second.
+        // side of the monetary indicators is dated by this, not by when the offer was made — an
+        // offer made in one month and paid in the next is spending in the second.
         public DateTime? PaidOn { get; private set; }
 
-        // ISSUE-06: whether the bought book has been put on the shelf as a Book. A paid offer is
-        // stocked exactly once; Book.CreateFromOffer is the only way this becomes true.
+        // Whether the bought book has been put on the shelf as a Book. A paid offer is stocked
+        // exactly once; Book.CreateFromOffer is the only way this becomes true.
         public bool IsStocked { get; private set; }
 
         // The store approves a pending offer and awaits the shipment from the customer.
@@ -120,9 +120,9 @@ namespace Bookstore.Domain.Offers
             OfferStatus = OfferStatus.Received;
         }
 
-        // INV-OFFER-04: the store pays the customer only after receipt has been confirmed.
-        // The date is passed in rather than read here so that what the store spent in a period is
-        // a fact about the offer, not about when a report happens to run.
+        // The store pays the customer only after receipt has been confirmed. The date is passed
+        // in rather than read here so that what the store spent in a period is a fact about the
+        // offer, not about when a report happens to run.
         public void RecordPayment(DateTime paidOnUtc)
         {
             RequireStatus(OfferStatus.Received, "be paid");
@@ -131,10 +131,10 @@ namespace Bookstore.Domain.Offers
             PaidOn = paidOnUtc;
         }
 
-        // ISSUE-06: the buying side of the business hands the book over to the selling side. Only
-        // a paid offer may be stocked — the store does not sell what it has not yet bought — and
-        // only once, so a single bought copy cannot become two books. Called by
-        // Book.CreateFromOffer, which is what actually produces the stock.
+        // The buying side of the business hands the book over to the selling side. Only a paid
+        // offer may be stocked — the store does not sell what it has not yet bought — and only
+        // once, so a single bought copy cannot become two books. Called by Book.CreateFromOffer,
+        // which is what actually produces the stock.
         internal void MarkAsStocked()
         {
             RequireStatus(OfferStatus.Paid, "be added to inventory");

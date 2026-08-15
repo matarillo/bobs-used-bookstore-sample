@@ -8,8 +8,8 @@ using NSubstitute;
 
 namespace Bookstore.Domain.Tests.Scenarios;
 
-// ISSUE-06 gave the buying (kaitori) side of the business a route into the selling (hanbai) side:
-// a paid offer can become a book on the shelf. Every test elsewhere pins one aggregate or one
+// The buying (kaitori) side of the business has one route into the selling (hanbai) side: a paid
+// offer can become a book on the shelf. Every test elsewhere pins one aggregate or one
 // service in isolation with mocked repositories, which is exactly why a defect in the *handoff*
 // between OfferService, BookService and OrderService — e.g. the wrong price surviving into the
 // order, or the stocked book not actually being purchasable — would not necessarily be caught
@@ -96,24 +96,24 @@ public class OfferToOrderScenarioTests
         var order = Assert.Single(db.Orders);
         var orderItem = Assert.Single(order.OrderItems);
 
-        // ISSUE-17: the price is the one captured at sale time, not a live read of Book.Price.
+        // The price is the one captured at sale time, not a live read of Book.Price.
         Assert.Equal(Money.Of(25m), orderItem.Price);
-        // ISSUE-06: the margin the buy-low-sell-high model exists to make visible.
+        // The margin the buy-low-sell-high model exists to make visible.
         Assert.Equal(Money.Of(8m), orderItem.Cost);
         Assert.Equal(17m, orderItem.GrossProfit);
 
-        // ISSUE-03: a second-hand book is one copy; selling it took the shelf to zero.
+        // A second-hand book is one copy; selling it took the shelf to zero.
         Assert.Equal(Quantity.None, book.Quantity);
         Assert.False(book.IsInStock);
 
-        // ISSUE-11: a second customer wanting the now-sold-out book is told so — the order is
-        // rejected rather than silently sold a copy that no longer exists.
+        // A second customer wanting the now-sold-out book is told so — the order is rejected
+        // rather than silently sold a copy that no longer exists.
         await cartService.AddToShoppingCartAsync(new AddToShoppingCartDto("other-buyer-cart", book.Id, Quantity.One));
         await Assert.ThrowsAsync<DomainException>(() =>
             orderService.CreateOrderAsync(new CreateOrderDto(OtherBuyerSub, "other-buyer-cart", AddressId)));
 
-        // --- The first buyer changes their mind. ISSUE-16: cancelling returns the copy to
-        // sellable stock, so the buy-sell loop does not end with a book stuck in limbo.
+        // --- The first buyer changes their mind. Cancelling returns the copy to sellable stock,
+        // so the buy-sell loop does not end with a book stuck in limbo.
         await orderService.CancelOrderAsync(new CancelOrderDto(BuyerSub, order.Id));
         Assert.Equal(OrderStatus.Cancelled, order.OrderStatus);
         Assert.Equal(Quantity.One, book.Quantity);
@@ -129,8 +129,8 @@ public class OfferToOrderScenarioTests
 
     // --- Failure modes that stay entirely inside the buying (kaitori) flow. -------------------
 
-    // ISSUE-06's gate is "only a paid offer may become stock"; rejection is the other legitimate
-    // way an offer's life can end, and it has to close the loop just as cleanly as a sale does —
+    // The gate is "only a paid offer may become stock"; rejection is the other legitimate way an
+    // offer's life can end, and it has to close the loop just as cleanly as a sale does —
     // nothing is left half-done for a member of staff to trip over later.
     [Fact]
     public async Task ARejectedOfferNeverBecomesStockAndCannotBeStockedAfterTheFact()
@@ -181,10 +181,10 @@ public class OfferToOrderScenarioTests
 
     // --- A failure mode that stays entirely inside the selling (hanbai) flow. ------------------
 
-    // ISSUE-15's state machine, not ISSUE-13's tolerant-cancel policy, has to govern here: a
-    // *found* order in the wrong state must fail loudly. ISSUE-16 only returns stock as a side
-    // effect of a cancellation that actually happens — a copy already on its way to the customer
-    // must not reappear as sellable stock because someone called cancel on it anyway.
+    // The state machine, not the tolerant-cancel policy, governs here: a *found* order in the
+    // wrong state must fail loudly. Stock only comes back as a side effect of a cancellation that
+    // actually happens — a copy already on its way to the customer must not reappear as sellable
+    // stock because someone called cancel on it anyway.
     [Fact]
     public async Task ShippingAnOrderPreventsCancellationFromClawingBackSoldStock()
     {
@@ -239,8 +239,8 @@ public class OfferToOrderScenarioTests
         Assert.Equal(Money.Of(9m), secondItem.Cost);
         Assert.Equal(15m, secondItem.GrossProfit);
 
-        // RULE-ORDER-02/ISSUE-02: the two lines aggregate correctly rather than one overwriting
-        // or being dropped from the other's total.
+        // The two lines aggregate correctly rather than one overwriting or being dropped from
+        // the other's total.
         Assert.Equal(Money.Of(42m), order.SubTotal);
         Assert.Equal(Money.Of(4.2m), order.Tax);
         Assert.Equal(Money.Of(46.2m), order.Total);
@@ -257,7 +257,7 @@ public class OfferToOrderScenarioTests
 
     // Drives one offer all the way from submission to sellable stock — the "buy" half every
     // scenario above builds on. Returns both the offer and the book so a test can assert on
-    // whichever side of the ISSUE-06 handoff it cares about. Safe to call more than once for the
+    // whichever side of the handoff it cares about. Safe to call more than once for the
     // same seller: CustomerService.FindOrCreateAsync is itself idempotent.
     private async Task<(Offer Offer, Book Book)> CreateStockedBookAsync(
         string sellerSub, string bookName, string isbn, decimal buyPrice, decimal salePrice)

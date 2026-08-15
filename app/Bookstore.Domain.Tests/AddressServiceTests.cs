@@ -16,8 +16,8 @@ namespace Bookstore.Domain.Tests
             sut = new AddressService(addressRepository, customerService, unitOfWork);
         }
 
-        // ISSUE-08: address creation goes through the single find-or-create operation rather
-        // than building a customer itself.
+        // Address creation goes through the single find-or-create operation rather than building
+        // a customer itself.
         [Fact]
         public async Task CreateAddressAsync_UsesTheCustomerFindOrCreateOperation()
         {
@@ -30,8 +30,8 @@ namespace Bookstore.Domain.Tests
 
             await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.Customer == customer && a.AddressLine1 == "123 Main St"));
 
-            // ISSUE-23: one unit of work. A customer FindOrCreateAsync had to create is folded
-            // into the same commit as the address, rather than being saved on its own first.
+            // One unit of work. A customer FindOrCreateAsync had to create is folded into the
+            // same commit as the address, rather than being saved on its own first.
             await unitOfWork.Received(1).CompleteAsync();
         }
 

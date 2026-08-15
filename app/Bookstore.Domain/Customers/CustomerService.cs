@@ -8,10 +8,10 @@ namespace Bookstore.Domain.Customers
 
         Task CreateOrUpdateCustomerAsync(CreateOrUpdateCustomerDto createOrUpdateCustomerDto);
 
-        // ISSUE-08: the single operation that identifies a customer, creating one (with only the
-        // subject identifier) if none exists yet. Address creation is the one caller that needs
-        // this; orders and offers still fail when the customer cannot be found (ISSUE-13's
-        // "updates are strict" policy), since placing either presumes an already-known customer.
+        // The single operation that identifies a customer, creating one (with only the subject
+        // identifier) if none exists yet. Address creation is the one caller that needs this;
+        // orders and offers fail when the customer cannot be found, under the "updates are
+        // strict" policy, since placing either presumes an already-known customer.
         Task<Customer> FindOrCreateAsync(string sub);
     }
 
@@ -55,10 +55,10 @@ namespace Bookstore.Domain.Customers
             await unitOfWork.CompleteAsync();
         }
 
-        // ISSUE-08: the operation ISSUE-08 asked for — identify a customer by subject
-        // identifier, creating one if this is the first time it has been seen. Deliberately does
-        // not complete the unit of work itself: a caller like CreateAddressAsync folds the new
-        // customer, if any, into the one change it is already making (ISSUE-23).
+        // Identifies a customer by subject identifier, creating one if this is the first time it
+        // has been seen. Deliberately does not complete the unit of work itself: a caller like
+        // CreateAddressAsync folds the new customer, if any, into the one change it is already
+        // making.
         public async Task<Customer> FindOrCreateAsync(string sub)
         {
             var customer = await customerRepository.GetAsync(sub);

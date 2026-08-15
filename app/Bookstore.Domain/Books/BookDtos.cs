@@ -15,8 +15,8 @@ namespace Bookstore.Domain.Books
         Stream CoverImage,
         string CoverImageFileName);
 
-    // ISSUE-06: stocking a paid offer. Name, author, ISBN and the four classifications are not
-    // asked for — they come from the offer.
+    // Stocking a paid offer. Name, author, ISBN and the four classifications are not asked for —
+    // they come from the offer.
     public record CreateBookFromOfferDto(
         int OfferId,
         int? Year,

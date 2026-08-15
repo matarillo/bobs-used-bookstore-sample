@@ -47,7 +47,7 @@ namespace Bookstore.Web.ViewModel.Resale
 
         public int SelectedConditionId { get; set; }
 
-        // ISSUE-07: Money rejects a negative amount by throwing, which is the right answer for
+        // Money rejects a negative amount by throwing, which is the right answer for
         // the model and the wrong one for a form. Caught here so the customer sees a validation
         // message instead of an error page.
         [Range(0, 1000000, ErrorMessage = "The price you are asking for must be zero or more.")]

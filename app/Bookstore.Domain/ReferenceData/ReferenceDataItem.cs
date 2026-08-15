@@ -11,9 +11,8 @@ namespace Bookstore.Domain.ReferenceData
             Text = text;
         }
 
-        // INV-REFDATA-03, enforced by ISSUE-05: what an item is, is settled when it is created.
-        // Changing it used to be part of editing an item, which meant a genre that books were
-        // already filed under could quietly become a publisher.
+        // What an item is, is settled when it is created. If it could be changed, a genre that
+        // books were already filed under could quietly become a publisher.
         public ReferenceDataType DataType { get; private set; }
 
         // The empty constructor above (required by EF Core) leaves this unset; the real
