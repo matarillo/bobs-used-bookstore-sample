@@ -1,16 +1,15 @@
-# 02. ドメイン全体像
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
 
-## 1. 事業モデル
+# ドメイン全体像
 
-この店の事業は一つの単純な循環でできている。
+## 1. モデルが表現すべき事実
 
-```
-顧客 ──買取オファー──> 店 ──棚入れ──> 在庫 ──注文──> 顧客
-        （代金を支払う）              （売価をつける）
-```
-
-**安く買って高く売る**。したがってドメインが表現しなければならない最重要の事実は、
-「**この1冊にいくら払い、いくらで売ったか**」である。この事実を保持するために、
+事業の循環は [事業モデルと指標](../../product/goals.md) にある。
+そこで挙げた最重要の事実、「**この 1 冊にいくら払い、いくらで売ったか**」を保持するために、
 仕入原価が買取オファーから書籍へ、書籍から注文明細へと**値として写し取られる**。
 
 ## 2. サブドメイン
@@ -67,17 +66,17 @@ graph TB
 
 | 識別子 | 集約 | ルート | 内部エンティティ | 識別の鍵 | 文書 |
 | --- | --- | --- | --- | --- | --- |
-| `AGG-REFDATA` | 参照データ項目 | ReferenceDataItem | — | 識別子 | [04](04-aggregate-reference-data.md) |
-| `AGG-BOOK` | 書籍 | Book | — | 識別子 | [05](05-aggregate-book.md) |
-| `AGG-CUSTOMER` | 顧客 | Customer | — | 主体識別子 (Sub) | [06](06-aggregate-customer-address.md) |
-| `AGG-ADDRESS` | 住所 | Address | — | 識別子 ＋ 所有顧客 | [06](06-aggregate-customer-address.md) |
-| `AGG-CART` | 買い物かご | ShoppingCart | ShoppingCartItem | かご相関識別子 | [07](07-aggregate-shopping-cart.md) |
-| `AGG-ORDER` | 注文 | Order | OrderItem | 識別子 | [08](08-aggregate-order.md) |
-| `AGG-OFFER` | 買取オファー | Offer | — | 識別子 | [09](09-aggregate-offer.md) |
+| `AGG-REFDATA` | 参照データ項目 | ReferenceDataItem | — | 識別子 | [AGG-REFDATA](aggregate-reference-data.md) |
+| `AGG-BOOK` | 書籍 | Book | — | 識別子 | [AGG-BOOK](aggregate-book.md) |
+| `AGG-CUSTOMER` | 顧客 | Customer | — | 主体識別子 (Sub) | [AGG-CUSTOMER / AGG-ADDRESS](aggregate-customer-address.md) |
+| `AGG-ADDRESS` | 住所 | Address | — | 識別子 ＋ 所有顧客 | [AGG-CUSTOMER / AGG-ADDRESS](aggregate-customer-address.md) |
+| `AGG-CART` | 買い物かご | ShoppingCart | ShoppingCartItem | かご相関識別子 | [AGG-CART](aggregate-shopping-cart.md) |
+| `AGG-ORDER` | 注文 | Order | OrderItem | 識別子 | [AGG-ORDER](aggregate-order.md) |
+| `AGG-OFFER` | 買取オファー | Offer | — | 識別子 | [AGG-OFFER](aggregate-offer.md) |
 
 ## 5. アクター
 
-| アクター | 役割 | 主なユースケース |
+| アクター | 役割 | 主な操作 |
 | --- | --- | --- |
 | **顧客 (Customer)** | 書籍を買う／自分の蔵書を売る | 検索、かご操作、注文、注文取消、買取申込、自分の履歴照会 |
 | **店舗スタッフ (Staff)** | 在庫と取引を運営する | 参照データ保守、書籍登録、オファー審査・支払・棚入れ、注文の受付・出荷・配達、ダッシュボード閲覧 |
@@ -85,7 +84,7 @@ graph TB
 
 顧客とスタッフの分離は**照会の作法**として現れる。顧客向けの照会は必ず主体識別子で絞り込まれ
 （`GetOrderAsync(sub, id)` / `GetOfferAsync(sub, id)`）、スタッフ向けの照会は絞り込まない
-（`GetOrderAsync(id)` / `GetOfferAsync(id)`）。詳細は [RULE-ACCESS-01](12-invariants-and-rules.md)。
+（`GetOrderAsync(id)` / `GetOfferAsync(id)`）。詳細は [RULE-ACCESS-01](../../spec/rules.md)。
 
 ## 6. ドメイン外の協力者
 
@@ -93,11 +92,11 @@ graph TB
 
 | インタフェース | 責務 | ドメイン上の位置づけ |
 | --- | --- | --- |
-| `IUnitOfWork` | 一連の変更をまとめて確定する | 整合性境界の宣言（[03](03-building-blocks.md) §5） |
+| `IUnitOfWork` | 一連の変更をまとめて確定する | 整合性境界の宣言（[共通構成要素](building-blocks.md) §5） |
 | `IFileService` | 表紙画像の保存・削除 | 外部資源参照の管理 |
 | `IImageResizeService` | 画像の寸法調整 | 表示都合の変換 |
-| `IImageValidationService` | 画像の安全性判定 | 差し替え可能なポリシー [POL-IMAGE-SAFETY](10-domain-services-and-policies.md) |
-| 各 `I*Repository` | 集約の取得と登録 | 永続化の抽象（[10](10-domain-services-and-policies.md) §4） |
+| `IImageValidationService` | 画像の安全性判定 | 差し替え可能なポリシー [POL-IMAGE-SAFETY](services-and-policies.md) |
+| 各 `I*Repository` | 集約の取得と登録 | 永続化の抽象（[ドメインサービスとポリシー](services-and-policies.md) §4） |
 
 ## 7. 二つの流れの詳細
 
@@ -161,4 +160,4 @@ sequenceDiagram
 
 DDD の一般原則は「1トランザクション1集約」だが、ここでは**在庫の即時整合性を優先する**判断が
 明示的に採られている。その代償として、集約が他の集約を直接変更する箇所が存在する
-（[ISSUE-03](15-design-issues.md)）。
+（[ISSUE-03](../issues.md)）。
