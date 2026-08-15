@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # AGG-REFDATA — 参照データ集約
 
 ## 1. 責務

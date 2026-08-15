@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # ドメインサービスとポリシー
 
 ## 1. 位置づけ

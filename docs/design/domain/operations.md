@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # ドメイン操作
 
 ドメインが外に向けて提供する操作を、それを起こすアクター別に記述する。

@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # AGG-CUSTOMER / AGG-ADDRESS — 顧客・住所集約
 
 ## 1. 責務

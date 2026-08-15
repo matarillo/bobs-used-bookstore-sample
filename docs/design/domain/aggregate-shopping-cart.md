@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # AGG-CART — 買い物かご集約
 
 ## 1. 責務

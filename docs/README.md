@@ -1,3 +1,7 @@
+---
+layer: shared
+---
+
 # Bob's Used Bookstore — 文書体系
 
 本書は文書地図である。**どこに何があり、新しく書くものをどこに置くか**を定める。
@@ -188,11 +192,15 @@ derived-from: 4412aa1
 
 | 項目 | 値 | 意味 |
 | --- | --- | --- |
-| `layer` | `product` / `spec` / `design` | 属する層 |
+| `layer` | `product` / `spec` / `design` / `shared` | 属する層。`shared` は層をまたぐ文書 |
 | `status` | `derived` | 実装から導出した。**顧客の承認を経ていない** |
 | | `proposed` | 変更案。合意待ち |
 | | `agreed` | 顧客と合意済み |
 | `derived-from` | コミット識別子 | 導出元。人が決めた文書には付けない |
+
+`status` と `derived-from` は、製品を記述する文書に付ける。本書のような規約の文書は `layer` だけを持つ。
+
+`status` と `derived-from` は、製品を記述する文書に付ける。本書のような規約の文書は `layer` だけを持つ。
 
 **スナップショットはフォルダ名で表さない。** 現在の版だけを置き、`derived-from` で導出元を示す。
 凍結して残す必要がある版は `archive/` へ退避し、他の文書から参照しない。

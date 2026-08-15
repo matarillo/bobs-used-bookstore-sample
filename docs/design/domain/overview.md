@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # ドメイン全体像
 
 ## 1. モデルが表現すべき事実

@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # 設計上の課題
 
 本章は**現時点のモデルの歪み**を隔離して記述する。01〜14 は現状の記述であり、

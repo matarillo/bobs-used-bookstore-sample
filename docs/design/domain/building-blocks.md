@@ -1,3 +1,9 @@
+---
+layer: design
+status: derived
+derived-from: 4412aa1
+---
+
 # 共通構成要素
 
 集約に先立って、ドメイン全体で共有される構成要素を定義する。
