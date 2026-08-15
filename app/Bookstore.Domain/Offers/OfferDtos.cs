@@ -10,8 +10,4 @@
         int GenreId,        
         int PublisherId,
         decimal BookPrice);
-
-    public record UpdateOfferStatusDto(
-        int OfferId,
-        OfferStatus Status);
 }

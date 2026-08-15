@@ -85,17 +85,116 @@ namespace Bookstore.Domain.Tests
         }
 
         [Fact]
-        public void OrderStatus_CanBeSetToAnyValue_When_AssignedDirectly()
+        public void Accept_TransitionsToOrdered_When_TheOrderIsPending()
         {
-            // INV-ORDER-02/03/04 are not enforced: a delivered order can be pushed back to
-            // pending, with no notion of a valid or an invalid transition. Recorded here so the
-            // change is visible when ISSUE-15 replaces the setter with guarded behaviours.
             var order = new Order(1, 1);
 
-            order.OrderStatus = OrderStatus.Delivered;
-            order.OrderStatus = OrderStatus.Pending;
+            order.Accept();
 
-            Assert.Equal(OrderStatus.Pending, order.OrderStatus);
+            Assert.Equal(OrderStatus.Ordered, order.OrderStatus);
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Ordered)]
+        [InlineData(OrderStatus.Shipped)]
+        [InlineData(OrderStatus.Delivered)]
+        [InlineData(OrderStatus.Cancelled)]
+        public void Accept_Throws_When_TheOrderIsNotPending(OrderStatus status)
+        {
+            var order = OrderInState(status);
+
+            Assert.Throws<DomainException>(() => order.Accept());
+        }
+
+        [Fact]
+        public void Ship_TransitionsToShipped_When_TheOrderIsOrdered()
+        {
+            var order = OrderInState(OrderStatus.Ordered);
+
+            order.Ship();
+
+            Assert.Equal(OrderStatus.Shipped, order.OrderStatus);
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Pending)]
+        [InlineData(OrderStatus.Shipped)]
+        [InlineData(OrderStatus.Delivered)]
+        [InlineData(OrderStatus.Cancelled)]
+        public void Ship_Throws_When_TheOrderIsNotOrdered(OrderStatus status)
+        {
+            var order = OrderInState(status);
+
+            Assert.Throws<DomainException>(() => order.Ship());
+        }
+
+        [Fact]
+        public void Deliver_TransitionsToDelivered_When_TheOrderIsShipped()
+        {
+            var order = OrderInState(OrderStatus.Shipped);
+
+            order.Deliver();
+
+            Assert.Equal(OrderStatus.Delivered, order.OrderStatus);
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Pending)]
+        [InlineData(OrderStatus.Ordered)]
+        [InlineData(OrderStatus.Delivered)]
+        [InlineData(OrderStatus.Cancelled)]
+        public void Deliver_Throws_When_TheOrderIsNotShipped(OrderStatus status)
+        {
+            var order = OrderInState(status);
+
+            Assert.Throws<DomainException>(() => order.Deliver());
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Pending)]
+        [InlineData(OrderStatus.Ordered)]
+        public void Cancel_TransitionsToCancelled_When_TheOrderIsPendingOrOrdered(OrderStatus status)
+        {
+            var order = OrderInState(status);
+
+            order.Cancel();
+
+            Assert.Equal(OrderStatus.Cancelled, order.OrderStatus);
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Shipped)]
+        [InlineData(OrderStatus.Delivered)]
+        [InlineData(OrderStatus.Cancelled)]
+        public void Cancel_Throws_When_TheOrderIsShippedDeliveredOrAlreadyCancelled(OrderStatus status)
+        {
+            var order = OrderInState(status);
+
+            Assert.Throws<DomainException>(() => order.Cancel());
+        }
+
+        // Drives the order through the transitions needed to reach the given state, so each
+        // test can start from an arbitrary point without relying on a raw status setter.
+        private static Order OrderInState(OrderStatus status)
+        {
+            var order = new Order(1, 1);
+
+            if (status == OrderStatus.Pending) return order;
+
+            order.Accept();
+            if (status == OrderStatus.Ordered) return order;
+
+            if (status == OrderStatus.Cancelled)
+            {
+                order.Cancel();
+                return order;
+            }
+
+            order.Ship();
+            if (status == OrderStatus.Shipped) return order;
+
+            order.Deliver();
+            return order;
         }
     }
 }

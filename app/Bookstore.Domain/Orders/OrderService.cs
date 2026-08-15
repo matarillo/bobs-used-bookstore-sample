@@ -15,7 +15,11 @@ namespace Bookstore.Domain.Orders
 
         Task<int> CreateOrderAsync(CreateOrderDto createOrderDto);
 
-        Task UpdateOrderStatusAsync(UpdateOrderStatusDto updateOrderStatusDto);
+        Task AcceptOrderAsync(int orderId);
+
+        Task ShipOrderAsync(int orderId);
+
+        Task DeliverOrderAsync(int orderId);
 
         Task CancelOrderAsync(CancelOrderDto cancelOrderDto);
     }
@@ -81,11 +85,26 @@ namespace Bookstore.Domain.Orders
             return order.Id;
         }
 
-        public async Task UpdateOrderStatusAsync(UpdateOrderStatusDto dto)
+        public async Task AcceptOrderAsync(int orderId)
         {
-            var order = await orderRepository.GetAsync(dto.OrderId);
+            await TransitionAsync(orderId, order => order.Accept());
+        }
 
-            order.OrderStatus = dto.OrderStatus;
+        public async Task ShipOrderAsync(int orderId)
+        {
+            await TransitionAsync(orderId, order => order.Ship());
+        }
+
+        public async Task DeliverOrderAsync(int orderId)
+        {
+            await TransitionAsync(orderId, order => order.Deliver());
+        }
+
+        private async Task TransitionAsync(int orderId, Action<Order> transition)
+        {
+            var order = await orderRepository.GetAsync(orderId);
+
+            transition(order);
 
             order.UpdatedOn = DateTime.UtcNow;
 
@@ -98,7 +117,7 @@ namespace Bookstore.Domain.Orders
 
             if (order == null) return;
 
-            order.OrderStatus = OrderStatus.Cancelled;
+            order.Cancel();
 
             await orderRepository.SaveChangesAsync();
         }

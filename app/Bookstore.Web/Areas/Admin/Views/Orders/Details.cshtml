@@ -36,13 +36,25 @@
                 <dl class="row">
                     <dt class="col-3">Order status</dt>
                     <dd class="col-9">
-                        <form method="post">
-                            <div class="d-flex">
-                                <input type="hidden" asp-for="@Model.OrderId" />
-                                <select id="orderStatusSelect" class="form-select m-auto" asp-for="SelectedOrderStatus" asp-items="Html.GetEnumSelectList<OrderStatus>()"></select>
-                                <button type="submit" class="btn btn-primary ms-2">Update</button>
-                            </div>
-                        </form>
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">@Model.OrderStatus</span>
+                            <form method="post">
+                                @switch (Model.OrderStatus)
+                                {
+                                    case OrderStatus.Pending:
+                                        <button type="submit" class="btn btn-primary btn-sm" asp-action="Accept" asp-route-id="@Model.OrderId">Accept</button>
+                                        break;
+
+                                    case OrderStatus.Ordered:
+                                        <button type="submit" class="btn btn-primary btn-sm" asp-action="Ship" asp-route-id="@Model.OrderId">Ship</button>
+                                        break;
+
+                                    case OrderStatus.Shipped:
+                                        <button type="submit" class="btn btn-primary btn-sm" asp-action="Deliver" asp-route-id="@Model.OrderId">Mark as Delivered</button>
+                                        break;
+                                }
+                            </form>
+                        </div>
                     </dd>
 
                     <dt class="col-3">Ordered on</dt>

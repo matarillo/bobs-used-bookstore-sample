@@ -13,7 +13,13 @@ namespace Bookstore.Domain.Offers
 
         Task CreateOfferAsync(CreateOfferDto createOfferDto);
 
-        Task UpdateOfferStatusAsync(UpdateOfferStatusDto updateOfferStatusDto);
+        Task ApproveOfferAsync(int offerId);
+
+        Task RejectOfferAsync(int offerId);
+
+        Task ConfirmOfferReceiptAsync(int offerId);
+
+        Task RecordOfferPaymentAsync(int offerId);
 
         Task<OfferStatistics> GetStatisticsAsync();
     }
@@ -64,11 +70,31 @@ namespace Bookstore.Domain.Offers
             await offerRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateOfferStatusAsync(UpdateOfferStatusDto dto)
+        public async Task ApproveOfferAsync(int offerId)
         {
-            var offer = await GetOfferAsync(dto.OfferId);
+            await TransitionAsync(offerId, offer => offer.Approve());
+        }
 
-            offer.OfferStatus = dto.Status;
+        public async Task RejectOfferAsync(int offerId)
+        {
+            await TransitionAsync(offerId, offer => offer.Reject());
+        }
+
+        public async Task ConfirmOfferReceiptAsync(int offerId)
+        {
+            await TransitionAsync(offerId, offer => offer.ConfirmReceipt());
+        }
+
+        public async Task RecordOfferPaymentAsync(int offerId)
+        {
+            await TransitionAsync(offerId, offer => offer.RecordPayment());
+        }
+
+        private async Task TransitionAsync(int offerId, Action<Offer> transition)
+        {
+            var offer = await GetOfferAsync(offerId);
+
+            transition(offer);
 
             offer.UpdatedOn = DateTime.UtcNow;
 
