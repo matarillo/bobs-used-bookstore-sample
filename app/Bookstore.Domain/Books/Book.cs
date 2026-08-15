@@ -69,16 +69,19 @@ namespace Bookstore.Domain.Books
 
         public string ISBN { get; set; }
 
-        public ReferenceDataItem Publisher { get; set; }
+        // Navigation properties populated by EF Core when a book is loaded; the private
+        // constructor above intentionally leaves them for EF to fix up, so the null-forgiving
+        // default here just tells the compiler what already holds at runtime.
+        public ReferenceDataItem Publisher { get; set; } = null!;
         public int PublisherId { get; private set; }
 
-        public ReferenceDataItem BookType { get; set; }
+        public ReferenceDataItem BookType { get; set; } = null!;
         public int BookTypeId { get; private set; }
 
-        public ReferenceDataItem Genre { get; set; }
+        public ReferenceDataItem Genre { get; set; } = null!;
         public int GenreId { get; private set; }
 
-        public ReferenceDataItem Condition { get; set; }
+        public ReferenceDataItem Condition { get; set; } = null!;
         public int ConditionId { get; private set; }
 
         // ISSUE-05: the four identifiers above are the foreign keys, and they are only ever set

@@ -35,16 +35,18 @@ namespace Bookstore.Domain.Offers
 
         public string? FrontUrl { get; set; }
 
-        public ReferenceDataItem Genre { get; set; }
+        // Navigation properties populated by EF Core when an offer is loaded; the private
+        // constructor above intentionally leaves them for EF to fix up.
+        public ReferenceDataItem Genre { get; set; } = null!;
         public int GenreId { get; private set; }
 
-        public ReferenceDataItem Condition { get; set; }
+        public ReferenceDataItem Condition { get; set; } = null!;
         public int ConditionId { get; private set; }
 
-        public ReferenceDataItem Publisher { get; set; }
+        public ReferenceDataItem Publisher { get; set; } = null!;
         public int PublisherId { get; private set; }
 
-        public ReferenceDataItem BookType { get; set; }
+        public ReferenceDataItem BookType { get; set; } = null!;
         public int BookTypeId { get; private set; }
 
         // ISSUE-05: as on Book — the four identifiers are only ever set through a classification
@@ -69,7 +71,7 @@ namespace Bookstore.Domain.Offers
 
         public string? Comment { get; set; }
 
-        public Customer Customer { get; set; }
+        public Customer Customer { get; set; } = null!;
         public int CustomerId { get; set; }
 
         public Money BookPrice { get; set; }

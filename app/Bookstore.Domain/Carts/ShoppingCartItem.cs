@@ -17,10 +17,13 @@ namespace Bookstore.Domain.Carts
         }
 
         public int ShoppingCartId { get; set; }
-        public ShoppingCart ShoppingCart { get; set; }
+
+        // Navigation properties populated by EF Core when the item is loaded; the empty
+        // constructor above intentionally leaves them for EF to fix up.
+        public ShoppingCart ShoppingCart { get; set; } = null!;
 
         public int BookId { get; set; }
-        public Book Book { get; set; }
+        public Book Book { get; set; } = null!;
 
         public Quantity Quantity { get; set; }
 

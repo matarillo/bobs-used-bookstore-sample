@@ -12,8 +12,10 @@ namespace Bookstore.Domain
 
         public DateTime UpdatedOn { get; set; } = DateTime.UtcNow;
 
+        // Populated by EF Core as a concurrency token; there is no meaningful default before
+        // the entity is persisted.
         [Timestamp]
-        public byte[] RowVersion { get; set; }
+        public byte[] RowVersion { get; set; } = null!;
 
         public bool IsNewEntity()
         {
