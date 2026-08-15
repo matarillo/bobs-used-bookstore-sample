@@ -4,7 +4,7 @@ namespace Bookstore.Domain.ReferenceData
     {
         internal protected Task<IEnumerable<ReferenceDataItem>> FullListAsync();
 
-        internal protected Task<IPaginatedList<ReferenceDataItem>> ListAsync(ReferenceDataFilters filters, int pageIndex, int pageSize);
+        internal protected Task<PagedResult<ReferenceDataItem>> ListAsync(ReferenceDataFilters filters, int pageIndex, int pageSize);
 
         internal protected Task<ReferenceDataItem> GetAsync(int id);
 

@@ -1,4 +1,5 @@
 using Bookstore.Domain;
+using Bookstore.Web.ViewModel;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,9 +11,9 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
 {
     public class OfferIndexViewModel : PaginatedViewModel
     {
-        public OfferIndexViewModel(IPaginatedList<Offer> offers, IEnumerable<ReferenceDataItem> referenceData)
+        public OfferIndexViewModel(PagedResult<Offer> offers, IEnumerable<ReferenceDataItem> referenceData)
         {
-            foreach (var offer in offers)
+            foreach (var offer in offers.Items)
             {
                 Items.Add(new OfferIndexItemViewModel
                 {
@@ -29,12 +30,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
                 });
             }
 
-            PageIndex = offers.PageIndex;
-            PageSize = offers.Count;
-            PageCount = offers.TotalPages;
-            HasNextPage = offers.HasNextPage;
-            HasPreviousPage = offers.HasPreviousPage;
-            PaginationButtons = offers.GetPageList(5).ToList();
+            SetPage(offers);
 
             Genres = referenceData.Where(x => x.DataType == ReferenceDataType.Genre).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });
             BookConditions = referenceData.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Text });

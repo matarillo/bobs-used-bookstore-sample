@@ -5,7 +5,7 @@ namespace Bookstore.Domain.Offers
 {
     public interface IOfferService
     {
-        Task<IPaginatedList<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize);
+        Task<PagedResult<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize);
 
         Task<IEnumerable<Offer>> GetOffersAsync(string sub);
 
@@ -43,7 +43,7 @@ namespace Bookstore.Domain.Offers
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IPaginatedList<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize)
+        public async Task<PagedResult<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize)
         {
             return await offerRepository.ListAsync(filters, pageIndex, pageSize);
         }

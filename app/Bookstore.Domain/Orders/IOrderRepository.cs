@@ -10,7 +10,7 @@ namespace Bookstore.Domain.Orders
 
         internal protected Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count);
 
-        internal protected Task<IPaginatedList<Order>> ListAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
+        internal protected Task<PagedResult<Order>> ListAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
 
         internal protected Task<IEnumerable<Order>> ListAsync(string sub);
 

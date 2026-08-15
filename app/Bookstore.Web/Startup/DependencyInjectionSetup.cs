@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Bookstore.Domain.Customers;
@@ -42,8 +42,6 @@ namespace Bookstore.Web.Startup
 
             // ISSUE-23: one unit of work per request, shared by every repository in it.
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            builder.Services.AddScoped(typeof(IPaginatedList<>), typeof(PaginatedList<>));
 
             if (builder.Environment.IsDevelopment())
             {

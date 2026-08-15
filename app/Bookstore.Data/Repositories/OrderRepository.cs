@@ -110,7 +110,7 @@ namespace Bookstore.Data.Repositories
                 .SumAsync(x => x.PriceAmount * x.QuantityValue);
         }
 
-        async Task<IPaginatedList<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
+        async Task<PagedResult<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)
         {
             var query = dbContext.Orders.AsQueryable();
 
@@ -141,11 +141,7 @@ namespace Bookstore.Data.Repositories
                 .Include(x => x.OrderItems)
                 .ThenInclude(x => x.Book);
 
-            var result = new PaginatedList<Order>(query, pageIndex, pageSize);
-
-            await result.PopulateAsync();
-
-            return result;
+            return await query.ToPagedResultAsync(pageIndex, pageSize);
         }
 
         async Task<IEnumerable<Order>> IOrderRepository.ListAsync(string sub)

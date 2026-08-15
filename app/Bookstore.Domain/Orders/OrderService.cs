@@ -5,7 +5,7 @@ namespace Bookstore.Domain.Orders
 {
     public interface IOrderService
     {
-        Task<IPaginatedList<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
+        Task<PagedResult<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10);
 
         Task<IEnumerable<Order>> GetOrdersAsync(string sub);
 
@@ -49,7 +49,7 @@ namespace Bookstore.Domain.Orders
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IPaginatedList<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
+        public async Task<PagedResult<Order>> GetOrdersAsync(OrderFilters filters, int pageIndex = 1, int pageSize = 10)
         {
             return await orderRepository.ListAsync(filters, pageIndex, pageSize);
         }

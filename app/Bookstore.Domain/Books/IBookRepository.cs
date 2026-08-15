@@ -4,9 +4,9 @@ namespace Bookstore.Domain.Books
     {
         internal protected Task<Book> GetAsync(int id);
 
-        internal protected Task<IPaginatedList<Book>> ListAsync(BookFilters filters, int pageIndex, int pageSize);
+        internal protected Task<PagedResult<Book>> ListAsync(BookFilters filters, int pageIndex, int pageSize);
 
-        internal protected Task<IPaginatedList<Book>> ListAsync(string searchString, string sortBy, int pageIndex, int pageSize);
+        internal protected Task<PagedResult<Book>> ListAsync(string searchString, string sortBy, int pageIndex, int pageSize);
 
         internal protected Task AddAsync(Book book);
 

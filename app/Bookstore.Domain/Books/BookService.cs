@@ -7,9 +7,9 @@ namespace Bookstore.Domain.Books
     {
         Task<Book> GetBookAsync(int id);
 
-        Task<IPaginatedList<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize);
+        Task<PagedResult<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize);
 
-        Task<IPaginatedList<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize);
+        Task<PagedResult<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize);
 
         Task<IEnumerable<Book>> ListBestSellingBooksAsync(int count);
 
@@ -49,12 +49,12 @@ namespace Bookstore.Domain.Books
             return await bookRepository.GetAsync(id);
         }
 
-        public async Task<IPaginatedList<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize)
+        public async Task<PagedResult<Book>> GetBooksAsync(BookFilters filters, int pageIndex, int pageSize)
         {
             return await bookRepository.ListAsync(filters, pageIndex, pageSize);
         }
 
-        public async Task<IPaginatedList<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize)
+        public async Task<PagedResult<Book>> GetBooksAsync(string searchString, string sortBy, int pageIndex, int pageSize)
         {
             return await bookRepository.ListAsync(searchString, sortBy, pageIndex, pageSize);
         }

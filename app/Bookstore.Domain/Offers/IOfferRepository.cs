@@ -4,7 +4,7 @@ namespace Bookstore.Domain.Offers
 {
     public interface IOfferRepository
     {
-        internal protected Task<IPaginatedList<Offer>> ListAsync(OfferFilters filters, int pageIndex, int pageSize);
+        internal protected Task<PagedResult<Offer>> ListAsync(OfferFilters filters, int pageIndex, int pageSize);
 
         internal protected Task<IEnumerable<Offer>> ListAsync(string sub);
 

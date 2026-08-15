@@ -15,9 +15,9 @@ namespace Bookstore.Web.ViewModel.Search
 
         public List<SearchIndexItemViewModel> Books { get; set; } = new List<SearchIndexItemViewModel>();
 
-        public SearchIndexViewModel(IPaginatedList<Book> books)
+        public SearchIndexViewModel(PagedResult<Book> books)
         {
-            foreach (var book in books)
+            foreach (var book in books.Items)
             {
                 Books.Add(new SearchIndexItemViewModel
                 {
@@ -29,12 +29,7 @@ namespace Bookstore.Web.ViewModel.Search
                 });
             }
 
-            PageIndex = books.PageIndex;
-            PageSize = books.Count;
-            PageCount = books.TotalPages;
-            HasNextPage = books.HasNextPage;
-            HasPreviousPage = books.HasPreviousPage;
-            PaginationButtons = books.GetPageList(5).ToList();
+            SetPage(books);
         }
     }
 

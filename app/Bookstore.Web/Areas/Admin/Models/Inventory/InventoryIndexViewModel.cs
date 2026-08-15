@@ -1,4 +1,5 @@
 using Bookstore.Domain;
+using Bookstore.Web.ViewModel;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,9 +25,9 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
 
         public InventoryIndexViewModel() { }
 
-        public InventoryIndexViewModel(IPaginatedList<Book> books, IEnumerable<ReferenceDataItem> referenceDataItems)
+        public InventoryIndexViewModel(PagedResult<Book> books, IEnumerable<ReferenceDataItem> referenceDataItems)
         {
-            foreach (var book in books)
+            foreach (var book in books.Items)
             {
                 Items.Add(new InventoryIndexListItemViewModel
                 {
@@ -44,12 +45,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
                 });
             }
 
-            PageIndex = books.PageIndex;
-            PageSize = books.Count;
-            PageCount = books.TotalPages;
-            HasNextPage = books.HasNextPage;
-            HasPreviousPage = books.HasPreviousPage;
-            PaginationButtons = books.GetPageList(5).ToList();
+            SetPage(books);
 
             var dataItems = referenceDataItems.ToList();
             BookConditions = dataItems.Where(x => x.DataType == ReferenceDataType.Condition).Select(x => new SelectListItem(x.Text, x.Id.ToString()));

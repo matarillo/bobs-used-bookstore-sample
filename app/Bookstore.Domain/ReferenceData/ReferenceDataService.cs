@@ -2,7 +2,7 @@ namespace Bookstore.Domain.ReferenceData
 {
     public interface IReferenceDataService
     {
-        Task<IPaginatedList<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize);
+        Task<PagedResult<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize);
 
         Task<IEnumerable<ReferenceDataItem>> GetAllReferenceDataAsync();
 
@@ -24,7 +24,7 @@ namespace Bookstore.Domain.ReferenceData
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IPaginatedList<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize)
+        public async Task<PagedResult<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize)
         {
             return await referenceDataRepository.ListAsync(filters, pageIndex, pageSize);
         }
