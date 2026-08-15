@@ -68,6 +68,10 @@ namespace Bookstore.Data
         // queries are exactly what they were before the values were introduced.
         private static void ConfigureMoneyAndQuantity(ModelBuilder modelBuilder)
         {
+            // ISSUE-05: the classification is a view over the four foreign keys, which stay mapped.
+            modelBuilder.Entity<Book>().Ignore(x => x.Classification);
+            modelBuilder.Entity<Offer>().Ignore(x => x.Classification);
+
             modelBuilder.Entity<Book>().Ignore(x => x.Price).Ignore(x => x.Quantity).Ignore(x => x.PurchaseCost);
             modelBuilder.Entity<Book>().Property(x => x.PriceAmount).HasColumnName("Price");
             modelBuilder.Entity<Book>().Property(x => x.StockQuantity).HasColumnName("Quantity");

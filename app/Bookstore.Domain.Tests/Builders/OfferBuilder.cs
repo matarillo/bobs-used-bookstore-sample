@@ -9,16 +9,16 @@ public class OfferBuilder
     private string bookName = "test";
     private string author = "author";
     private string isbn = "12345678";
-    private int bookTypeId = 2;
-    private int conditionId = 3;
-    private int genreId = 4;
-    private int publisherId = 5;
+    private int bookTypeId = TestReferenceData.BookTypeId;
+    private int conditionId = TestReferenceData.ConditionId;
+    private int genreId = TestReferenceData.GenreId;
+    private int publisherId = TestReferenceData.PublisherId;
     private decimal bookPrice = 5;
     private OfferStatus status = OfferStatus.PendingApproval;
 
     public Offer Build()
     {
-        var offer = new Offer(customerId, bookName, author, isbn, bookTypeId, conditionId, genreId, publisherId, Money.Of(bookPrice))
+        var offer = new Offer(customerId, bookName, author, isbn, TestReferenceData.Classification(publisherId, bookTypeId, genreId, conditionId), Money.Of(bookPrice))
         {
             Id = id
         };

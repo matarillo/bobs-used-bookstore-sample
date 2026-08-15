@@ -1,5 +1,6 @@
 using Bookstore.Domain.Customers;
 using Bookstore.Domain.Orders;
+using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Domain.Offers
 {
@@ -34,12 +35,14 @@ namespace Bookstore.Domain.Offers
     {
         private readonly IOfferRepository offerRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly IReferenceDataRepository referenceDataRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
+        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository, IReferenceDataRepository referenceDataRepository, IUnitOfWork unitOfWork)
         {
             this.offerRepository = offerRepository;
             this.customerRepository = customerRepository;
+            this.referenceDataRepository = referenceDataRepository;
             this.unitOfWork = unitOfWork;
         }
 
@@ -67,15 +70,16 @@ namespace Bookstore.Domain.Offers
         {
             var customer = await customerRepository.GetAsync(dto.CustomerSub);
 
+            // ISSUE-05: the four classification identifiers are checked against the reference
+            // data they were chosen from before the offer is made (see BookService.ClassifyAsync).
+            var referenceData = await referenceDataRepository.FullListAsync();
+
             var offer = new Offer(
                 customer.Id,
                 dto.BookName,
                 dto.Author,
                 dto.ISBN,
-                dto.BookTypeId,
-                dto.ConditionId,
-                dto.GenreId,
-                dto.PublisherId,
+                BookClassification.Of(referenceData, dto.PublisherId, dto.BookTypeId, dto.GenreId, dto.ConditionId),
                 dto.BookPrice);
 
             await offerRepository.AddAsync(offer);

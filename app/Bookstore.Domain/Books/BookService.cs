@@ -1,4 +1,5 @@
 using Bookstore.Domain.Offers;
+using Bookstore.Domain.ReferenceData;
 using Bookstore.Domain.Orders;
 
 namespace Bookstore.Domain.Books
@@ -31,9 +32,10 @@ namespace Bookstore.Domain.Books
         private readonly IBookRepository bookRepository;
         private readonly IOrderRepository orderRepository;
         private readonly IOfferRepository offerRepository;
+        private readonly IReferenceDataRepository referenceDataRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, IOfferRepository offerRepository, IUnitOfWork unitOfWork)
+        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, IOfferRepository offerRepository, IReferenceDataRepository referenceDataRepository, IUnitOfWork unitOfWork)
         {
             this.imageResizeService = imageResizeService;
             this.imageValidationService = imageValidationService;
@@ -41,6 +43,7 @@ namespace Bookstore.Domain.Books
             this.bookRepository = bookRepository;
             this.orderRepository = orderRepository;
             this.offerRepository = offerRepository;
+            this.referenceDataRepository = referenceDataRepository;
             this.unitOfWork = unitOfWork;
         }
 
@@ -75,10 +78,7 @@ namespace Bookstore.Domain.Books
                 dto.Name,
                 dto.Author,
                 dto.ISBN,
-                dto.PublisherId,
-                dto.BookTypeId,
-                dto.GenreId,
-                dto.ConditionId,
+                await ClassifyAsync(dto.PublisherId, dto.BookTypeId, dto.GenreId, dto.ConditionId),
                 dto.Price,
                 dto.Quantity,
                 dto.Year,
@@ -115,10 +115,7 @@ namespace Bookstore.Domain.Books
             book.Name = dto.Name;
             book.Author = dto.Author;
             book.ISBN = dto.ISBN;
-            book.PublisherId = dto.PublisherId;
-            book.BookTypeId = dto.BookTypeId;
-            book.GenreId = dto.GenreId;
-            book.ConditionId = dto.ConditionId;
+            book.Classification = await ClassifyAsync(dto.PublisherId, dto.BookTypeId, dto.GenreId, dto.ConditionId);
             book.Price = dto.Price;
             book.Quantity = dto.Quantity;
             book.Year = dto.Year;
@@ -128,6 +125,16 @@ namespace Bookstore.Domain.Books
             await bookRepository.UpdateAsync(book);
 
             return await SaveAsync(book, dto.CoverImage, dto.CoverImageFileName);
+        }
+
+        // ISSUE-05: the four identifiers arrive from four dropdowns, and nothing but the shape of
+        // the form ever said the one in the genre position was a genre. Checked here, against the
+        // reference data they were chosen from, before the book is built.
+        private async Task<BookClassification> ClassifyAsync(int publisherId, int bookTypeId, int genreId, int conditionId)
+        {
+            var referenceData = await referenceDataRepository.FullListAsync();
+
+            return BookClassification.Of(referenceData, publisherId, bookTypeId, genreId, conditionId);
         }
 
         private async Task<BookResult> SaveAsync(Book book, Stream? coverImage, string coverImageFileName)

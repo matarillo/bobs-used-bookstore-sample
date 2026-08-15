@@ -16,20 +16,14 @@ namespace Bookstore.Domain.Offers
             string bookName,
             string author,
             string ISBN,
-            int bookTypeId,
-            int conditionId,
-            int genreId,
-            int publisherId,
+            BookClassification classification,
             Money bookPrice)
         {
             CustomerId = customerId;
             BookName = bookName;
             Author = author;
             this.ISBN = ISBN;
-            BookTypeId = bookTypeId;
-            ConditionId = conditionId;
-            GenreId = genreId;
-            PublisherId = publisherId;
+            Classification = classification;
             BookPrice = bookPrice;
         }
 
@@ -42,16 +36,30 @@ namespace Bookstore.Domain.Offers
         public string? FrontUrl { get; set; }
 
         public ReferenceDataItem Genre { get; set; }
-        public int GenreId { get; set; }
+        public int GenreId { get; private set; }
 
         public ReferenceDataItem Condition { get; set; }
-        public int ConditionId { get; set; }
+        public int ConditionId { get; private set; }
 
         public ReferenceDataItem Publisher { get; set; }
-        public int PublisherId { get; set; }
+        public int PublisherId { get; private set; }
 
         public ReferenceDataItem BookType { get; set; }
-        public int BookTypeId { get; set; }
+        public int BookTypeId { get; private set; }
+
+        // ISSUE-05: as on Book — the four identifiers are only ever set through a classification
+        // checked against the reference data, so INV-OFFER-07 is now enforced rather than assumed.
+        public BookClassification Classification
+        {
+            get => BookClassification.AlreadyChecked(PublisherId, BookTypeId, GenreId, ConditionId);
+            private set
+            {
+                PublisherId = value.PublisherId;
+                BookTypeId = value.BookTypeId;
+                GenreId = value.GenreId;
+                ConditionId = value.ConditionId;
+            }
+        }
 
         public string? Summary { get; set; }
 

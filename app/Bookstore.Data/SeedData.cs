@@ -9,7 +9,8 @@ namespace Bookstore.Data
     {
         private void PopulateDatabase(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ReferenceDataItem>().HasData(
+            var referenceData = new[]
+            {
                 new ReferenceDataItem(ReferenceDataType.BookType, "Hardcover") { Id = 1 },
                 new ReferenceDataItem(ReferenceDataType.BookType, "Trade Paperback") { Id = 2 },
                 new ReferenceDataItem(ReferenceDataType.BookType, "Mass Market Paperback") { Id = 3 },
@@ -37,18 +38,26 @@ namespace Bookstore.Data
                 new ReferenceDataItem(ReferenceDataType.Publisher, "Infinity Press") { Id = 22 },
                 new ReferenceDataItem(ReferenceDataType.Publisher, "Paradigm Publishing") { Id = 23 },
                 new ReferenceDataItem(ReferenceDataType.Publisher, "Aurora Publishing") { Id = 24 }
-            );
+            };
+
+            modelBuilder.Entity<ReferenceDataItem>().HasData(referenceData);
 
             modelBuilder.Entity<Book>().HasData(
-                new Book("2020: The Apocalypse", "Li Juan", "6556784356", 15, 1, 13, 5, Money.Of(10.95M), Quantity.Of(25), null, null, "/images/coverimages/apocalypse.png") { Id = 1 },
-                new Book("Children Of Iron", "Nikki Wolf", "7665438976", 16, 1, 11, 6, Money.Of(13.95M), Quantity.Of(3), null, null, "/images/coverimages/childrenofiron.png") { Id = 2 },
-                new Book("Gold In The Dark", "Richard Roe", "5442280765", 17, 1, 13, 5, Money.Of(6.50M), Quantity.Of(10), null, null, "/images/coverimages/goldinthedark.png") { Id = 3 },
-                new Book("Leagues Of Smoke", "Pat Candella", "4556789542", 18, 2, 11, 7, Money.Of(3M), Quantity.Of(1), null, null, "/images/coverimages/leaguesofsmoke.png") { Id = 4 },
-                new Book("Alone With The Stars", "Carlos Salazar", "4563358087", 19, 2, 12, 5, Money.Of(15.95M), Quantity.Of(5), null, null, "/images/coverimages/alonewiththestars.png") { Id = 5 },
-                new Book("The Girl In The Polaroid", "Terri Whitlock", "2354435678", 20, 1, 12, 6, Money.Of(8.25M), Quantity.Of(2), null, null, "/images/coverimages/girlinthepolaroid.png") { Id = 6 },
-                new Book("1001 Jokes", "Mary Major", "6554789632", 21, 2, 11, 5, Money.Of(13.95M), Quantity.Of(7), null, null, "/images/coverimages/1001jokes.png") { Id = 7 },
-                new Book("My Search For Meaning", "Mateo Jackson", "4558786554", 22, 3, 8, 7, Money.Of(5M), Quantity.Of(15), null, null, "/images/coverimages/mysearchformeaning.png") { Id = 8 }
+                new Book("2020: The Apocalypse", "Li Juan", "6556784356", Classify(15, 1, 13, 5), Money.Of(10.95M), Quantity.Of(25), null, null, "/images/coverimages/apocalypse.png") { Id = 1 },
+                new Book("Children Of Iron", "Nikki Wolf", "7665438976", Classify(16, 1, 11, 6), Money.Of(13.95M), Quantity.Of(3), null, null, "/images/coverimages/childrenofiron.png") { Id = 2 },
+                new Book("Gold In The Dark", "Richard Roe", "5442280765", Classify(17, 1, 13, 5), Money.Of(6.50M), Quantity.Of(10), null, null, "/images/coverimages/goldinthedark.png") { Id = 3 },
+                new Book("Leagues Of Smoke", "Pat Candella", "4556789542", Classify(18, 2, 11, 7), Money.Of(3M), Quantity.Of(1), null, null, "/images/coverimages/leaguesofsmoke.png") { Id = 4 },
+                new Book("Alone With The Stars", "Carlos Salazar", "4563358087", Classify(19, 2, 12, 5), Money.Of(15.95M), Quantity.Of(5), null, null, "/images/coverimages/alonewiththestars.png") { Id = 5 },
+                new Book("The Girl In The Polaroid", "Terri Whitlock", "2354435678", Classify(20, 1, 12, 6), Money.Of(8.25M), Quantity.Of(2), null, null, "/images/coverimages/girlinthepolaroid.png") { Id = 6 },
+                new Book("1001 Jokes", "Mary Major", "6554789632", Classify(21, 2, 11, 5), Money.Of(13.95M), Quantity.Of(7), null, null, "/images/coverimages/1001jokes.png") { Id = 7 },
+                new Book("My Search For Meaning", "Mateo Jackson", "4558786554", Classify(22, 3, 8, 7), Money.Of(5M), Quantity.Of(15), null, null, "/images/coverimages/mysearchformeaning.png") { Id = 8 }
             );
+
+            // ISSUE-05: the seed goes through the same checked factory the application does, so a
+            // mistyped identifier here fails at start-up rather than seeding a book filed under a
+            // publisher.
+            BookClassification Classify(int publisherId, int bookTypeId, int genreId, int conditionId) =>
+                BookClassification.Of(referenceData, publisherId, bookTypeId, genreId, conditionId);
         }
     }
 }

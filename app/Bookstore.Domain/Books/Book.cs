@@ -20,10 +20,7 @@ namespace Bookstore.Domain.Books
             string name,
             string author,
             string ISBN,
-            int publisherId,
-            int bookTypeId,
-            int genreId,
-            int conditionId,
+            BookClassification classification,
             Money price,
             Quantity quantity,
             int? year = null,
@@ -33,10 +30,7 @@ namespace Bookstore.Domain.Books
             Name = name;
             Author = author;
             this.ISBN = ISBN;
-            PublisherId = publisherId;
-            BookTypeId = bookTypeId;
-            GenreId = genreId;
-            ConditionId = conditionId;
+            Classification = classification;
             Price = price;
             Quantity = quantity;
             Year = year;
@@ -56,10 +50,7 @@ namespace Bookstore.Domain.Books
                 offer.BookName,
                 offer.Author,
                 offer.ISBN,
-                offer.PublisherId,
-                offer.BookTypeId,
-                offer.GenreId,
-                offer.ConditionId,
+                offer.Classification,
                 price,
                 StockedFromOfferQuantity,
                 year,
@@ -79,16 +70,31 @@ namespace Bookstore.Domain.Books
         public string ISBN { get; set; }
 
         public ReferenceDataItem Publisher { get; set; }
-        public int PublisherId { get; set; }
+        public int PublisherId { get; private set; }
 
         public ReferenceDataItem BookType { get; set; }
-        public int BookTypeId { get; set; }
+        public int BookTypeId { get; private set; }
 
         public ReferenceDataItem Genre { get; set; }
-        public int GenreId { get; set; }
+        public int GenreId { get; private set; }
 
         public ReferenceDataItem Condition { get; set; }
-        public int ConditionId { get; set; }
+        public int ConditionId { get; private set; }
+
+        // ISSUE-05: the four identifiers above are the foreign keys, and they are only ever set
+        // through a classification that has been checked against the reference data. INV-BOOK-05
+        // used to hold by convention alone.
+        public BookClassification Classification
+        {
+            get => BookClassification.AlreadyChecked(PublisherId, BookTypeId, GenreId, ConditionId);
+            set
+            {
+                PublisherId = value.PublisherId;
+                BookTypeId = value.BookTypeId;
+                GenreId = value.GenreId;
+                ConditionId = value.ConditionId;
+            }
+        }
 
         public string? CoverImageUrl { get; set; }
 
