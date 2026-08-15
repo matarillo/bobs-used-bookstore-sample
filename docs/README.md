@@ -54,9 +54,10 @@ docs/
     screens.md                   画面一覧 SCR- と画面遷移
     rules.md                     業務ルール RULE-
     use-cases/                   ユースケース UC-（機能グループ単位）
-    wireframes/                  ワイヤーフレーム（画面単位）… 未作成
-      customer/
-      admin/
+    wireframes/                  ワイヤーフレーム（画面単位）
+      README.md                    版面の書式
+      customer/                    店頭の画面            … 未作成
+      admin/                       管理の画面            … 未作成
 
   design/                      【設計】内部構造
     README.md
@@ -88,6 +89,7 @@ docs/
 | [spec/conventions.md](spec/conventions.md) | 仕様 | 通知・確認・ページ送り・エラー・権限の共通作法 |
 | [spec/rules.md](spec/rules.md) | 仕様 | 税率、しきい値、状態遷移など**顧客が決めるルール** |
 | [spec/use-cases/](spec/use-cases/) | 仕様 | アクター起点の操作。Boundary / Controller / Entity で記述 |
+| [spec/wireframes/README.md](spec/wireframes/README.md) | 仕様 | 画面の姿。版面の書式と共通フレーム |
 | [design/README.md](design/README.md) | 設計 | この層の読み方と論理設計の記法 |
 | [design/domain/](design/domain/) | 設計 | 集約、値オブジェクト、不変条件、ドメイン操作 |
 | [design/issues.md](design/issues.md) | 設計 | モデルの歪みと改善方針 |
