@@ -7,51 +7,38 @@ namespace Bookstore.Domain.Tests
     public class AddressServiceTests
     {
         private readonly IAddressRepository addressRepository = Substitute.For<IAddressRepository>();
-        private readonly ICustomerRepository customerRepository = Substitute.For<ICustomerRepository>();
+        private readonly ICustomerService customerService = Substitute.For<ICustomerService>();
         private readonly IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         private readonly AddressService sut;
 
         public AddressServiceTests()
         {
-            sut = new AddressService(addressRepository, customerRepository, unitOfWork);
+            sut = new AddressService(addressRepository, customerService, unitOfWork);
         }
 
+        // ISSUE-08: address creation goes through the single find-or-create operation rather
+        // than building a customer itself.
         [Fact]
-        public async Task CreateAddressAsync_CreatesANewCustomer_When_NoneExists()
+        public async Task CreateAddressAsync_UsesTheCustomerFindOrCreateOperation()
         {
-            customerRepository.GetAsync("sub-1").Returns((Customer)null!);
+            var customer = new Customer("sub-1") { Id = 9 };
+            customerService.FindOrCreateAsync("sub-1").Returns(customer);
 
             var dto = new CreateAddressDto("123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
 
             await sut.CreateAddressAsync(dto);
 
-            await customerRepository.Received(1).AddAsync(Arg.Is<Customer>(c => c.Sub == "sub-1"));
-            await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.AddressLine1 == "123 Main St"));
+            await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.Customer == customer && a.AddressLine1 == "123 Main St"));
 
-            // ISSUE-23: one unit of work, not two. The new customer used to be committed on its
-            // own before the address was even built, so a failure in between left a customer
-            // with no address behind.
+            // ISSUE-23: one unit of work. A customer FindOrCreateAsync had to create is folded
+            // into the same commit as the address, rather than being saved on its own first.
             await unitOfWork.Received(1).CompleteAsync();
-        }
-
-        [Fact]
-        public async Task CreateAddressAsync_ReusesTheExistingCustomer_When_OneAlreadyExists()
-        {
-            var existingCustomer = new Customer("sub-1") { Id = 9 };
-            customerRepository.GetAsync("sub-1").Returns(existingCustomer);
-
-            var dto = new CreateAddressDto("123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
-
-            await sut.CreateAddressAsync(dto);
-
-            await customerRepository.DidNotReceive().AddAsync(Arg.Any<Customer>());
-            await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.Customer == existingCustomer));
         }
 
         [Fact]
         public async Task CreateAddressAsync_AllowsAddressLine2ToBeOmitted()
         {
-            customerRepository.GetAsync("sub-1").Returns(new Customer("sub-1"));
+            customerService.FindOrCreateAsync("sub-1").Returns(new Customer("sub-1"));
 
             var dto = new CreateAddressDto("123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
 

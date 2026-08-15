@@ -18,13 +18,13 @@ namespace Bookstore.Domain.Addresses
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository addressRepository;
-        private readonly ICustomerRepository customerRepository;
+        private readonly ICustomerService customerService;
         private readonly IUnitOfWork unitOfWork;
 
-        public AddressService(IAddressRepository addressRepository, ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
+        public AddressService(IAddressRepository addressRepository, ICustomerService customerService, IUnitOfWork unitOfWork)
         {
             this.addressRepository = addressRepository;
-            this.customerRepository = customerRepository;
+            this.customerService = customerService;
             this.unitOfWork = unitOfWork;
         }
 
@@ -40,12 +40,9 @@ namespace Bookstore.Domain.Addresses
 
         public async Task CreateAddressAsync(CreateAddressDto dto)
         {
-            var customer = await customerRepository.GetAsync(dto.CustomerSub);
-            if (customer == null)
-            {
-                customer = new Customer(dto.CustomerSub);
-                await customerRepository.AddAsync(customer);
-            }
+            // ISSUE-08: the one place a customer may be created without already existing — the
+            // customer's first address is often also their first contact with the domain.
+            var customer = await customerService.FindOrCreateAsync(dto.CustomerSub);
 
             var address = new Address(customer, dto.AddressLine1, dto.AddressLine2, dto.City, dto.State, dto.Country, dto.ZipCode);
 
