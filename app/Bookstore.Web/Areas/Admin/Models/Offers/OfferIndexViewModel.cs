@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,7 +23,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
                     CustomerName = offer.Customer.FullName,
                     OfferStatus = offer.OfferStatus,
                     OfferDate = offer.CreatedOn,
-                    OfferPrice = offer.BookPrice,
+                    OfferPrice = offer.BookPrice.Amount,
                     Condition = offer.Condition.Text,
                     IsStocked = offer.IsStocked
                 });

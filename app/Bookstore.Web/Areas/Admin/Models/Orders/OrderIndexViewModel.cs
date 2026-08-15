@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Orders;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Bookstore.Web.Areas.Admin.Models.Orders
                     OrderStatus = order.OrderStatus,
                     OrderDate = order.CreatedOn,
                     DeliveryDate = order.DeliveryDate,
-                    Total = order.Total,
+                    Total = order.Total.Amount,
                     IsPastDue = order.IsPastDue(now)
                 });
             }

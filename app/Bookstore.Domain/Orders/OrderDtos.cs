@@ -8,5 +8,5 @@
     // included because they were out of stock, so the caller can tell the customer.
     public record CreateOrderResult(int OrderId, IReadOnlyList<SkippedOrderItemDto> SkippedItems);
 
-    public record SkippedOrderItemDto(int BookId, string BookName, int Quantity);
+    public record SkippedOrderItemDto(int BookId, string BookName, Quantity Quantity);
 }

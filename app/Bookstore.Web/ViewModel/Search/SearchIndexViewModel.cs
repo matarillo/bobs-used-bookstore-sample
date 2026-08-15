@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using Bookstore.Domain.Books;
@@ -24,8 +24,8 @@ namespace Bookstore.Web.ViewModel.Search
                     BookId = book.Id,
                     BookName = book.Name,
                     ImageUrl = book.CoverImageUrl,
-                    Price = book.Price,
-                    Quantity = book.Quantity
+                    Price = book.Price.Amount,
+                    Quantity = book.Quantity.Value
                 });
             }
 

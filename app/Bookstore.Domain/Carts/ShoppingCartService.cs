@@ -39,10 +39,11 @@
 
         public async Task AddToWishlistAsync(AddToWishlistDto dto)
         {
-            await AddToShoppingCartAsync(dto.CorrelationId, dto.BookId, 1, false);
+            // INV-CART-03 keeps a wish list line at one copy.
+            await AddToShoppingCartAsync(dto.CorrelationId, dto.BookId, Quantity.One, false);
         }
 
-        private async Task AddToShoppingCartAsync(string correlationId, int bookId, int quantity, bool wantToBuy)
+        private async Task AddToShoppingCartAsync(string correlationId, int bookId, Quantity quantity, bool wantToBuy)
         {
             var shoppingCart = await shoppingCartRepository.GetAsync(correlationId);
 

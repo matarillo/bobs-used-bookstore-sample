@@ -15,7 +15,7 @@ public class ShoppingCartBuilder
 
     public ShoppingCartBuilder WithShoppingCartItem(Book book, int quantity)
     {
-        shoppingCart.AddItemToShoppingCart(book.Id, quantity);
+        shoppingCart.AddItemToShoppingCart(book.Id, Quantity.Of(quantity));
         Populate(book);
         return this;
     }

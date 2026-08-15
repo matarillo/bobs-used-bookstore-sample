@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -39,8 +39,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
                     Publisher = book.Publisher.Text,
                     UpdatedOn = book.UpdatedOn,
                     Year = book.Year.GetValueOrDefault(),
-                    Price = book.Price,
-                    Quantity = book.Quantity
+                    Price = book.Price.Amount,
+                    Quantity = book.Quantity.Value
                 });
             }
 

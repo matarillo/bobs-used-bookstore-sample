@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Offers;
 using System.Collections.Generic;
 
@@ -21,7 +21,7 @@ namespace Bookstore.Web.ViewModel.Resale
                     BookType = offer.BookType.Text,
                     ISBN = offer.ISBN,
                     Condition = offer.Condition.Text,
-                    Price = offer.BookPrice,
+                    Price = offer.BookPrice.Amount,
                     OfferStatus = offer.OfferStatus.GetDescription()
                 });
             }

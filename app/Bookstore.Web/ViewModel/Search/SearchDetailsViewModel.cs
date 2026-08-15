@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using Bookstore.Domain.Books;
 
@@ -46,8 +46,8 @@ namespace Bookstore.Web.ViewModel.Search
             TypeName = book.BookType.Text;
             ConditionName = book.Condition.Text;
             Url = book.CoverImageUrl;
-            MinPrice = book.Price;
-            Quantity = book.Quantity;
+            MinPrice = book.Price.Amount;
+            Quantity = book.Quantity.Value;
             BookId = book.Id;
             Summary = book.Summary;
         }

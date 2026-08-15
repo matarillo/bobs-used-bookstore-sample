@@ -5,6 +5,12 @@ namespace Bookstore.Domain.Offers
 {
     public class Offer : Entity
     {
+        // An empty constructor is required by EF Core, which can no longer bind the constructor
+        // below now that the buying price is a value rather than the mapped column.
+#pragma warning disable CS8618 // Non-nullable property must contain a non-null value when exiting constructor.
+        private Offer() { }
+#pragma warning restore CS8618
+
         public Offer(
             int customerId,
             string bookName,
@@ -14,7 +20,7 @@ namespace Bookstore.Domain.Offers
             int conditionId,
             int genreId,
             int publisherId,
-            decimal bookPrice)
+            Money bookPrice)
         {
             CustomerId = customerId;
             BookName = bookName;
@@ -58,7 +64,14 @@ namespace Bookstore.Domain.Offers
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
 
-        public decimal BookPrice { get; set; }
+        public Money BookPrice { get; set; }
+
+        // ISSUE-07: the column behind BookPrice — see Book for why it exists.
+        internal decimal BookPriceAmount
+        {
+            get => BookPrice.Amount;
+            private set => BookPrice = Money.Of(value);
+        }
 
         // When the store paid the customer, and so when the money left the business. The buying
         // side of the monetary indicators (12 §2.4) is dated by this, not by when the offer was

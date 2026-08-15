@@ -15,7 +15,7 @@
         {
             return filter == ShoppingCartItemFilter.IncludeOutOfStockItems ?
                 ShoppingCartItems.Where(x => x.WantToBuy) :
-                ShoppingCartItems.Where(x => x.WantToBuy && x.Book.Quantity > 0);
+                ShoppingCartItems.Where(x => x.WantToBuy && x.Book.IsInStock);
         }
 
         public IEnumerable<ShoppingCartItem> GetWishListItems()
@@ -25,8 +25,15 @@
 
         // INV-CART-04: a book occupies a single line of the shopping cart. Adding it again
         // increases the quantity of the existing line rather than creating a second one.
-        public void AddItemToShoppingCart(int bookId, int quantity)
+        public void AddItemToShoppingCart(int bookId, Quantity quantity)
         {
+            // INV-CART-05, ISSUE-07: Quantity rules out a negative count; that a line is for at
+            // least one copy is the cart's rule rather than the value's.
+            if (quantity.IsNone)
+            {
+                throw new DomainException("A shopping cart line must be for at least one copy.");
+            }
+
             var existingItem = ShoppingCartItems.FirstOrDefault(x => x.BookId == bookId && x.WantToBuy);
 
             if (existingItem == null)
@@ -44,7 +51,7 @@
         {
             if (ShoppingCartItems.Any(x => x.BookId == bookId && x.WantToBuy == false)) return;
 
-            ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, 1, false));
+            ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, Quantity.One, false));
         }
 
         // ISSUE-13: a specifically-identified item that is not there is a failure, the same
@@ -87,7 +94,7 @@
             ShoppingCartItems.Remove(shoppingCartItem);
         }
 
-        public decimal GetSubTotal(ShoppingCartItemFilter filter)
+        public Money GetSubTotal(ShoppingCartItemFilter filter)
         {
             return GetShoppingCartItems(filter).Sum(x => x.SubTotal);
         }
@@ -114,7 +121,7 @@
         // customer may still want them once the book is back in stock.
         public IReadOnlyList<ShoppingCartItem> GetOutOfStockWantedItems()
         {
-            return ShoppingCartItems.Where(x => x.WantToBuy && x.Book.Quantity <= 0).ToList();
+            return ShoppingCartItems.Where(x => x.WantToBuy && !x.Book.IsInStock).ToList();
         }
     }
 

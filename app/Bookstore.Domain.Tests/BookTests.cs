@@ -39,9 +39,9 @@ namespace Bookstore.Domain.Tests
                 .Build();
             
             const int amountToReduce = 50;
-            var expectedQuantity = book.Quantity - amountToReduce;
+            var expectedQuantity = book.Quantity - Quantity.Of(amountToReduce);
 
-            book.ReduceStockLevel(amountToReduce);
+            book.ReduceStockLevel(Quantity.Of(amountToReduce));
 
             Assert.Equal(expectedQuantity, book.Quantity);
         }
@@ -55,8 +55,8 @@ namespace Bookstore.Domain.Tests
 
             const int amountToReduce = 60;
 
-            Assert.Throws<DomainException>(() => book.ReduceStockLevel(amountToReduce));
-            Assert.Equal(50, book.Quantity);
+            Assert.Throws<DomainException>(() => book.ReduceStockLevel(Quantity.Of(amountToReduce)));
+            Assert.Equal(Quantity.Of(50), book.Quantity);
         }
 
         [Fact]
@@ -68,9 +68,9 @@ namespace Bookstore.Domain.Tests
 
             const int amountToRestore = 3;
 
-            book.RestoreStockLevel(amountToRestore);
+            book.RestoreStockLevel(Quantity.Of(amountToRestore));
 
-            Assert.Equal(53, book.Quantity);
+            Assert.Equal(Quantity.Of(53), book.Quantity);
         }
 
         // ISSUE-06: the offer describes the book, so stocking it must carry that description over
@@ -80,7 +80,7 @@ namespace Bookstore.Domain.Tests
         {
             var offer = PaidOffer();
 
-            var book = Book.CreateFromOffer(offer, price: 20m);
+            var book = Book.CreateFromOffer(offer, price: Money.Of(20m));
 
             Assert.Equal(offer.BookName, book.Name);
             Assert.Equal(offer.Author, book.Author);
@@ -96,10 +96,10 @@ namespace Bookstore.Domain.Tests
         {
             var offer = PaidOffer(bookPrice: 5m);
 
-            var book = Book.CreateFromOffer(offer, price: 20m);
+            var book = Book.CreateFromOffer(offer, price: Money.Of(20m));
 
-            Assert.Equal(20m, book.Price);
-            Assert.Equal(1, book.Quantity);
+            Assert.Equal(Money.Of(20m), book.Price);
+            Assert.Equal(Quantity.Of(1), book.Quantity);
         }
 
         // ISSUE-06: the source of the stock and what it cost, which is what makes a margin
@@ -109,10 +109,10 @@ namespace Bookstore.Domain.Tests
         {
             var offer = PaidOffer(bookPrice: 5m, id: 7);
 
-            var book = Book.CreateFromOffer(offer, price: 20m);
+            var book = Book.CreateFromOffer(offer, price: Money.Of(20m));
 
             Assert.Equal(7, book.SourceOfferId);
-            Assert.Equal(5m, book.PurchaseCost);
+            Assert.Equal(Money.Of(5m), book.PurchaseCost);
             Assert.Equal(15m, book.Margin);
         }
 
@@ -123,7 +123,7 @@ namespace Bookstore.Domain.Tests
 
             Assert.False(offer.IsStocked);
 
-            Book.CreateFromOffer(offer, price: 20m);
+            Book.CreateFromOffer(offer, price: Money.Of(20m));
 
             Assert.True(offer.IsStocked);
         }
@@ -138,7 +138,7 @@ namespace Bookstore.Domain.Tests
         {
             var offer = new OfferBuilder().Status(status).Build();
 
-            Assert.Throws<DomainException>(() => Book.CreateFromOffer(offer, price: 20m));
+            Assert.Throws<DomainException>(() => Book.CreateFromOffer(offer, price: Money.Of(20m)));
             Assert.False(offer.IsStocked);
         }
 
@@ -148,9 +148,9 @@ namespace Bookstore.Domain.Tests
         {
             var offer = PaidOffer();
 
-            Book.CreateFromOffer(offer, price: 20m);
+            Book.CreateFromOffer(offer, price: Money.Of(20m));
 
-            Assert.Throws<DomainException>(() => Book.CreateFromOffer(offer, price: 20m));
+            Assert.Throws<DomainException>(() => Book.CreateFromOffer(offer, price: Money.Of(20m)));
         }
 
         [Fact]

@@ -67,8 +67,8 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(42, addedOrder!.CustomerId);
             Assert.Equal(7, addedOrder.AddressId);
             Assert.Equal(2, addedOrder.OrderItems.Count());
-            Assert.Equal(3, firstBook.Quantity);
-            Assert.Equal(2, secondBook.Quantity);
+            Assert.Equal(Quantity.Of(3), firstBook.Quantity);
+            Assert.Equal(Quantity.Of(2), secondBook.Quantity);
             Assert.Empty(cart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems));
             await orderRepository.Received(1).SaveChangesAsync();
         }

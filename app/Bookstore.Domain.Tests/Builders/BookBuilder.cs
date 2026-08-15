@@ -20,7 +20,7 @@ public class BookBuilder
     
     public Book Build()
     {
-        return new Book(name, author, isbn, publisherId, bookTypeId, genreId, conditionId, price, quantity, year,
+        return new Book(name, author, isbn, publisherId, bookTypeId, genreId, conditionId, Money.Of(price), Domain.Quantity.Of(quantity), year,
             summary, coverImageUrl)
         {
             Id = id

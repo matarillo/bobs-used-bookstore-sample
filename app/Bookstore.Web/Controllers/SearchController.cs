@@ -1,9 +1,16 @@
-﻿using System.Threading.Tasks;
+using Bookstore.Domain;
+using System.Threading.Tasks;
+using Bookstore.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Bookstore.Domain;
 using Microsoft.AspNetCore.Authorization;
+using Bookstore.Domain;
 using Bookstore.Web.Helpers;
+using Bookstore.Domain;
 using Bookstore.Domain.Books;
+using Bookstore.Domain;
 using Bookstore.Domain.Carts;
+using Bookstore.Domain;
 using Bookstore.Web.ViewModel.Search;
 
 namespace Bookstore.Web.Controllers
@@ -36,7 +43,7 @@ namespace Bookstore.Web.Controllers
 
         public async Task<IActionResult> AddItemToShoppingCart(int bookId)
         {
-            var dto = new AddToShoppingCartDto(HttpContext.GetShoppingCartCorrelationId(), bookId, 1);
+            var dto = new AddToShoppingCartDto(HttpContext.GetShoppingCartCorrelationId(), bookId, Quantity.One);
 
             await shoppingCartService.AddToShoppingCartAsync(dto);
 

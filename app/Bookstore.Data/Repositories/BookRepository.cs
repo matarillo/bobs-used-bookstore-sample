@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Books;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -61,7 +61,7 @@ namespace Bookstore.Data.Repositories
 
             if (filters.LowStock)
             {
-                query = query.Where(x => x.Quantity <= Book.LowBookThreshold);
+                query = query.Where(x => x.StockQuantity <= Book.LowBookThreshold);
             }
 
             query = query
@@ -93,8 +93,8 @@ namespace Bookstore.Data.Repositories
             query = sortBy switch
             {
                 "Name" => query.OrderBy(x => x.Name),
-                "PriceAsc" => query.OrderBy(x => x.Price),
-                "PriceDesc" => query.OrderByDescending(x => x.Price),
+                "PriceAsc" => query.OrderBy(x => x.PriceAmount),
+                "PriceDesc" => query.OrderByDescending(x => x.PriceAmount),
                 _ => query.OrderBy(x => x.Name),
             };
 
@@ -133,10 +133,11 @@ namespace Bookstore.Data.Repositories
                 .GroupBy(x => 1)
                 .Select(x => new BookStatistics
                 {
-                    LowStock = x.Count(y => y.Quantity > 0 && y.Quantity <= Book.LowBookThreshold),
-                    OutOfStock = x.Count(y => y.Quantity == 0),
+                    LowStock = x.Count(y => y.StockQuantity > 0 && y.StockQuantity <= Book.LowBookThreshold),
+                    OutOfStock = x.Count(y => y.StockQuantity == 0),
                     StockTotal = x.Count()
                 }).SingleOrDefaultAsync();
         }
     }
 }
+

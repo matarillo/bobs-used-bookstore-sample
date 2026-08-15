@@ -18,7 +18,7 @@ public class OfferBuilder
 
     public Offer Build()
     {
-        var offer = new Offer(customerId, bookName, author, isbn, bookTypeId, conditionId, genreId, publisherId, bookPrice)
+        var offer = new Offer(customerId, bookName, author, isbn, bookTypeId, conditionId, genreId, publisherId, Money.Of(bookPrice))
         {
             Id = id
         };

@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Bookstore.Domain.Tests" />
+    <!-- ISSUE-07: the plain numbers behind Money and Quantity are mapped and queried by the
+         persistence layer, and are not part of the model's public surface. -->
+    <InternalsVisibleTo Include="Bookstore.Data" />
   </ItemGroup>
 
 </Project>

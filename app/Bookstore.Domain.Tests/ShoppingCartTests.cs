@@ -17,7 +17,7 @@ namespace Bookstore.Domain.Tests
 
             var shoppingCartItem = shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single();
 
-            Assert.Equal(5, shoppingCartItem.Quantity);
+            Assert.Equal(Quantity.Of(5), shoppingCartItem.Quantity);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Bookstore.Domain.Tests
                 .WithShoppingCartItem(book, 2)
                 .Build();
 
-            Assert.Equal(2, shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single().Quantity);
+            Assert.Equal(Quantity.Of(2), shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single().Quantity);
             Assert.Single(shoppingCart.GetWishListItems());
         }
 
@@ -75,7 +75,7 @@ namespace Bookstore.Domain.Tests
 
             shoppingCart.MoveWishListItemToShoppingCart(wishListItemId);
 
-            Assert.Equal(3, shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single().Quantity);
+            Assert.Equal(Quantity.Of(3), shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Single().Quantity);
             Assert.Empty(shoppingCart.GetWishListItems());
         }
 
@@ -121,7 +121,7 @@ namespace Bookstore.Domain.Tests
                 .WithShoppingCartItem(book, 3)
                 .Build();
 
-            Assert.Equal(30m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
+            Assert.Equal(Money.Of(30m), shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Bookstore.Domain.Tests
                 .WithShoppingCartItem(book, 3)
                 .Build();
 
-            Assert.Equal(50m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
+            Assert.Equal(Money.Of(50m), shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
         }
 
         [Fact]
@@ -148,8 +148,8 @@ namespace Bookstore.Domain.Tests
                 .WithShoppingCartItem(outOfStockBook, 1)
                 .Build();
 
-            Assert.Equal(10m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
-            Assert.Equal(30m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.IncludeOutOfStockItems));
+            Assert.Equal(Money.Of(10m), shoppingCart.GetSubTotal(ShoppingCartItemFilter.ExcludeOutOfStockItems));
+            Assert.Equal(Money.Of(30m), shoppingCart.GetSubTotal(ShoppingCartItemFilter.IncludeOutOfStockItems));
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace Bookstore.Domain.Tests
                 .WithWishListItem(wishListBook)
                 .Build();
 
-            Assert.Equal(10m, shoppingCart.GetSubTotal(ShoppingCartItemFilter.IncludeOutOfStockItems));
+            Assert.Equal(Money.Of(10m), shoppingCart.GetSubTotal(ShoppingCartItemFilter.IncludeOutOfStockItems));
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace Bookstore.Domain.Tests
                 .WithWishListItem(book)
                 .Build();
 
-            Assert.Equal(1, shoppingCart.GetWishListItems().Single().Quantity);
+            Assert.Equal(Quantity.Of(1), shoppingCart.GetWishListItems().Single().Quantity);
         }
 
         [Fact]

@@ -35,6 +35,8 @@ namespace Bookstore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            ConfigureMoneyAndQuantity(modelBuilder);
+
             modelBuilder.Entity<Customer>().HasIndex(x => x.Sub).IsUnique();
 
             modelBuilder.Entity<Book>().HasOne(x => x.Publisher).WithMany().HasForeignKey(x => x.PublisherId).OnDelete(DeleteBehavior.Restrict);
@@ -58,6 +60,29 @@ namespace Bookstore.Data
             PopulateDatabase(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        // ISSUE-07: Money and Quantity are the domain's way of talking about amounts and counts;
+        // the database's way is a decimal and an int. Each aggregate keeps an internal property
+        // for the column and derives the value from it, so the column names and the read-side
+        // queries are exactly what they were before the values were introduced.
+        private static void ConfigureMoneyAndQuantity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>().Ignore(x => x.Price).Ignore(x => x.Quantity).Ignore(x => x.PurchaseCost);
+            modelBuilder.Entity<Book>().Property(x => x.PriceAmount).HasColumnName("Price");
+            modelBuilder.Entity<Book>().Property(x => x.StockQuantity).HasColumnName("Quantity");
+            modelBuilder.Entity<Book>().Property(x => x.PurchaseCostAmount).HasColumnName("PurchaseCost");
+
+            modelBuilder.Entity<OrderItem>().Ignore(x => x.Price).Ignore(x => x.Quantity).Ignore(x => x.Cost);
+            modelBuilder.Entity<OrderItem>().Property(x => x.PriceAmount).HasColumnName("Price");
+            modelBuilder.Entity<OrderItem>().Property(x => x.QuantityValue).HasColumnName("Quantity");
+            modelBuilder.Entity<OrderItem>().Property(x => x.CostAmount).HasColumnName("Cost");
+
+            modelBuilder.Entity<ShoppingCartItem>().Ignore(x => x.Quantity);
+            modelBuilder.Entity<ShoppingCartItem>().Property(x => x.QuantityValue).HasColumnName("Quantity");
+
+            modelBuilder.Entity<Offer>().Ignore(x => x.BookPrice);
+            modelBuilder.Entity<Offer>().Property(x => x.BookPriceAmount).HasColumnName("BookPrice");
         }
     }
 }

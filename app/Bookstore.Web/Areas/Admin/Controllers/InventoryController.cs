@@ -1,8 +1,14 @@
-﻿using System.Threading.Tasks;
+using Bookstore.Domain;
+using System.Threading.Tasks;
+using Bookstore.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Bookstore.Domain;
 using Bookstore.Web.Areas.Admin.Models.Inventory;
+using Bookstore.Domain;
 using Bookstore.Domain.Books;
+using Bookstore.Domain;
 using Bookstore.Domain.Offers;
+using Bookstore.Domain;
 using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
@@ -65,7 +71,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 model.SourceOfferId.GetValueOrDefault(),
                 model.Year,
                 model.Summary,
-                model.Price,
+                Money.Of(model.Price),
                 model.CoverImage?.OpenReadStream(),
                 model.CoverImage?.FileName);
 
@@ -89,8 +95,8 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 model.Year, 
                 model.ISBN, 
                 model.Summary, 
-                model.Price, 
-                model.Quantity, 
+                Money.Of(model.Price), 
+                Quantity.Of(model.Quantity), 
                 model.CoverImage?.OpenReadStream(), 
                 model.CoverImage?.FileName);
 
@@ -123,8 +129,8 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 model.Year,
                 model.ISBN,
                 model.Summary,
-                model.Price,
-                model.Quantity,
+                Money.Of(model.Price),
+                Quantity.Of(model.Quantity),
                 model.CoverImage?.OpenReadStream(),
                 model.CoverImage?.FileName);
 

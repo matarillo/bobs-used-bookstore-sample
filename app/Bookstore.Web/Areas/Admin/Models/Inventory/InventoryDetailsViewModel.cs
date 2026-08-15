@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Books;
+using Bookstore.Domain.Books;
 
 namespace Bookstore.Web.Areas.Admin.Models.Inventory
 {
@@ -16,13 +16,13 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Id = book.Id;
             ISBN = book.ISBN;
             Name = book.Name;
-            Price = book.Price;
+            Price = book.Price.Amount;
             Publisher = book.Publisher.Text;
-            Quantity = book.Quantity;
+            Quantity = book.Quantity.Value;
             Summary = book.Summary;
             Year = book.Year.GetValueOrDefault();
             SourceOfferId = book.SourceOfferId;
-            PurchaseCost = book.PurchaseCost;
+            PurchaseCost = book.PurchaseCost?.Amount;
             Margin = book.Margin;
         }
 

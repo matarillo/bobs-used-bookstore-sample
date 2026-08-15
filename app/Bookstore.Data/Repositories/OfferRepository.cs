@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +33,9 @@ namespace Bookstore.Data.Repositories
                     // The monetary indicators (12 §2.4): what the waiting offers would cost to
                     // accept, and what the store has actually paid out. A purchase is an offer
                     // that has been paid for, dated by Offer.PaidOn.
-                    PendingOffersValue = x.Sum(y => y.OfferStatus == OfferStatus.PendingApproval ? y.BookPrice : 0),
-                    PurchasesThisMonth = x.Sum(y => y.PaidOn >= startOfMonth ? y.BookPrice : 0),
-                    PurchasesTotal = x.Sum(y => y.PaidOn != null ? y.BookPrice : 0)
+                    PendingOffersValue = x.Sum(y => y.OfferStatus == OfferStatus.PendingApproval ? y.BookPriceAmount : 0),
+                    PurchasesThisMonth = x.Sum(y => y.PaidOn >= startOfMonth ? y.BookPriceAmount : 0),
+                    PurchasesTotal = x.Sum(y => y.PaidOn != null ? y.BookPriceAmount : 0)
                 }).SingleOrDefaultAsync();
         }
 
