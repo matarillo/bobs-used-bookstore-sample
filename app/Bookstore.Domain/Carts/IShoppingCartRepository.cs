@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.Carts
+namespace Bookstore.Domain.Carts
 {
     public interface IShoppingCartRepository
     {
@@ -6,6 +6,5 @@
 
         internal protected Task<ShoppingCart> GetAsync(string correlationId);
 
-        internal protected Task SaveChangesAsync();
     }
 }

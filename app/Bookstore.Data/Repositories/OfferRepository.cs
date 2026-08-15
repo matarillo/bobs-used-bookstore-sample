@@ -108,9 +108,5 @@ namespace Bookstore.Data.Repositories
                 .ToListAsync();
         }
 
-        async Task IOfferRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

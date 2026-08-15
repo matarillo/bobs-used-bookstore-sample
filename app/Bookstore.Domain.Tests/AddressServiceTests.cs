@@ -8,11 +8,12 @@ namespace Bookstore.Domain.Tests
     {
         private readonly IAddressRepository addressRepository = Substitute.For<IAddressRepository>();
         private readonly ICustomerRepository customerRepository = Substitute.For<ICustomerRepository>();
+        private readonly IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         private readonly AddressService sut;
 
         public AddressServiceTests()
         {
-            sut = new AddressService(addressRepository, customerRepository);
+            sut = new AddressService(addressRepository, customerRepository, unitOfWork);
         }
 
         [Fact]
@@ -25,9 +26,12 @@ namespace Bookstore.Domain.Tests
             await sut.CreateAddressAsync(dto);
 
             await customerRepository.Received(1).AddAsync(Arg.Is<Customer>(c => c.Sub == "sub-1"));
-            await customerRepository.Received(1).SaveChangesAsync();
             await addressRepository.Received(1).AddAsync(Arg.Is<Address>(a => a.AddressLine1 == "123 Main St"));
-            await addressRepository.Received(1).SaveChangesAsync();
+
+            // ISSUE-23: one unit of work, not two. The new customer used to be committed on its
+            // own before the address was even built, so a failure in between left a customer
+            // with no address behind.
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -64,7 +68,7 @@ namespace Bookstore.Domain.Tests
             var dto = new UpdateAddressDto(1, "123 Main St", null, "Springfield", "IL", "USA", "62701", "sub-1");
 
             await Assert.ThrowsAsync<DomainException>(() => sut.UpdateAddressAsync(dto));
-            await addressRepository.DidNotReceive().SaveChangesAsync();
+            await unitOfWork.DidNotReceive().CompleteAsync();
         }
 
         [Fact]
@@ -84,7 +88,7 @@ namespace Bookstore.Domain.Tests
             Assert.Equal("new state", address.State);
             Assert.Equal("new country", address.Country);
             Assert.Equal("99999", address.ZipCode);
-            await addressRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -95,7 +99,7 @@ namespace Bookstore.Domain.Tests
             var dto = new DeleteAddressDto(1, "sub-1");
 
             await Assert.ThrowsAsync<DomainException>(() => sut.DeleteAddressAsync(dto));
-            await addressRepository.DidNotReceive().SaveChangesAsync();
+            await unitOfWork.DidNotReceive().CompleteAsync();
         }
 
         [Fact]
@@ -107,7 +111,7 @@ namespace Bookstore.Domain.Tests
 
             await sut.DeleteAddressAsync(dto);
 
-            await addressRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]

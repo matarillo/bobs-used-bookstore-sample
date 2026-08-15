@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Customers;
+using Bookstore.Domain.Customers;
 using Bookstore.Domain.Orders;
 
 namespace Bookstore.Domain.Offers
@@ -34,11 +34,13 @@ namespace Bookstore.Domain.Offers
     {
         private readonly IOfferRepository offerRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository)
+        public OfferService(IOfferRepository offerRepository, ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
         {
             this.offerRepository = offerRepository;
             this.customerRepository = customerRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<IPaginatedList<Offer>> GetOffersAsync(OfferFilters filters, int pageIndex, int pageSize)
@@ -78,7 +80,7 @@ namespace Bookstore.Domain.Offers
 
             await offerRepository.AddAsync(offer);
 
-            await offerRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         public async Task ApproveOfferAsync(int offerId)
@@ -109,7 +111,7 @@ namespace Bookstore.Domain.Offers
 
             offer.UpdatedOn = DateTime.UtcNow;
 
-            await offerRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         public async Task<OfferStatistics> GetStatisticsAsync()

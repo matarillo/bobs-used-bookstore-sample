@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.ReferenceData
+namespace Bookstore.Domain.ReferenceData
 {
     public interface IReferenceDataService
     {
@@ -16,10 +16,12 @@
     public class ReferenceDataService : IReferenceDataService
     {
         private readonly IReferenceDataRepository referenceDataRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ReferenceDataService(IReferenceDataRepository referenceDataRepository)
+        public ReferenceDataService(IReferenceDataRepository referenceDataRepository, IUnitOfWork unitOfWork)
         {
             this.referenceDataRepository = referenceDataRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<IPaginatedList<ReferenceDataItem>> GetReferenceDataAsync(ReferenceDataFilters filters, int pageIndex, int pageSize)
@@ -43,7 +45,7 @@
 
             await referenceDataRepository.AddAsync(referenceDataItem);
 
-            await referenceDataRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         public async Task UpdateAsync(UpdateReferenceDataItemDto dto)
@@ -53,7 +55,7 @@
             referenceDataItem.DataType = dto.ReferenceDataType;
             referenceDataItem.Text = dto.Text;
 
-            await referenceDataRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
     }
 }

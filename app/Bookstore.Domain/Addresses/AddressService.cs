@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Customers;
+using Bookstore.Domain.Customers;
 
 namespace Bookstore.Domain.Addresses
 {
@@ -19,11 +19,13 @@ namespace Bookstore.Domain.Addresses
     {
         private readonly IAddressRepository addressRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public AddressService(IAddressRepository addressRepository, ICustomerRepository customerRepository)
+        public AddressService(IAddressRepository addressRepository, ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
         {
             this.addressRepository = addressRepository;
             this.customerRepository = customerRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Address> GetAddressAsync(string sub, int id)
@@ -43,14 +45,15 @@ namespace Bookstore.Domain.Addresses
             {
                 customer = new Customer(dto.CustomerSub);
                 await customerRepository.AddAsync(customer);
-                await customerRepository.SaveChangesAsync();
             }
-            
+
             var address = new Address(customer, dto.AddressLine1, dto.AddressLine2, dto.City, dto.State, dto.Country, dto.ZipCode);
 
             await addressRepository.AddAsync(address);
 
-            await addressRepository.SaveChangesAsync();
+            // ISSUE-23: the customer and the address are one change. The customer used to be
+            // committed separately, which left a customer behind if the address then failed.
+            await unitOfWork.CompleteAsync();
         }
 
         // ISSUE-13: updating one specifically-identified address is a strict update.
@@ -70,7 +73,7 @@ namespace Bookstore.Domain.Addresses
             address.Country = dto.Country;
             address.ZipCode = dto.ZipCode;
 
-            await addressRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
 
         // ISSUE-13: deleting one specifically-identified address is a strict update too, the
@@ -84,7 +87,7 @@ namespace Bookstore.Domain.Addresses
                 throw new DomainException($"Address {dto.AddressId} was not found.");
             }
 
-            await addressRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
     }
 }

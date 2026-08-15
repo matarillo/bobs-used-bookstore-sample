@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.Customers
+namespace Bookstore.Domain.Customers
 {
     public interface ICustomerService
     {
@@ -12,10 +12,12 @@
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository customerRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
         {
             this.customerRepository = customerRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Customer> GetAsync(int id)
@@ -45,7 +47,7 @@
             existingCustomer.LastName = dto.LastName;
             existingCustomer.UpdatedOn = DateTime.UtcNow;
 
-            await customerRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
         }
     }
 }

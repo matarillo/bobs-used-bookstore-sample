@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.Addresses
+namespace Bookstore.Domain.Addresses
 {
     public interface IAddressRepository
     {
@@ -12,6 +12,5 @@
         // how to react to a missing target (ISSUE-13).
         internal protected Task<bool> DeleteAsync(string sub, int id);
 
-        internal protected Task SaveChangesAsync();
     }
 }

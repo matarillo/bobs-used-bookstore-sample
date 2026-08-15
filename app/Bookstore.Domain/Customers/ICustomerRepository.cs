@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.Customers
+namespace Bookstore.Domain.Customers
 {
     public interface ICustomerRepository
     {
@@ -8,6 +8,5 @@
 
         internal protected Task AddAsync(Customer customer);
 
-        internal protected Task SaveChangesAsync();
     }
 }

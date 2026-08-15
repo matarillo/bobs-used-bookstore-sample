@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.ReferenceData
+namespace Bookstore.Domain.ReferenceData
 {
     public interface IReferenceDataRepository
     {
@@ -10,6 +10,5 @@
 
         internal protected Task AddAsync(ReferenceDataItem item);
 
-        internal protected Task SaveChangesAsync();
     }
 }

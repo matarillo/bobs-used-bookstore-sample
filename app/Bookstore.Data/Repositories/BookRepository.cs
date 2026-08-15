@@ -122,10 +122,6 @@ namespace Bookstore.Data.Repositories
             }
         }
 
-        async Task IBookRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
 
         async Task<BookStatistics> IBookRepository.GetStatisticsAsync()
         {

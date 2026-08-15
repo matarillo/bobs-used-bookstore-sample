@@ -1,4 +1,4 @@
-﻿namespace Bookstore.Domain.Books
+namespace Bookstore.Domain.Books
 {
     public interface IBookRepository
     {
@@ -12,7 +12,6 @@
 
         internal protected Task UpdateAsync(Book book);
 
-        Task SaveChangesAsync();
 
         Task<BookStatistics> GetStatisticsAsync();
     }

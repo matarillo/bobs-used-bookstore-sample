@@ -157,9 +157,5 @@ namespace Bookstore.Data.Repositories
                 .ToListAsync();
         }
 
-        async Task IOrderRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

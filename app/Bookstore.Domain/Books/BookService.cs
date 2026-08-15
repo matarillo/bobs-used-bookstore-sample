@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Offers;
+using Bookstore.Domain.Offers;
 using Bookstore.Domain.Orders;
 
 namespace Bookstore.Domain.Books
@@ -31,8 +31,9 @@ namespace Bookstore.Domain.Books
         private readonly IBookRepository bookRepository;
         private readonly IOrderRepository orderRepository;
         private readonly IOfferRepository offerRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, IOfferRepository offerRepository)
+        public BookService(IImageResizeService imageResizeService, IImageValidationService imageValidationService, IFileService fileService, IBookRepository bookRepository, IOrderRepository orderRepository, IOfferRepository offerRepository, IUnitOfWork unitOfWork)
         {
             this.imageResizeService = imageResizeService;
             this.imageValidationService = imageValidationService;
@@ -40,6 +41,7 @@ namespace Bookstore.Domain.Books
             this.bookRepository = bookRepository;
             this.orderRepository = orderRepository;
             this.offerRepository = offerRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Book> GetBookAsync(int id)
@@ -138,7 +140,7 @@ namespace Bookstore.Domain.Books
 
             await SaveImageAsync(book, resizedCoverImage, coverImageFileName);
 
-            await bookRepository.SaveChangesAsync();
+            await unitOfWork.CompleteAsync();
 
             return new BookResult(true, null);
         }

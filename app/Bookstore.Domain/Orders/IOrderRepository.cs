@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain.Books;
+using Bookstore.Domain.Books;
 
 namespace Bookstore.Domain.Orders
 {
@@ -18,6 +18,5 @@ namespace Bookstore.Domain.Orders
 
         internal protected Task<OrderStatistics> GetStatisticsAsync();
 
-        internal protected Task SaveChangesAsync();
     }
 }

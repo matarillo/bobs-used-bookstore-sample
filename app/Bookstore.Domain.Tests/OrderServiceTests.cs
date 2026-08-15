@@ -11,11 +11,12 @@ namespace Bookstore.Domain.Tests
         private readonly IOrderRepository orderRepository = Substitute.For<IOrderRepository>();
         private readonly IShoppingCartRepository shoppingCartRepository = Substitute.For<IShoppingCartRepository>();
         private readonly ICustomerRepository customerRepository = Substitute.For<ICustomerRepository>();
+        private readonly IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         private readonly OrderService sut;
 
         public OrderServiceTests()
         {
-            sut = new OrderService(orderRepository, shoppingCartRepository, customerRepository);
+            sut = new OrderService(orderRepository, shoppingCartRepository, customerRepository, unitOfWork);
         }
 
         [Fact]
@@ -70,7 +71,7 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(Quantity.Of(3), firstBook.Quantity);
             Assert.Equal(Quantity.Of(2), secondBook.Quantity);
             Assert.Empty(cart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems));
-            await orderRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -120,7 +121,7 @@ namespace Bookstore.Domain.Tests
             await sut.AcceptOrderAsync(5);
 
             Assert.Equal(OrderStatus.Ordered, order.OrderStatus);
-            await orderRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -133,7 +134,7 @@ namespace Bookstore.Domain.Tests
             await sut.ShipOrderAsync(5);
 
             Assert.Equal(OrderStatus.Shipped, order.OrderStatus);
-            await orderRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -147,7 +148,7 @@ namespace Bookstore.Domain.Tests
             await sut.DeliverOrderAsync(5);
 
             Assert.Equal(OrderStatus.Delivered, order.OrderStatus);
-            await orderRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]
@@ -159,7 +160,7 @@ namespace Bookstore.Domain.Tests
 
             await sut.CancelOrderAsync(dto);
 
-            await orderRepository.DidNotReceive().SaveChangesAsync();
+            await unitOfWork.DidNotReceive().CompleteAsync();
         }
 
         [Fact]
@@ -173,7 +174,7 @@ namespace Bookstore.Domain.Tests
             await sut.CancelOrderAsync(dto);
 
             Assert.Equal(OrderStatus.Cancelled, order.OrderStatus);
-            await orderRepository.Received(1).SaveChangesAsync();
+            await unitOfWork.Received(1).CompleteAsync();
         }
 
         [Fact]

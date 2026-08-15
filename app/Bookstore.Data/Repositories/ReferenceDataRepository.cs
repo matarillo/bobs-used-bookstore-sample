@@ -1,4 +1,4 @@
-﻿using Bookstore.Domain;
+using Bookstore.Domain;
 using Bookstore.Domain.ReferenceData;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -47,9 +47,5 @@ namespace Bookstore.Data.Repositories
             return result;
         }
 
-        async Task IReferenceDataRepository.SaveChangesAsync()
-        {
-            await dbContext.SaveChangesAsync();
-        }
     }
 }
