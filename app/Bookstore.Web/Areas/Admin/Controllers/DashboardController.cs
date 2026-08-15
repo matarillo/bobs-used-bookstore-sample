@@ -32,10 +32,17 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 PendingOrders = orderStats.PendingOrders,
                 OrdersThisMonth = orderStats.OrdersThisMonth,
                 OrdersTotal = orderStats.OrdersTotal,
+                SalesThisMonth = orderStats.SalesThisMonth,
+                SalesTotal = orderStats.SalesTotal,
+                GrossProfitThisMonth = orderStats.GrossProfitThisMonth,
+                SalesWithKnownCostThisMonth = orderStats.SalesWithKnownCostThisMonth,
 
                 PendingOffers = offerStats.PendingOffers,
                 OffersThisMonth = offerStats.OffersThisMonth,
                 OffersTotal = offerStats.OffersTotal,
+                PendingOffersValue = offerStats.PendingOffersValue,
+                PurchasesThisMonth = offerStats.PurchasesThisMonth,
+                PurchasesTotal = offerStats.PurchasesTotal,
 
                 LowStock = inventoryStats.LowStock,
                 OutOfStock = inventoryStats.OutOfStock,

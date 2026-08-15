@@ -46,8 +46,11 @@ public class OfferBuilder
         offer.ConfirmReceipt();
         if (status == OfferStatus.Received) return;
 
-        offer.RecordPayment();
+        offer.RecordPayment(PaidOn);
     }
+
+    // A fixed payment date, so a test that cares about when the store paid can assert on it.
+    public static readonly DateTime PaidOn = new DateTime(2026, 1, 15, 9, 0, 0, DateTimeKind.Utc);
 
     public OfferBuilder Status(OfferStatus value)
     {

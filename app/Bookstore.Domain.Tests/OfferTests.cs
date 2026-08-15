@@ -85,9 +85,22 @@ namespace Bookstore.Domain.Tests
         {
             var offer = OfferInState(OfferStatus.Received);
 
-            offer.RecordPayment();
+            offer.RecordPayment(OfferBuilder.PaidOn);
 
             Assert.Equal(OfferStatus.Paid, offer.OfferStatus);
+        }
+
+        // The buying half of the monetary indicators is dated by this, so the offer has to keep it.
+        [Fact]
+        public void RecordPayment_RecordsWhenTheStorePaid_When_TheOfferIsReceived()
+        {
+            var offer = OfferInState(OfferStatus.Received);
+
+            Assert.Null(offer.PaidOn);
+
+            offer.RecordPayment(OfferBuilder.PaidOn);
+
+            Assert.Equal(OfferBuilder.PaidOn, offer.PaidOn);
         }
 
         [Theory]
@@ -99,7 +112,7 @@ namespace Bookstore.Domain.Tests
         {
             var offer = OfferInState(status);
 
-            Assert.Throws<DomainException>(() => offer.RecordPayment());
+            Assert.Throws<DomainException>(() => offer.RecordPayment(OfferBuilder.PaidOn));
         }
 
         private static Offer OfferInState(OfferStatus status) => new OfferBuilder().Status(status).Build();

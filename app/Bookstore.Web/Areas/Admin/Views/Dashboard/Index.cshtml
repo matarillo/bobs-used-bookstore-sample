@@ -12,7 +12,7 @@
     <h5 class="me-auto">Dashboard</h5>
 </div>
 
-<div class="row row-cols-3">
+<div class="row row-cols-3 gy-3">
     <div class="col">
         <div class="card mx-3">
             <div class="card-header">Orders</div>
@@ -26,6 +26,23 @@
         </div>
     </div>
 
+    @* The monetary indicators (12 §2.4): what the business took in, what it paid out and what it
+       kept. All amounts are net of tax and exclude cancelled orders. *@
+    <div class="col">
+        <div class="card mx-3">
+            <div class="card-header">Sales</div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@($"{Model.SalesThisMonth.ToString("C")} sold this month")</li>
+                <li class="list-group-item">@($"{Model.SalesTotal.ToString("C")} sold in total")</li>
+                <li class="list-group-item">
+                    @($"{Model.GrossProfitThisMonth.ToString("C")} gross profit this month")
+                    <small class="d-block text-muted">on @Model.SalesWithKnownCostThisMonth.ToString("C") of books bought from customers; books entered by hand have no recorded cost</small>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div class="col">
         <div class="card mx-3">
             <div class="card-header">Offers</div>
@@ -34,6 +51,9 @@
                 <li class="list-group-item d-flex justify-content-between">@(Model.PendingOffers == 1 ? "There is 1 pending offer" : $"There are {Model.PendingOffers} pending offers")<a asp-area="Admin" asp-controller="Offers" asp-route-Filters.OfferStatus="@((int)OfferStatus.PendingApproval)">View</a></li>
                 <li class="list-group-item d-flex justify-content-between">@(Model.OffersThisMonth == 1 ? "There has been 1 offer made this month" : $"There have been {Model.OffersThisMonth} offers made this month")<a asp-area="Admin" asp-controller="Offers" asp-route-Filters.OfferDateFromfilter="@DateTime.UtcNow.StartOfMonth().ToString("yyyy-MM-dd")">View</a></li>
                 <li class="list-group-item d-flex justify-content-between">@(Model.OffersTotal == 1 ? "There has been 1 offer made in total" : $"There have been {Model.OffersTotal} offers made in total")<a asp-area="Admin" asp-controller="Offers">View</a></li>
+                <li class="list-group-item d-flex justify-content-between">@($"{Model.PendingOffersValue.ToString("C")} would be owed if every pending offer were accepted")<a asp-area="Admin" asp-controller="Offers" asp-route-Filters.OfferStatus="@((int)OfferStatus.PendingApproval)">View</a></li>
+                <li class="list-group-item">@($"{Model.PurchasesThisMonth.ToString("C")} paid to customers this month")</li>
+                <li class="list-group-item">@($"{Model.PurchasesTotal.ToString("C")} paid to customers in total")</li>
             </ul>
         </div>
     </div>

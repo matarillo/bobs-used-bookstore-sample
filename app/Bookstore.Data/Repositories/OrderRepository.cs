@@ -75,7 +75,39 @@ namespace Bookstore.Data.Repositories
             // projection above.
             statistics.PastDueOrders = await dbContext.Orders.CountAsync(Order.PastDueAsOf(now));
 
+            // The monetary indicators (12 §2.4). What counts as a sale is the order's rule; the
+            // amounts are the ones the order items already carry.
+            var sales = dbContext.Orders.Where(Order.SalesFilter());
+            var salesThisMonth = sales.Where(x => x.CreatedOn >= startOfMonth);
+
+            statistics.SalesTotal = await SumSubTotalAsync(sales);
+            statistics.SalesThisMonth = await SumSubTotalAsync(salesThisMonth);
+            statistics.GrossProfitTotal = await SumGrossProfitAsync(sales);
+            statistics.GrossProfitThisMonth = await SumGrossProfitAsync(salesThisMonth);
+            statistics.SalesWithKnownCostTotal = await SumSubTotalWithKnownCostAsync(sales);
+            statistics.SalesWithKnownCostThisMonth = await SumSubTotalWithKnownCostAsync(salesThisMonth);
+
             return statistics;
+        }
+
+        private static Task<decimal> SumSubTotalAsync(IQueryable<Order> orders)
+        {
+            return orders.SelectMany(x => x.OrderItems).SumAsync(x => x.Price * x.Quantity);
+        }
+
+        // Only the items whose cost the domain knows — see OrderStatistics.GrossProfitTotal.
+        private static Task<decimal> SumGrossProfitAsync(IQueryable<Order> orders)
+        {
+            return orders.SelectMany(x => x.OrderItems)
+                .Where(x => x.Cost != null)
+                .SumAsync(x => (x.Price - x.Cost.Value) * x.Quantity);
+        }
+
+        private static Task<decimal> SumSubTotalWithKnownCostAsync(IQueryable<Order> orders)
+        {
+            return orders.SelectMany(x => x.OrderItems)
+                .Where(x => x.Cost != null)
+                .SumAsync(x => x.Price * x.Quantity);
         }
 
         async Task<IPaginatedList<Order>> IOrderRepository.ListAsync(OrderFilters filters, int pageIndex, int pageSize)

@@ -44,6 +44,18 @@ namespace Bookstore.Domain.Orders
             orderItems.Add(new OrderItem(this, book, quantity));
         }
 
+        // The monetary indicators (12 §2.4) count an order as revenue unless it was cancelled: a
+        // cancelled order was never charged and its stock came back. Nothing else in the
+        // lifecycle changes whether it is a sale — an order is an agreement from the moment it is
+        // placed.
+        public bool CountsAsSale => OrderStatus != OrderStatus.Cancelled;
+
+        // The same rule for the read side, which sums these amounts across every order.
+        public static Expression<Func<Order, bool>> SalesFilter()
+        {
+            return order => order.OrderStatus != OrderStatus.Cancelled;
+        }
+
         // ISSUE-25: "past due" used to exist only as a line on the dashboard, with its rule
         // written into the query that counted it. The order decides what it means: the delivery
         // date promised by RULE-ORDER-01 has passed and the order has still not reached the
