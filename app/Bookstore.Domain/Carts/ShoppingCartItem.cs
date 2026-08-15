@@ -26,7 +26,7 @@ namespace Bookstore.Domain.Carts
 
         public bool WantToBuy { get; set; }
 
-        // RULE-CART-03: the price of the book multiplied by the quantity ordered.
+        // RULE-CART-03, revised by ISSUE-02: the price of the book multiplied by the quantity.
         public decimal SubTotal => Book.Price * Quantity;
     }
 }
