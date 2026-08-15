@@ -21,7 +21,7 @@ namespace Bookstore.Data.Repositories
 
             if (address == null) return false;
 
-            address.IsActive = false;
+            address.Deactivate();
 
             return true;
         }
