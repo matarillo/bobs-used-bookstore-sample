@@ -38,11 +38,11 @@ docs/
   glossary.md                  ユビキタス言語。全層が共有する唯一の正
 
   product/                     【要求・要件】
-    goals.md                     事業モデルと成功指標
+    README.md
+    goals.md                     事業の循環と、店が測っている指標
     actors.md                    アクターと、その人が達したいこと
-    scope.md                     引き受けると決めたこと
     open-questions.md            未決事項 Q-
-    decisions/                   決定の記録 ADR-
+    decisions/                   決定の記録 ADR-      … 未作成
 
   spec/                        【仕様】外から観測できる振る舞い
     README.md                    読み方と記述規約
@@ -50,7 +50,7 @@ docs/
     screens.md                   画面一覧 SCR- と画面遷移
     rules.md                     業務ルール RULE-
     use-cases/                   ユースケース UC-（機能グループ単位）
-    wireframes/                  ワイヤーフレーム（画面単位）
+    wireframes/                  ワイヤーフレーム（画面単位）… 未作成
       customer/
       admin/
 
@@ -75,16 +75,16 @@ docs/
 | 文書 | 層 | 内容 |
 | --- | --- | --- |
 | [glossary.md](glossary.md) | 全層 | 用語集。同じものを違う言葉で呼ばないための正 |
+| [product/README.md](product/README.md) | 要求・要件 | この層の読み方と、決定が出たときの流れ |
 | [product/goals.md](product/goals.md) | 要求 | 買って売るという事業の骨格、測る指標 |
 | [product/actors.md](product/actors.md) | 要求 | 来店者・顧客・スタッフ・外部認証基盤 |
-| [product/scope.md](product/scope.md) | 要件 | 引き受けると決めた範囲 |
 | [product/open-questions.md](product/open-questions.md) | 要求 | 業務担当者に確認しないと決められないこと |
-| [product/decisions/](product/decisions/) | 要求 | 未決事項への回答。1 ファイル 1 決定 |
+| [spec/README.md](spec/README.md) | 仕様 | この層の読み方とユースケースの書式 |
 | [spec/screens.md](spec/screens.md) | 仕様 | 画面一覧と遷移。ワイヤーフレームとの接続点 |
 | [spec/conventions.md](spec/conventions.md) | 仕様 | 通知・確認・ページ送り・エラー・権限の共通作法 |
 | [spec/rules.md](spec/rules.md) | 仕様 | 税率、しきい値、状態遷移など**顧客が決めるルール** |
 | [spec/use-cases/](spec/use-cases/) | 仕様 | アクター起点の操作。Boundary / Controller / Entity で記述 |
-| [spec/wireframes/](spec/wireframes/) | 仕様 | 画面の配置。1 画面 1 ファイル |
+| [design/README.md](design/README.md) | 設計 | この層の読み方と論理設計の記法 |
 | [design/domain/](design/domain/) | 設計 | 集約、値オブジェクト、不変条件、ドメイン操作 |
 | [design/issues.md](design/issues.md) | 設計 | モデルの歪みと改善方針 |
 
