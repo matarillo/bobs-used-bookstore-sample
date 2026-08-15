@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Bookstore.Web.Areas.Admin.Models.Inventory;
 using Bookstore.Domain.Books;
+using Bookstore.Domain.Offers;
 using Bookstore.Domain.ReferenceData;
 
 namespace Bookstore.Web.Areas.Admin.Controllers
@@ -10,11 +11,13 @@ namespace Bookstore.Web.Areas.Admin.Controllers
     {
         private readonly IBookService bookService;
         private readonly IReferenceDataService referenceDataService;
+        private readonly IOfferService offerService;
 
-        public InventoryController(IBookService bookService, IReferenceDataService referenceDataService)
+        public InventoryController(IBookService bookService, IReferenceDataService referenceDataService, IOfferService offerService)
         {
             this.bookService = bookService;
             this.referenceDataService = referenceDataService;
+            this.offerService = offerService;
         }
 
         public async Task<IActionResult> Index(BookFilters filters, int pageIndex = 1, int pageSize = 10)
@@ -37,6 +40,38 @@ namespace Bookstore.Web.Areas.Admin.Controllers
             var referenceDataItemDtos = await referenceDataService.GetAllReferenceDataAsync();
 
             return View("CreateUpdate", new InventoryCreateUpdateViewModel(referenceDataItemDtos));
+        }
+
+        // ISSUE-06: the route from a paid offer to the shelf. The offer describes the book; the
+        // store is only asked for the sale price and the presentation details.
+        [HttpGet]
+        public async Task<IActionResult> CreateFromOffer(int id)
+        {
+            var offer = await offerService.GetOfferAsync(id);
+
+            if (offer == null) return NotFound();
+
+            var referenceDataItemDtos = await referenceDataService.GetAllReferenceDataAsync();
+
+            return View("CreateUpdate", new InventoryCreateUpdateViewModel(referenceDataItemDtos, offer));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateFromOffer(InventoryCreateUpdateViewModel model)
+        {
+            if (!ModelState.IsValid) return await InvalidCreateUpdateView(model);
+
+            var dto = new CreateBookFromOfferDto(
+                model.SourceOfferId.GetValueOrDefault(),
+                model.Year,
+                model.Summary,
+                model.Price,
+                model.CoverImage?.OpenReadStream(),
+                model.CoverImage?.FileName);
+
+            var result = await bookService.AddFromOfferAsync(dto);
+
+            return await ProcessBookResultAsync(model, result, $"{model.Name} has been stocked from offer {model.SourceOfferId}");
         }
 
         [HttpPost]

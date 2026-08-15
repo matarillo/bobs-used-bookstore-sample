@@ -60,6 +60,10 @@ namespace Bookstore.Domain.Offers
 
         public decimal BookPrice { get; set; }
 
+        // ISSUE-06: whether the bought book has been put on the shelf as a Book. A paid offer is
+        // stocked exactly once; Book.CreateFromOffer is the only way this becomes true.
+        public bool IsStocked { get; private set; }
+
         // The store approves a pending offer and awaits the shipment from the customer.
         public void Approve()
         {
@@ -94,6 +98,22 @@ namespace Bookstore.Domain.Offers
             RequireStatus(OfferStatus.Received, "be paid");
 
             OfferStatus = OfferStatus.Paid;
+        }
+
+        // ISSUE-06: the buying side of the business hands the book over to the selling side. Only
+        // a paid offer may be stocked — the store does not sell what it has not yet bought — and
+        // only once, so a single bought copy cannot become two books. Called by
+        // Book.CreateFromOffer, which is what actually produces the stock.
+        internal void MarkAsStocked()
+        {
+            RequireStatus(OfferStatus.Paid, "be added to inventory");
+
+            if (IsStocked)
+            {
+                throw new DomainException($"Offer {Id} has already been added to inventory.");
+            }
+
+            IsStocked = true;
         }
 
         private void RequireStatus(OfferStatus required, string action)

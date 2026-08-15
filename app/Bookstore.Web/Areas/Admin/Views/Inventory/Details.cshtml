@@ -48,6 +48,21 @@
                     <th scope="row">Description</th>
                     <td>@Model.Summary</td>
                 </tr>
+                @if (Model.SourceOfferId.HasValue)
+                {
+                    <tr>
+                        <th scope="row">Bought as</th>
+                        <td>Offer @Model.SourceOfferId</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Purchase cost</th>
+                        <td>@Model.PurchaseCost.GetValueOrDefault().ToString("C")</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Margin</th>
+                        <td>@Model.Margin.GetValueOrDefault().ToString("C")</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

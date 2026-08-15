@@ -52,12 +52,15 @@ namespace Bookstore.Web.Startup
                 await context.Database.EnsureCreatedAsync();
 
                 // EnsureCreated does not alter an existing schema, so a database created by an
-                // earlier version of the application can be missing a column (RowVersion, or the
-                // OrderItem.Price added for ISSUE-17). SQL Server reports that as error 207,
+                // earlier version of the application can be missing a column (RowVersion, the
+                // OrderItem.Price added for ISSUE-17, or the Book.SourceOfferId and
+                // Offer.IsStocked added for ISSUE-06). SQL Server reports that as error 207,
                 // "Invalid column name"; the database is recreated in that case.
                 try
                 {
                     await context.OrderItem.FirstOrDefaultAsync();
+                    await context.Book.FirstOrDefaultAsync();
+                    await context.Offer.FirstOrDefaultAsync();
                 }
                 catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Number == 207)
                 {

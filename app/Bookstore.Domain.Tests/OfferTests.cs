@@ -102,28 +102,6 @@ namespace Bookstore.Domain.Tests
             Assert.Throws<DomainException>(() => offer.RecordPayment());
         }
 
-        // Drives the offer through the transitions needed to reach the given state, so each
-        // test can start from an arbitrary point without relying on a raw status setter.
-        private static Offer OfferInState(OfferStatus status)
-        {
-            var offer = new OfferBuilder().Build();
-
-            if (status == OfferStatus.PendingApproval) return offer;
-
-            if (status == OfferStatus.Rejected)
-            {
-                offer.Reject();
-                return offer;
-            }
-
-            offer.Approve();
-            if (status == OfferStatus.Approved) return offer;
-
-            offer.ConfirmReceipt();
-            if (status == OfferStatus.Received) return offer;
-
-            offer.RecordPayment();
-            return offer;
-        }
+        private static Offer OfferInState(OfferStatus status) => new OfferBuilder().Status(status).Build();
     }
 }

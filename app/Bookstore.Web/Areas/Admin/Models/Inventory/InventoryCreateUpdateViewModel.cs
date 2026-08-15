@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Bookstore.Domain.Books;
+using Bookstore.Domain.Offers;
 using Bookstore.Domain.ReferenceData;
 using Bookstore.Web.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +37,29 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Year = book.Year.GetValueOrDefault();
         }
 
+        // ISSUE-06: stocking a paid offer. The book is described by the offer, so only the sale
+        // price and the presentation details are left for the store to fill in.
+        public InventoryCreateUpdateViewModel(IEnumerable<ReferenceDataItem> referenceDataItems, Offer offer) : this(referenceDataItems)
+        {
+            SourceOfferId = offer.Id;
+            PurchaseCost = offer.BookPrice;
+            Author = offer.Author;
+            ISBN = offer.ISBN;
+            Name = offer.BookName;
+            SelectedBookTypeId = offer.BookTypeId;
+            SelectedConditionId = offer.ConditionId;
+            SelectedGenreId = offer.GenreId;
+            SelectedPublisherId = offer.PublisherId;
+            Summary = offer.Summary;
+        }
+
         public int Id { get; set; }
+
+        // ISSUE-06: set only when the book is being stocked from an offer.
+        public int? SourceOfferId { get; set; }
+
+        [DisplayName("Purchase cost")]
+        public decimal? PurchaseCost { get; set; }
 
         [Required]
         public string Name { get; set; }

@@ -21,6 +21,9 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
             Quantity = book.Quantity;
             Summary = book.Summary;
             Year = book.Year.GetValueOrDefault();
+            SourceOfferId = book.SourceOfferId;
+            PurchaseCost = book.PurchaseCost;
+            Margin = book.Margin;
         }
 
         public int Id { get; set; }
@@ -48,5 +51,13 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         public decimal Price { get; set; }
 
         public int Quantity { get; set; }
+
+        // ISSUE-06: where the stock came from and what it cost, so the buying and selling sides
+        // of the business can be read together.
+        public int? SourceOfferId { get; set; }
+
+        public decimal? PurchaseCost { get; set; }
+
+        public decimal? Margin { get; set; }
     }
 }

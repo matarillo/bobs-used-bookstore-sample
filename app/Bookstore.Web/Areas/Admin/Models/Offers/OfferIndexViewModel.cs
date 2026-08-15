@@ -24,7 +24,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
                     OfferStatus = offer.OfferStatus,
                     OfferDate = offer.CreatedOn,
                     OfferPrice = offer.BookPrice,
-                    Condition = offer.Condition.Text
+                    Condition = offer.Condition.Text,
+                    IsStocked = offer.IsStocked
                 });
             }
 
@@ -67,5 +68,8 @@ namespace Bookstore.Web.Areas.Admin.Models.Offers
         public decimal OfferPrice { get; internal set; }
 
         public string Condition { get; internal set; }
+
+        // ISSUE-06: whether the bought book has already been put on the shelf.
+        public bool IsStocked { get; internal set; }
     }
 }

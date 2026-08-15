@@ -2,32 +2,48 @@
 
 @model Bookstore.Web.Areas.Admin.Models.Inventory.InventoryCreateUpdateViewModel
 
+@{
+    // ISSUE-06: when the book is being stocked from a paid offer, everything the offer already
+    // states about the book is fixed. Only the sale price and the presentation details are the
+    // store's to decide.
+    var fromOffer = Model.SourceOfferId.HasValue;
+}
+
 <div class="d-flex m-3">
-    <h5 class="me-auto">Create / Update Book</h5>
+    <h5 class="me-auto">@(fromOffer ? "Stock Book From Offer" : "Create / Update Book")</h5>
 </div>
+
+@if (fromOffer)
+{
+    <div class="alert alert-info mx-3">
+        Stocking offer @Model.SourceOfferId at a purchase cost of @Model.PurchaseCost.GetValueOrDefault().ToString("C").
+        The book is described by the offer; set the price it will be sold at. One copy is stocked.
+    </div>
+}
 
 <form enctype="multipart/form-data" method="post" novalidate>
     <div asp-validation-summary="ModelOnly"></div>
 
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="SourceOfferId" />
 
     <div class="row justify-content-center">
         <div class="col-4">
             <div class="mb-3">
                 <label class="form-label" for="NameInput">Name</label>
-                <input id="NameInput" type="text" class="form-control" asp-for="Name" placeholder="Book name" />
+                <input id="NameInput" type="text" class="form-control" asp-for="Name" placeholder="Book name" readonly="@fromOffer" />
                 <small><span asp-validation-for="Name" class="text-danger"></span></small>
             </div>            
 
             <div class="mb-3">
                 <label class="form-label" for="AuthorInput">Author</label>
-                <input id="AuthorInput" type="text" class="form-control" asp-for="Author" placeholder="Author" />
+                <input id="AuthorInput" type="text" class="form-control" asp-for="Author" placeholder="Author" readonly="@fromOffer" />
                 <small><span asp-validation-for="Author" class="text-danger"></span></small>
             </div>
             
             <div class="mb-3">
                 <label class="form-label" for="IsbnInput">ISBN</label>
-                <input id="IsbnInput" type="text" class="form-control" asp-for="ISBN" placeholder="ISBN" />
+                <input id="IsbnInput" type="text" class="form-control" asp-for="ISBN" placeholder="ISBN" readonly="@fromOffer" />
                 <small><span asp-validation-for="ISBN" class="text-danger"></span></small>
             </div>
             
@@ -40,7 +56,7 @@
 
                 <div class="col">
                     <label class="form-label" for="QuantityInput">Quantity</label>
-                    <input id="QuantityInput" type="number" class="form-control" asp-for="Quantity" placeholder="Quantity" />
+                    <input id="QuantityInput" type="number" class="form-control" asp-for="Quantity" placeholder="Quantity" readonly="@fromOffer" />
                     <small><span asp-validation-for="Quantity" class="text-danger"></span></small>
                 </div>
             </div>
@@ -56,9 +72,10 @@
                 <div class="mb-3">
                     <label class="form-label" for="PublisherSelect">Publisher</label>
                     <div class="input-group">
-                        <select id="PublisherSelect" class="form-select" asp-for="SelectedPublisherId" asp-items="Model.Publishers">
+                        <select id="PublisherSelect" class="form-select" asp-for="SelectedPublisherId" asp-items="Model.Publishers" disabled="@fromOffer">
                             <option value="">Select the publisher</option>
                         </select>
+                        @if (fromOffer) { <input type="hidden" asp-for="SelectedPublisherId" /> }
                         <a class="btn btn-outline-primary" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Publisher">Add</a>
                     </div>
                     <small><span asp-validation-for="SelectedPublisherId" class="text-danger"></span></small>
@@ -67,9 +84,10 @@
                 <div class="mb-3">
                     <label class="form-label" for="GenreSelect">Genre</label>
                     <div class="input-group">
-                        <select id="GenreSelect" class="form-select" asp-for="SelectedGenreId" asp-items="Model.Genres">
+                        <select id="GenreSelect" class="form-select" asp-for="SelectedGenreId" asp-items="Model.Genres" disabled="@fromOffer">
                             <option value="">Select the genre</option>
                         </select>
+                        @if (fromOffer) { <input type="hidden" asp-for="SelectedGenreId" /> }
                         <a class="btn btn-outline-primary" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Genre">Add</a>
                     </div>
                     <small><span asp-validation-for="SelectedGenreId" class="text-danger"></span></small>
@@ -78,9 +96,10 @@
                 <div class="mb-3">
                     <label class="form-label" for="BookTypeSelect">Book Type</label>
                     <div class="input-group">
-                        <select id="BookTypeSelect" class="form-select" asp-for="SelectedBookTypeId" asp-items="Model.BookTypes">
+                        <select id="BookTypeSelect" class="form-select" asp-for="SelectedBookTypeId" asp-items="Model.BookTypes" disabled="@fromOffer">
                             <option value="">Select the type</option>
                         </select>
+                        @if (fromOffer) { <input type="hidden" asp-for="SelectedBookTypeId" /> }
                         <a class="btn btn-outline-primary" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.BookType">Add</a>
                     </div>
                     <small><span asp-validation-for="SelectedBookTypeId" class="text-danger"></span></small>
@@ -89,9 +108,10 @@
                 <div class="mb-3">
                     <label class="form-label" for="ConditionSelect">Condition</label>
                     <div class="input-group">
-                        <select id="ConditionSelect" class="form-select" asp-for="SelectedConditionId" asp-items="Model.BookConditions">
+                        <select id="ConditionSelect" class="form-select" asp-for="SelectedConditionId" asp-items="Model.BookConditions" disabled="@fromOffer">
                             <option value="">Select the condition</option>
                         </select>
+                        @if (fromOffer) { <input type="hidden" asp-for="SelectedConditionId" /> }
                         <a class="btn btn-outline-primary" asp-action="Create" asp-controller="ReferenceData" asp-route-selectedReferenceDataType="@ReferenceDataType.Condition">Add</a>
                     </div>
                     <small><span asp-validation-for="SelectedConditionId" class="text-danger"></span></small>
