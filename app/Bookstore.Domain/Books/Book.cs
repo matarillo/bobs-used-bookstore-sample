@@ -78,5 +78,12 @@ namespace Bookstore.Domain.Books
 
             Quantity -= quantity;
         }
+
+        // RULE-ORDER-05, revised by ISSUE-16: the counterpart of ReduceStockLevel, used to
+        // return stock that a cancelled order had withdrawn.
+        public void RestoreStockLevel(int quantity)
+        {
+            Quantity += quantity;
+        }
     }
 }

@@ -173,6 +173,41 @@ namespace Bookstore.Domain.Tests
             Assert.Throws<DomainException>(() => order.Cancel());
         }
 
+        [Fact]
+        public void Cancel_RestoresTheWithdrawnStockToEachBook_When_TheOrderIsCancelled()
+        {
+            var firstBook = new BookBuilder().Id(1).Quantity(10).Build();
+            var secondBook = new BookBuilder().Id(2).Quantity(10).Build();
+
+            var order = new Order(1, 1);
+            order.AddOrderItem(firstBook, 3);
+            order.AddOrderItem(secondBook, 2);
+
+            // Mirrors what OrderService.CreateOrderAsync does when the order is placed.
+            firstBook.ReduceStockLevel(3);
+            secondBook.ReduceStockLevel(2);
+
+            order.Cancel();
+
+            Assert.Equal(10, firstBook.Quantity);
+            Assert.Equal(10, secondBook.Quantity);
+        }
+
+        [Fact]
+        public void Cancel_Throws_When_TheOrderIsAlreadyCancelled_AndDoesNotRestoreStockASecondTime()
+        {
+            var book = new BookBuilder().Id(1).Quantity(10).Build();
+
+            var order = new Order(1, 1);
+            order.AddOrderItem(book, 3);
+
+            book.ReduceStockLevel(3);
+            order.Cancel();
+
+            Assert.Throws<DomainException>(() => order.Cancel());
+            Assert.Equal(10, book.Quantity);
+        }
+
         // Drives the order through the transitions needed to reach the given state, so each
         // test can start from an arbitrary point without relying on a raw status setter.
         private static Order OrderInState(OrderStatus status)

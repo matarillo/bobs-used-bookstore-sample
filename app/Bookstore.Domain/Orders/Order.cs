@@ -63,8 +63,9 @@ namespace Bookstore.Domain.Orders
             OrderStatus = OrderStatus.Delivered;
         }
 
-        // RULE-ORDER-05, revised by ISSUE-15: INV-ORDER-04 keeps a shipped, delivered or already
-        // cancelled order from being cancelled again.
+        // RULE-ORDER-05, revised by ISSUE-15/16: INV-ORDER-04 keeps a shipped, delivered or
+        // already cancelled order from being cancelled again, and the stock withdrawn for each
+        // item is returned to its book as part of cancelling.
         public void Cancel()
         {
             if (OrderStatus != OrderStatus.Pending && OrderStatus != OrderStatus.Ordered)
@@ -73,6 +74,11 @@ namespace Bookstore.Domain.Orders
             }
 
             OrderStatus = OrderStatus.Cancelled;
+
+            foreach (var orderItem in orderItems)
+            {
+                orderItem.Book.RestoreStockLevel(orderItem.Quantity);
+            }
         }
 
         private void RequireStatus(OrderStatus required, string action)

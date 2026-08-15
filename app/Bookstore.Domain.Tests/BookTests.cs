@@ -57,5 +57,19 @@ namespace Bookstore.Domain.Tests
             Assert.Throws<DomainException>(() => book.ReduceStockLevel(amountToReduce));
             Assert.Equal(50, book.Quantity);
         }
+
+        [Fact]
+        public void RestoreStockLevel_IncreasesQuantityBySpecifiedAmount_When_Executed()
+        {
+            var book = new BookBuilder()
+                .Quantity(50)
+                .Build();
+
+            const int amountToRestore = 3;
+
+            book.RestoreStockLevel(amountToRestore);
+
+            Assert.Equal(53, book.Quantity);
+        }
     }
 }
