@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # スタッフ：買取オファーを裁く
 
-対象画面: `SCR-A-OFFERS`
+対象画面: [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html)
 **管理者グループに属していること**が条件。
 
 > この画面は**買取の流れそのもの**である。顧客の申込から、店が代金を払うまでの全段階が
@@ -20,7 +20,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-OFFERS` |
+| 画面 | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) |
 | ドメイン対応 | [OP-STAFF-11](../../design/domain/operations.md) / [RM-OFFER-LIST](../../design/domain/read-models.md) |
 | 目的 | 今どの申込に手を打つべきかを見つける |
 
@@ -36,7 +36,7 @@ derived-from: 4412aa1
   | 承認待ち | 「承認」「却下」 |
   | 承認済（発送待ち） | 「発送を確認」 |
   | 受領確認済 | 「支払う」 |
-  | 支払完了・未棚入れ | 「在庫に追加」（→ `SCR-A-BOOK-EDIT` 棚入れモード） |
+  | 支払完了・未棚入れ | 「在庫に追加」（→ [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html) 棚入れモード） |
   | 支払完了・棚入れ済 | 操作なし。「在庫済」と表示 |
   | 却下 | 操作なし |
 
@@ -45,7 +45,7 @@ derived-from: 4412aa1
 1. 絞り込み条件と頁番号を受け取る。
 2. 条件に合うオファーの頁を問い合わせる。
 3. 参照データ（ジャンル・コンディション）を取得し、絞り込みの選択肢として渡す。
-4. `SCR-A-OFFERS` に渡して描画する。
+4. [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -79,14 +79,14 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 店舗スタッフ |
-| 画面 | `SCR-A-OFFERS` |
+| 画面 | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) |
 | ドメイン対応 | [OP-STAFF-06〜09](../../design/domain/operations.md) |
 | 目的 | 買い取るか断るかを決め、現物を受け取り、代金を払う |
 
 **【Boundary：画面】**
 
 - 操作: 一覧の行にあるボタン。**確認ダイアログはない**
-- フィードバック: `SCR-A-OFFERS` に戻り、通知バナー（「承認しました」「却下しました」「本を受け取りました」「支払いました」）
+- フィードバック: [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) に戻り、通知バナー（「承認しました」「却下しました」「本を受け取りました」「支払いました」）
 - 行の状態表示と操作ボタンが、遷移先のものに入れ替わる
 
 **【Controller：手順】**
@@ -95,7 +95,7 @@ derived-from: 4412aa1
 2. **オファーに状態遷移を依頼する**（遷移できるかどうかの判断は集約が行う。手順側では判断しない）。
 3. 更新日時を記録する。
 4. 単位作業を完了する。
-5. `SCR-A-OFFERS` へ戻し、通知バナーを出す。
+5. [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) へ戻し、通知バナーを出す。
 
 **【Entity：ルール】**
 

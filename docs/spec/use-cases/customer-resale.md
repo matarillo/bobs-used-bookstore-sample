@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # 顧客：本を売る
 
-対象画面: `SCR-RESALE`, `SCR-RESALE-NEW`
+対象画面: [`SCR-RESALE`](../wireframes/customer/SCR-RESALE.html), [`SCR-RESALE-NEW`](../wireframes/customer/SCR-RESALE-NEW.html)
 **ログインが必要**である。
 
 > ここは**買取 (Buying)** の流れの入口である。以降の審査・支払・棚入れはスタッフ側
@@ -20,7 +20,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-RESALE-NEW` |
+| 画面 | [`SCR-RESALE-NEW`](../wireframes/customer/SCR-RESALE-NEW.html) |
 | ドメイン対応 | [OP-CUST-14](../../design/domain/operations.md) |
 | 目的 | 手持ちの本を店に買い取ってもらえるか打診する |
 
@@ -40,7 +40,7 @@ derived-from: 4412aa1
   | 希望買取価格 | ● | 金額。**0 以上 1,000,000 以下** |
 
 - 操作: 「保存」
-- 成功時: `SCR-RESALE` へ移る。**通知バナーは出ない**（一覧に自分の申込が増えていることで分かる）
+- 成功時: [`SCR-RESALE`](../wireframes/customer/SCR-RESALE.html) へ移る。**通知バナーは出ない**（一覧に自分の申込が増えていることで分かる）
 - 失敗時: この画面に留まり、項目ごとにメッセージを出す。**選択肢と入力内容は保たれる**
 - **本の状態を写真で伝える手段はない**（表紙画像は店が棚入れ時に用意する）
 - **概要・備考を書く欄はない**
@@ -51,7 +51,7 @@ derived-from: 4412aa1
 2. 入力を検証する。不備があれば選択肢を用意し直してこの画面を描く。
 3. 主体識別子とともに、買取オファーの申込を依頼する。
 4. 単位作業を完了する。
-5. `SCR-RESALE` へ遷移する。
+5. [`SCR-RESALE`](../wireframes/customer/SCR-RESALE.html) へ遷移する。
 
 **【Entity：ルール】**
 
@@ -79,7 +79,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-RESALE` |
+| 画面 | [`SCR-RESALE`](../wireframes/customer/SCR-RESALE.html) |
 | ドメイン対応 | [OP-CUST-15](../../design/domain/operations.md) / [RM-OFFER-BY-CUSTOMER](../../design/domain/read-models.md) |
 | 目的 | 出した申込がどうなったかを知る |
 
@@ -87,7 +87,7 @@ derived-from: 4412aa1
 
 - 表示項目（申込ごと）: 書名、著者、ジャンル、出版社、書籍種別、ISBN、状態（コンディション）、買取価格、**申込の状態**
 - 申込の状態: 承認待ち／承認済（発送待ち）／受領確認済／支払完了／却下／棚入れ済
-- 操作: 「買取を申し込む」（→ `SCR-RESALE-NEW`）のみ
+- 操作: 「買取を申し込む」（→ [`SCR-RESALE-NEW`](../wireframes/customer/SCR-RESALE-NEW.html)）のみ
 - **申込ごとの操作は一つもない**。取り下げも修正もできない
 - **申込日・支払日は表示していない**
 - ページ送り・絞り込みなし
@@ -95,7 +95,7 @@ derived-from: 4412aa1
 **【Controller：手順】**
 
 1. 主体識別子で自分の買取申込を取得する。
-2. `SCR-RESALE` に渡して描画する。
+2. [`SCR-RESALE`](../wireframes/customer/SCR-RESALE.html) に渡して描画する。
 
 **【Entity：ルール】**
 

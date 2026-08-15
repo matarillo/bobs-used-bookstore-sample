@@ -6,7 +6,7 @@ derived-from: 4412aa1
 
 # 顧客：注文を照会する
 
-対象画面: `SCR-ORDERS`, `SCR-ORDER`
+対象画面: [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html), [`SCR-ORDER`](../wireframes/customer/SCR-ORDER.html)
 **ログインが必要**である。照会は必ず本人の注文に絞られる（[RULE-ACCESS-01](../rules.md)）。
 
 ---
@@ -16,7 +16,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-ORDERS` |
+| 画面 | [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) |
 | ドメイン対応 | [OP-CUST-12](../../design/domain/operations.md) / [RM-ORDER-BY-CUSTOMER](../../design/domain/read-models.md) |
 | 目的 | 頼んだ本が今どうなっているかを知る |
 
@@ -30,7 +30,7 @@ derived-from: 4412aa1
   | 納品予定日 | 日付のみ |
   | 状態 | 受付待ち／受付済／出荷済／配達済／取消済 |
 
-- 操作: 「詳細」（→ `SCR-ORDER`）／「取消」（→ [UC-CUST-20](#uc-cust-20--注文を取り消す)）
+- 操作: 「詳細」（→ [`SCR-ORDER`](../wireframes/customer/SCR-ORDER.html)）／「取消」（→ [UC-CUST-20](#uc-cust-20--注文を取り消す)）
 - 0 件のとき: 「注文はありません」と伝える
 - **絞り込みもページ送りもない**（[Q-09](../../product/open-questions.md)）
 - **並び順の取り決めがない**（[Q-09](../../product/open-questions.md)）
@@ -38,7 +38,7 @@ derived-from: 4412aa1
 **【Controller：手順】**
 
 1. 主体識別子で自分の注文を取得する。
-2. `SCR-ORDERS` に渡して描画する。
+2. [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -61,7 +61,7 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-ORDER` |
+| 画面 | [`SCR-ORDER`](../wireframes/customer/SCR-ORDER.html) |
 | ドメイン対応 | [OP-CUST-12](../../design/domain/operations.md) |
 | 目的 | 何を頼んだかを確かめる |
 
@@ -75,8 +75,8 @@ derived-from: 4412aa1
 
   | 操作 | 遷移先 |
   | --- | --- |
-  | 明細の書名を選ぶ | `SCR-BOOK` |
-  | 「戻る」 | `SCR-ORDERS` |
+  | 明細の書名を選ぶ | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
+  | 「戻る」 | [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) |
 
 - **状態を変える操作は無い。** この画面から注文を取り消すことはできない
 
@@ -84,7 +84,7 @@ derived-from: 4412aa1
 
 1. 主体識別子と注文識別子で注文を取得する。
 2. **本人の注文でなければ「見つかりません」とする**。
-3. `SCR-ORDER` に渡して描画する。
+3. [`SCR-ORDER`](../wireframes/customer/SCR-ORDER.html) に渡して描画する。
 
 **【Entity：ルール】**
 
@@ -105,14 +105,14 @@ derived-from: 4412aa1
 | 項目 | 内容 |
 | --- | --- |
 | アクター | 顧客 |
-| 画面 | `SCR-ORDERS` |
+| 画面 | [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) |
 | ドメイン対応 | [OP-CUST-13](../../design/domain/operations.md) |
 | 目的 | 発送前に注文をやめる |
 
 **【Boundary：画面】**
 
 - 操作: 行の「取消」。**確認ダイアログはない**（[Q-08](../../product/open-questions.md)）
-- フィードバック: `SCR-ORDERS` に戻る。**通知バナーは出ない**。一覧の状態欄が「取消済」に変わることだけが手がかり
+- フィードバック: [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) に戻る。**通知バナーは出ない**。一覧の状態欄が「取消済」に変わることだけが手がかり
 - ボタンは**状態にかかわらず常に表示される**
 
 **【Controller：手順】**
@@ -120,7 +120,7 @@ derived-from: 4412aa1
 1. 主体識別子と注文識別子を受け取る。
 2. 注文の取消を依頼する（**状態が取り消せるかどうかの判断は集約が行う**）。
 3. 単位作業を完了する。
-4. `SCR-ORDERS` へ戻す。
+4. [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) へ戻す。
 
 **【Entity：ルール】**
 
