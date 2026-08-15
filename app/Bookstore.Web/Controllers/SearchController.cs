@@ -1,16 +1,10 @@
 using Bookstore.Domain;
 using System.Threading.Tasks;
-using Bookstore.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Bookstore.Domain;
 using Microsoft.AspNetCore.Authorization;
-using Bookstore.Domain;
 using Bookstore.Web.Helpers;
-using Bookstore.Domain;
 using Bookstore.Domain.Books;
-using Bookstore.Domain;
 using Bookstore.Domain.Carts;
-using Bookstore.Domain;
 using Bookstore.Web.ViewModel.Search;
 
 namespace Bookstore.Web.Controllers
