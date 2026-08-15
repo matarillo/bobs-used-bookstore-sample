@@ -208,6 +208,18 @@ namespace Bookstore.Domain.Tests
             Assert.Equal(10, book.Quantity);
         }
 
+        // Pinned before ISSUE-25. RULE-ORDER-01 puts the delivery date seven days out, but takes
+        // "now" from the local time of the machine, while its only reader — the past-due
+        // statistic — compares it against UTC. The two are only comparable where the machine
+        // happens to run on UTC.
+        [Fact]
+        public void DeliveryDate_IsSevenDaysAfterTheLocalTime_When_TheOrderIsCreated()
+        {
+            var order = new Order(1, 1);
+
+            Assert.Equal(DateTime.Now.AddDays(7), order.DeliveryDate, TimeSpan.FromMinutes(1));
+        }
+
         // Drives the order through the transitions needed to reach the given state, so each
         // test can start from an arbitrary point without relying on a raw status setter.
         private static Order OrderInState(OrderStatus status)
