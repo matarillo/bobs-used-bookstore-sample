@@ -25,7 +25,11 @@
 
         public string AddressLine1 { get; set; }
 
-        public string AddressLine2 { get; set; }
+        // Nullable because the domain treats it that way (Address.AddressLine2 is "string?"):
+        // under <Nullable>enable</Nullable> a non-nullable reference type is implicitly required,
+        // which would force every customer to fill in a line that the domain itself does not
+        // require.
+        public string? AddressLine2 { get; set; }
 
         public string City { get; set; }
 

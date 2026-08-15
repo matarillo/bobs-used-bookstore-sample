@@ -33,7 +33,9 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(AddressCreateUpdateViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            // The GET actions render "CreateUpdate", not "Create"/"Update" — a bare View(model)
+            // here looks for a view that does not exist and 500s instead of redisplaying errors.
+            if (!ModelState.IsValid) return View("CreateUpdate", model);
 
             var dto = new CreateAddressDto(model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub());
 
@@ -52,7 +54,9 @@ namespace Bookstore.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(AddressCreateUpdateViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            // The GET actions render "CreateUpdate", not "Create"/"Update" — a bare View(model)
+            // here looks for a view that does not exist and 500s instead of redisplaying errors.
+            if (!ModelState.IsValid) return View("CreateUpdate", model);
 
             var dto = new UpdateAddressDto(model.Id, model.AddressLine1, model.AddressLine2, model.City, model.State, model.Country, model.ZipCode, User.GetSub());
 

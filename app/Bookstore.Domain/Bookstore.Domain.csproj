@@ -4,4 +4,8 @@
     <!-- TargetFramework, ImplicitUsings, Nullable, LangVersion inherited from Directory.Build.props -->
   </PropertyGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Bookstore.Domain.Tests" />
+  </ItemGroup>
+
 </Project>

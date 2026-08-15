@@ -9,6 +9,8 @@
     <br />
 
     <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ReturnUrl" />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-group">
