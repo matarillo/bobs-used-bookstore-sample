@@ -44,7 +44,7 @@ derived-from: 4412aa1
 | [domain/aggregate-offer.md](domain/aggregate-offer.md) | 買取オファー集約 |
 | [domain/services-and-policies.md](domain/services-and-policies.md) | 集約に属さない振る舞い |
 | [domain/operations.md](domain/operations.md) | ドメイン操作 `OP-` |
-| [domain/invariants.md](domain/invariants.md) | 不変条件 `INV-` と強制レベル |
+| [domain/invariants.md](domain/invariants.md) | 不変条件 `INV-` と強制レベル、ポリシー `POL-` |
 | [domain/read-models.md](domain/read-models.md) | 読み取りモデル `RM-` |
 | [domain/verified-by-test.md](domain/verified-by-test.md) | テストで固定されている範囲 `SPEC-` |
 | [issues.md](issues.md) | 設計課題 `ISSUE-` |

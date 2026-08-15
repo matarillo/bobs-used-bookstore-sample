@@ -85,7 +85,7 @@ graph TB
 
 顧客とスタッフの分離は**照会の作法**として現れる。顧客向けの照会は必ず主体識別子で絞り込まれ
 （`GetOrderAsync(sub, id)` / `GetOfferAsync(sub, id)`）、スタッフ向けの照会は絞り込まない
-（`GetOrderAsync(id)` / `GetOfferAsync(id)`）。詳細は [RULE-ACCESS-01](invariants.md)。
+（`GetOrderAsync(id)` / `GetOfferAsync(id)`）。詳細は [RULE-ACCESS-01](../../spec/rules.md)。
 
 ## 6. ドメイン外の協力者
 
