@@ -19,7 +19,7 @@ namespace Bookstore.Web.Helpers
 
             if (string.IsNullOrWhiteSpace(shoppingCartClientId))
             {
-                shoppingCartClientId = context.User.Identity.IsAuthenticated ? context.User.GetSub() : Guid.NewGuid().ToString();
+                shoppingCartClientId = context.User.Identity!.IsAuthenticated ? context.User.GetSub() : Guid.NewGuid().ToString();
             }
 
             context.Response.Cookies.Append(CookieKey, shoppingCartClientId, cookieOptions);

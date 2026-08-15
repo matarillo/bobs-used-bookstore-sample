@@ -62,15 +62,15 @@ namespace Bookstore.Web.Areas.Admin.Models.Inventory
         public decimal? PurchaseCost { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Required]
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
         public int Year { get; set; }
 
         [Required]
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = null!;
 
         public IEnumerable<SelectListItem> Publishers { get; set; } = new List<SelectListItem>();
         

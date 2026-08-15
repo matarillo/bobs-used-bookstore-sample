@@ -14,7 +14,7 @@ namespace Bookstore.Web.ViewModel.Address
                 {
                     Id = address.Id,
                     AddressLine1 = address.AddressLine1,
-                    AddressLine2 = address.AddressLine2,
+                    AddressLine2 = address.AddressLine2!,
                     City = address.City,
                     State = address.State,
                     Country = address.Country,
@@ -28,16 +28,16 @@ namespace Bookstore.Web.ViewModel.Address
     {
         public int Id { get; set; }
 
-        public string AddressLine1 { get; set; }
+        public string AddressLine1 { get; set; } = null!;
 
-        public string AddressLine2 { get; set; }
+        public string AddressLine2 { get; set; } = null!;
 
-        public string City { get; set; }
+        public string City { get; set; } = null!;
 
-        public string State { get; set; }
+        public string State { get; set; } = null!;
 
-        public string Country { get; set; }
+        public string Country { get; set; } = null!;
 
-        public string ZipCode { get; set; }
+        public string ZipCode { get; set; } = null!;
     }
 }

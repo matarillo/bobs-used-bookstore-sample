@@ -16,20 +16,20 @@ namespace Bookstore.Web.ViewModel.Checkout
                 Bookname = x.Book.Name,
                 Price = x.Price.Amount,
                 Quantity = x.Quantity.Value,
-                Url = x.Book.CoverImageUrl
+                Url = x.Book.CoverImageUrl!
             });
         }
     }
 
     public class CheckoutFinishedItemViewModel
     {
-        public string Bookname { get; set; }
+        public string Bookname { get; set; } = null!;
 
         public long BookId { get; set; }
 
         public int Quantity { get; set; }
 
-        public string Url { get; set; }
+        public string Url { get; set; } = null!;
 
         public decimal Price { get; set; }
     }

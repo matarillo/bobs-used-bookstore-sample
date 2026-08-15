@@ -22,7 +22,7 @@ namespace Bookstore.Web.ViewModel.Checkout
             {
                 Id = x.Id,
                 AddressLine1 = x.AddressLine1,
-                AddressLine2 = x.AddressLine2,
+                AddressLine2 = x.AddressLine2!,
                 City = x.City,
                 Country = x.Country,
                 State = x.State,
@@ -37,7 +37,7 @@ namespace Bookstore.Web.ViewModel.Checkout
                 ShoppingCartItems = shoppingCart.GetShoppingCartItems(ShoppingCartItemFilter.IncludeOutOfStockItems).Select(x => new CheckoutItemViewModel
                 {
                     BookName = x.Book.Name,
-                    ImageUrl = x.Book.CoverImageUrl,
+                    ImageUrl = x.Book.CoverImageUrl!,
                     Price = x.Book.Price.Amount,
                     Quantity = x.Quantity.Value,
                     OutOfStock = !x.Book.IsInStock
@@ -54,24 +54,24 @@ namespace Bookstore.Web.ViewModel.Checkout
     {
         public int Id { get; set; }
 
-        public string AddressLine1 { get; set; }
+        public string AddressLine1 { get; set; } = null!;
 
-        public string AddressLine2 { get; set; }
+        public string AddressLine2 { get; set; } = null!;
 
-        public string City { get; set; }
+        public string City { get; set; } = null!;
 
-        public string State { get; set; }
+        public string State { get; set; } = null!;
 
-        public string Country { get; set; }
+        public string Country { get; set; } = null!;
 
-        public string ZipCode { get; set; }
+        public string ZipCode { get; set; } = null!;
 
         public bool IsPrimary { get; set; }
     }
 
     public class CheckoutItemViewModel
     {
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
         public decimal Price { get; set; }
 
@@ -79,7 +79,7 @@ namespace Bookstore.Web.ViewModel.Checkout
 
         public decimal SubTotal => Price * Quantity;
 
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = null!;
 
         public bool OutOfStock { get; set; }
     }

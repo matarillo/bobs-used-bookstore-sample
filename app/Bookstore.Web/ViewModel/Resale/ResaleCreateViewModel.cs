@@ -53,10 +53,10 @@ namespace Bookstore.Web.ViewModel.Resale
         [Range(0, 1000000, ErrorMessage = "The price you are asking for must be zero or more.")]
         public decimal BookPrice { get; set; }
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = null!;
     }
 }

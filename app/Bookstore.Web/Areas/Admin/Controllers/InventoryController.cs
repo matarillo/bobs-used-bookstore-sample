@@ -62,13 +62,18 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return await InvalidCreateUpdateView(model);
 
+            // CreateBookFromOfferDto declares Summary/CoverImage/CoverImageFileName as
+            // non-nullable even though none of the three is required (see
+            // InventoryCreateUpdateViewModel's comment on the same fields); the null-forgiving
+            // operators here match the existing, wider-than-the-type contract rather than
+            // changing the DTO.
             var dto = new CreateBookFromOfferDto(
                 model.SourceOfferId.GetValueOrDefault(),
                 model.Year,
-                model.Summary,
+                model.Summary!,
                 Money.Of(model.Price),
-                model.CoverImage?.OpenReadStream(),
-                model.CoverImage?.FileName);
+                model.CoverImage?.OpenReadStream()!,
+                model.CoverImage?.FileName!);
 
             var result = await bookService.AddFromOfferAsync(dto);
 
@@ -80,20 +85,21 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return await InvalidCreateUpdateView(model);
 
+            // See the comment on the CreateBookFromOfferDto call above.
             var dto = new CreateBookDto(
-                model.Name, 
-                model.Author, 
-                model.SelectedBookTypeId, 
-                model.SelectedConditionId, 
-                model.SelectedGenreId, 
-                model.SelectedPublisherId, 
-                model.Year, 
-                model.ISBN, 
-                model.Summary, 
-                Money.Of(model.Price), 
-                Quantity.Of(model.Quantity), 
-                model.CoverImage?.OpenReadStream(), 
-                model.CoverImage?.FileName);
+                model.Name,
+                model.Author,
+                model.SelectedBookTypeId,
+                model.SelectedConditionId,
+                model.SelectedGenreId,
+                model.SelectedPublisherId,
+                model.Year,
+                model.ISBN,
+                model.Summary!,
+                Money.Of(model.Price),
+                Quantity.Of(model.Quantity),
+                model.CoverImage?.OpenReadStream()!,
+                model.CoverImage?.FileName!);
 
             var result = await bookService.AddAsync(dto);
 
@@ -113,6 +119,7 @@ namespace Bookstore.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return await InvalidCreateUpdateView(model);
 
+            // See the comment on the CreateBookFromOfferDto call above.
             var dto = new UpdateBookDto(
                 model.Id,
                 model.Name,
@@ -123,11 +130,11 @@ namespace Bookstore.Web.Areas.Admin.Controllers
                 model.SelectedPublisherId,
                 model.Year,
                 model.ISBN,
-                model.Summary,
+                model.Summary!,
                 Money.Of(model.Price),
                 Quantity.Of(model.Quantity),
-                model.CoverImage?.OpenReadStream(),
-                model.CoverImage?.FileName);
+                model.CoverImage?.OpenReadStream()!,
+                model.CoverImage?.FileName!);
 
             var result = await bookService.UpdateAsync(dto);
 
@@ -144,7 +151,9 @@ namespace Bookstore.Web.Areas.Admin.Controllers
             }
             else
             {
-                ModelState.AddModelError(nameof(model.CoverImage), result.ErrorMessage);
+                // BookResult.ErrorMessage is only null on success; this branch only runs on
+                // failure, so it is always set here.
+                ModelState.AddModelError(nameof(model.CoverImage), result.ErrorMessage!);
 
                 return await InvalidCreateUpdateView(model);
             }

@@ -29,7 +29,7 @@ namespace Bookstore.Web.ViewModel.Orders
             {
                 BookId = x.BookId,
                 BookName = x.Book.Name,
-                ImageUrl = x.Book.CoverImageUrl,
+                ImageUrl = x.Book.CoverImageUrl!,
                 Price = x.Price.Amount,
                 Quantity = x.Quantity.Value
             }).ToList();
@@ -40,9 +40,9 @@ namespace Bookstore.Web.ViewModel.Orders
     {
         public int BookId { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = null!;
 
-        public string BookName { get; set; }
+        public string BookName { get; set; } = null!;
 
         public decimal Price { get; set; }
 
