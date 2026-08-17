@@ -1,5 +1,5 @@
 ---
-layer: product
+layer: design
 status: proposed
 ---
 
@@ -9,7 +9,7 @@ status: proposed
 | --- | --- |
 | 対象 | R4 の実行基盤（価値ストーリーではないため STORY- を持たない） |
 | 決めた人 | チーム（コスト上限は店主が承認） |
-| 影響する文書 | [design/architecture.md](../../design/architecture.md)、[constraints §3](../constraints.md)、[non-functional.md §3.2](../../spec/non-functional.md) |
+| 影響する文書 | [architecture.md](../architecture.md)、[constraints §3](../../product/constraints.md)、[non-functional.md §3.2](../../spec/non-functional.md) |
 
 ## 決めたこと
 
@@ -24,12 +24,12 @@ R4 の便で、実行環境をオンプレミス相当からクラウドへ移�
 
 - 移行の動機はスケールではなく、**サーバーの面倒を見る時間と、認証・画像のような
   「作ってはいけない汎用機能」を手放す**ことにある。単一 VM で規模要件
-  （同時数十セッション——[constraints §1](../constraints.md)）には十分足りる。
+  （同時数十セッション——[constraints §1](../../product/constraints.md)）には十分足りる。
 - アプリの形を変えずに移すことで、R4 の価値（EPIC-OPS）と基盤移行を同じ便に載せられた。
   形を変える移行（コンテナ化・分割）は、便を 1 つ以上専有する見積りだった。
-- 月額コストの上限が先にある（[constraints §3](../constraints.md)）。
+- 月額コストの上限が先にある（[constraints §3](../../product/constraints.md)）。
   NAT なし・最小インスタンス・バックアップ無効という切り詰めは、
-  この上限と引き換えに受容した（[RISK-06](../risks.md)、[NFR-AVAIL-01 / NFR-DATA-01](../../spec/non-functional.md)）。
+  この上限と引き換えに受容した（[RISK-06](../../product/risks.md)、[NFR-AVAIL-01 / NFR-DATA-01](../../spec/non-functional.md)）。
 
 ## 採らなかった案とその理由
 
@@ -41,4 +41,4 @@ R4 の便で、実行環境をオンプレミス相当からクラウドへ移�
 
 **再訪の条件**: 単一インスタンスの停止が売上機会の損失として無視できなくなったとき、
 または配備の頻度が上がり無停止配備が要るようになったとき。
-その際は App Runner 案から検討を再開する（[design/architecture.md §3.1](../../design/architecture.md)）。
+その際は App Runner 案から検討を再開する（[architecture.md §3.1](../architecture.md)）。

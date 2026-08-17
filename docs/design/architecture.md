@@ -65,7 +65,7 @@ derived-from: 4412aa1
 構成値は本番では Parameter Store のパス `/BobsBookstore/` から読み込む。
 
 > 構成には App Runner 用のクライアント ID 設定が存在するが、対応する配備スタックは**存在しない**。
-> コンテナ化・App Runner への移行は見送った将来の選択肢である（[ADR-0004](../product/decisions/ADR-0004-ec2-lift-and-shift.md)）。
+> コンテナ化・App Runner への移行は見送った将来の選択肢である（[ADR-0004](decisions/ADR-0004-ec2-lift-and-shift.md)）。
 
 ## 4. CON-WEB の層（C4 L3 の要点）
 
@@ -121,7 +121,8 @@ AI はこの対応で生成コードの置き場を決める。
 
 - 技術的な仮説は `HYP-`（[product/hypotheses.md](../product/hypotheses.md)）、
   アーキテクチャ上のリスクは `RISK-`（[product/risks.md](../product/risks.md)）に置く。
-- 決定は `ADR`（`product/decisions/`）に、採らなかった案とともに残す。
+- 技術決定は `ADR` として [decisions/](decisions/) に、採らなかった案とともに残す。
+  要求層の決定は [product/decisions/](../product/decisions/) にある。採番は層をまたいで通しである。
 - 検証で覆れば `ADR` に記録し、この文書を書き換える。
 
 決定済みの主なもの:
@@ -129,7 +130,7 @@ AI はこの対応で生成コードの置き場を決める。
 | 決定 | 記録 |
 | --- | --- |
 | 本人確認を作らず外部認証基盤に委ねる | [integrations.md `EXT-AUTH`](../spec/integrations.md) |
-| クラウド移行は EC2 への lift & shift とし、コンテナ化を見送る | [ADR-0004](../product/decisions/ADR-0004-ec2-lift-and-shift.md) |
+| クラウド移行は EC2 への lift & shift とし、コンテナ化を見送る | [ADR-0004](decisions/ADR-0004-ec2-lift-and-shift.md) |
 | オンライン決済を持たない | [ADR-0001](../product/decisions/ADR-0001-defer-online-payment.md) |
 | 通知（メール等）を持たない | [ADR-0002](../product/decisions/ADR-0002-defer-notifications.md) |
 

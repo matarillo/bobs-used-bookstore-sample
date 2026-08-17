@@ -62,6 +62,7 @@ derived-from: 4412aa1
 | [domain/read-models.md](domain/read-models.md) | 読み取りモデル `RM-` |
 | [domain/verified-by-test.md](domain/verified-by-test.md) | テストで固定されている範囲 `SPEC-` |
 | [issues.md](issues.md) | 設計課題 `ISSUE-` |
+| [decisions/](decisions/) | 技術決定 `ADR-`。書式は [product/README §5](../product/README.md) と同じ |
 
 用語は [glossary.md](../glossary.md) を正とする。識別子の体系は [文書体系 §4](../README.md) にある。
 
