@@ -15,6 +15,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-17](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-DASH`](../wireframes/admin/SCR-A-DASH.html) |
 | ドメイン対応 | [OP-STAFF-16](../../design/domain/operations.md) / [13-read-models-and-statistics.md](../../design/domain/read-models.md) |

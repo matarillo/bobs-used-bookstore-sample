@@ -19,6 +19,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-14](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) |
 | ドメイン対応 | [OP-STAFF-11](../../design/domain/operations.md) / [RM-OFFER-LIST](../../design/domain/read-models.md) |
@@ -78,6 +79,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-14](../../product/story-map.md)（UC-STAFF-08〜09）、[STORY-15](../../product/story-map.md)（UC-STAFF-10〜11） |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-OFFERS`](../wireframes/admin/SCR-A-OFFERS.html) |
 | ドメイン対応 | [OP-STAFF-06〜09](../../design/domain/operations.md) |

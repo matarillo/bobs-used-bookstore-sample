@@ -20,6 +20,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-04](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-CART`](../wireframes/customer/SCR-CART.html) |
 | ドメイン対応 | [AGG-CART](../../design/domain/aggregate-shopping-cart.md) の照会 |
@@ -73,6 +74,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-04](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-CART`](../wireframes/customer/SCR-CART.html) |
 | ドメイン対応 | [OP-CUST-10](../../design/domain/operations.md) |
@@ -107,6 +109,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-11](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [AGG-CART](../../design/domain/aggregate-shopping-cart.md) の照会 |
@@ -146,6 +149,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-11](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [OP-CUST-08](../../design/domain/operations.md) |
@@ -183,6 +187,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-11](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [OP-CUST-09](../../design/domain/operations.md) |
@@ -220,6 +225,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-11](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-WISH`](../wireframes/customer/SCR-WISH.html) |
 | ドメイン対応 | [OP-CUST-10](../../design/domain/operations.md) |

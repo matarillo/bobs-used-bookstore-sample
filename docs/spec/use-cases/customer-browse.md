@@ -15,6 +15,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-02](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-HOME`](../wireframes/customer/SCR-HOME.html) |
 | ドメイン対応 | [RM-BESTSELLERS](../../design/domain/read-models.md) |
@@ -68,6 +69,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-01](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-SEARCH`](../wireframes/customer/SCR-SEARCH.html) |
 | ドメイン対応 | [OP-CUST-05](../../design/domain/operations.md) / [RM-BOOK-SEARCH](../../design/domain/read-models.md) |
@@ -110,6 +112,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-03](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
 | ドメイン対応 | [OP-CUST-05](../../design/domain/operations.md) |
@@ -145,6 +148,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-04](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
 | ドメイン対応 | [OP-CUST-06](../../design/domain/operations.md) |
@@ -182,6 +186,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-11](../../product/story-map.md) |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
 | ドメイン対応 | [OP-CUST-07](../../design/domain/operations.md) |

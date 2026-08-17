@@ -87,6 +87,7 @@ docs/
       read-models.md               照会・統計 RM-
       verified-by-test.md          テストで固定されている範囲 SPEC-
     issues.md                    設計課題 ISSUE-
+    decisions/                   技術決定の記録 ADR-（採らなかった案とともに）
 
   archive/                     凍結した版の置き場。参照されない
 ```
@@ -106,6 +107,7 @@ docs/
 | [product/tradeoffs.md](product/tradeoffs.md) | 要求 | 譲る順(QCD+S)と譲らない品質バー。NFR の強制を決める |
 | [product/risks.md](product/risks.md) | 要求 | 顧客が受容するリスク RULE-/INV-/NFR- へ分解した残り |
 | [product/open-questions.md](product/open-questions.md) | 要求 | 業務担当者に確認しないと決められないこと |
+| [product/decisions/](product/decisions/) | 要求 | 反証・ピボット・見送りの決定 ADR- と、その理由 |
 | [spec/README.md](spec/README.md) | 仕様 | この層の読み方とユースケースの書式 |
 | [spec/screens.md](spec/screens.md) | 仕様 | 画面一覧と遷移。ワイヤーフレームとの接続点 |
 | [spec/conventions.md](spec/conventions.md) | 仕様 | 通知・確認・ページ送り・エラー・権限の共通作法 |
@@ -118,6 +120,7 @@ docs/
 | [design/architecture.md](design/architecture.md) | 設計 | コンテナ構成・境界・技術選択 CON-。BCE と層の対応 |
 | [design/domain/](design/domain/) | 設計 | 集約、値オブジェクト、不変条件、ドメイン操作 |
 | [design/issues.md](design/issues.md) | 設計 | モデルの歪みと改善方針 |
+| [design/decisions/](design/decisions/) | 設計 | 技術決定 ADR- と、採らなかった案の理由 |
 
 ## 4. 識別子
 
@@ -130,7 +133,7 @@ docs/
 | 要求 | `EPIC-` | 価値・デリバリーのまとまり | `EPIC-CHECKOUT` |
 | 要求 | `RISK-` | プロダクトリスク（顧客が受容するもの） | `RISK-02` |
 | 要求 | `Q-` | 未決事項 | `Q-17` |
-| 要求 | `ADR-` | 決定の記録（プロダクト判断を含む） | `ADR-0001` |
+| 要求・設計 | `ADR-` | 決定の記録。要求層は `product/decisions/`、技術決定は `design/decisions/`。**採番は層をまたいで通し** | `ADR-0001` |
 | 仕様 | `UC-` | ユースケース | `UC-CUST-12` |
 | 仕様 | `FEAT-` | 実装・アーキテクチャのまとまり（任意） | `FEAT-CART` |
 | 仕様 | `SCR-` | 画面 | `SCR-CART` |
@@ -247,9 +250,14 @@ derived-from: 4412aa1
 
 `status` と `derived-from` は、製品を記述する文書に付ける。本書のような規約の文書は `layer` だけを持つ。
 
+**現在、`agreed` の文書は存在しない。** 実在の業務担当者と読み合わせた文書がまだ無いためである。
+`agreed` は語彙として定義しておくが、**読み合わせが実際に行われるまで用いない**。
+
 **要求層は、文書全体の `status` に加えて項目ごとの仮説状態を持ってよい。**
 `hypotheses.md` の各 `HYP-` は 仮説 → 検証中 → 実証 → 反証 のライフサイクルを持つ。
-`実証` は文書 `status` の `agreed` に対応し、`反証` は撤回と `decisions/` 記録に対応する（§6.4）。
+**検証の度合いを表すのはこの仮説状態であり、文書の `status` ではない。**
+文書単位の `status` と項目単位の仮説状態は粒度が違う。`実証` は、昇格先の文書全体が
+承認されたことを意味しない（§6.4）。`反証` は撤回と `decisions/` 記録に対応する。
 
 **HTML の文書（ワイヤーフレーム）は同じ項目を `<meta>` で表す。**
 
@@ -285,6 +293,7 @@ derived-from: 4412aa1
 同じ議論を繰り返さないためであり、経緯の記録ではない。
 **要求層ではこの例外を次の三種に限る**——反証された仮説、ピボット、見送ったストーリー。
 それ以外の「かつて」は書かない。
+設計層の技術決定は `design/decisions/` に置く。三種の制限は要求層の決定に対するものである。
 
 ### 6.3 決定が出たら文書を移す
 
@@ -292,8 +301,13 @@ derived-from: 4412aa1
 
 1. `product/decisions/` に決定を 1 ファイルとして記録する
 2. 業務ルールなら `spec/rules.md` へ、`RULE-UI-` は識別子参照に置き換える
-3. 該当するユースケース・画面の記述を更新し、`status` を `agreed` にする
+3. 該当するユースケース・画面の記述を更新する（`status` の扱いは §5.5）
 4. `product/open-questions.md` から当該 `Q-` を除く
+
+**見送り・先送りの決定は `Q-` を消費しない。** 「いまは作らない」と決めても、
+その `Q-` が問うている業務判断（誰が決めるのか、何を記録するのか）は未回答のまま残る。
+`Q-` を除くのは**問いに回答が出たとき**だけである。見送りの決定は `decisions/` に記録し、
+`Q-` はその `ADR-` の**再訪条件を監視する対象**として残す。
 
 ### 6.4 仮説を事実に変える
 

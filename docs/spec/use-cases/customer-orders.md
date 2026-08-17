@@ -15,6 +15,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-08](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) |
 | ドメイン対応 | [OP-CUST-12](../../design/domain/operations.md) / [RM-ORDER-BY-CUSTOMER](../../design/domain/read-models.md) |
@@ -60,6 +61,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-08](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-ORDER`](../wireframes/customer/SCR-ORDER.html) |
 | ドメイン対応 | [OP-CUST-12](../../design/domain/operations.md) |
@@ -104,6 +106,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-09](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-ORDERS`](../wireframes/customer/SCR-ORDERS.html) |
 | ドメイン対応 | [OP-CUST-13](../../design/domain/operations.md) |

@@ -19,6 +19,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-05](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-CHECKOUT`](../wireframes/customer/SCR-CHECKOUT.html) |
 | ドメイン対応 | [OP-CUST-11](../../design/domain/operations.md) |
@@ -92,6 +93,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-05](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-CHECKOUT-DONE`](../wireframes/customer/SCR-CHECKOUT-DONE.html) |
 | ドメイン対応 | [OP-CUST-12](../../design/domain/operations.md) |
@@ -125,6 +127,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-10](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) |
 | ドメイン対応 | [RM-ADDRESS-BY-CUSTOMER](../../design/domain/read-models.md) |
@@ -151,6 +154,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-05](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-ADDRESS-EDIT`](../wireframes/customer/SCR-ADDRESS-EDIT.html) |
 | ドメイン対応 | [OP-CUST-02](../../design/domain/operations.md) |
@@ -201,6 +205,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-10](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-ADDRESS-EDIT`](../wireframes/customer/SCR-ADDRESS-EDIT.html) |
 | ドメイン対応 | [OP-CUST-03](../../design/domain/operations.md) |
@@ -235,6 +240,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-10](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-ADDRESSES`](../wireframes/customer/SCR-ADDRESSES.html) |
 | ドメイン対応 | [OP-CUST-04](../../design/domain/operations.md) |

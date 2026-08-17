@@ -18,6 +18,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-06](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-ORDERS`](../wireframes/admin/SCR-A-ORDERS.html) |
 | ドメイン対応 | [OP-STAFF-15](../../design/domain/operations.md) / [RM-ORDER-LIST](../../design/domain/read-models.md) |
@@ -65,6 +66,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-06](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-ORDER`](../wireframes/admin/SCR-A-ORDER.html) |
 | ドメイン対応 | [OP-STAFF-15](../../design/domain/operations.md) |
@@ -122,6 +124,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-06](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-ORDER`](../wireframes/admin/SCR-A-ORDER.html) |
 | ドメイン対応 | [OP-STAFF-12〜14](../../design/domain/operations.md) |

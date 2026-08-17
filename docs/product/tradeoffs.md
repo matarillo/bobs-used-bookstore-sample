@@ -33,9 +33,12 @@ status: proposed
 - **同じ 1 冊を二人に売らないこと。** 中古書店の在庫は通常 1 冊であり、二重販売は信用を直撃する。
   在庫の引き当ては注文の確定と同時に確定し、在庫を超える出庫は拒否される
   （[RULE-STOCK-01 / 03](../spec/rules.md)、
-  [ISSUE-03](../design/issues.md) の意図的判断）。
+  [ISSUE-03](../design/issues.md) の意図的判断。ただし在庫数への直接代入がこの検査を迂回できる
+  ——[ISSUE-01](../design/issues.md) として追跡中）。
 - **本人のものしか見せない・触らせないこと。** 顧客向けの照会・操作は本人に限る
   （[RULE-ACCESS-01 / 02](../spec/rules.md)、[NFR-SEC-02 / 03](../spec/non-functional.md)）。
+  ただし**注文確定時のかご・住所の所有者検証をドメインは保証していない**
+  （[ISSUE-02](../design/issues.md)。防がれているとすればドメイン層の外である）。
 - **通信と入力の基本的な防御。** 全通信の暗号化と CSRF 防御
   （[NFR-SEC-01 / 04](../spec/non-functional.md)）。
 
