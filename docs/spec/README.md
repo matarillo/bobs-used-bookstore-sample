@@ -19,6 +19,8 @@ Web アプリケーション `app/Bookstore.Web` が来店者と店舗スタッ�
 | [screens.md](screens.md) | 画面一覧 `SCR-` と画面遷移 |
 | [conventions.md](conventions.md) | 全画面に共通する入出力・通知・エラーの作法 |
 | [rules.md](rules.md) | 業務ルール `RULE-` |
+| [non-functional.md](non-functional.md) | 非機能仕様 `NFR-`（観測・テスト可能な品質水準） |
+| [integrations.md](integrations.md) | 外部連携先 `EXT-` の境界・契約・失敗時の見え方 |
 | [use-cases/](use-cases/) | ユースケース `UC-`。下表のとおり |
 | [wireframes/](wireframes/README.md) | 画面ごとのワイヤーフレーム。書式は同 README |
 
@@ -36,6 +38,11 @@ Web アプリケーション `app/Bookstore.Web` が来店者と店舗スタッ�
 | [use-cases/staff-catalog.md](use-cases/staff-catalog.md) | 書籍の登録・更新・棚入れ、参照データの保守 |
 | [use-cases/staff-dashboard.md](use-cases/staff-dashboard.md) | ダッシュボードの指標と導線 |
 
+上表の**機能グループ（`UC-` のまとまり）がフィーチャーである**。アプリケーションの
+アーキテクチャ領域に対応する実装側の束ね方で、要求層のエピック（価値のまとまり）とは
+別軸である（[story-map.md §2](../product/story-map.md)）。明示的に採番したいときだけ、
+各グループに `FEAT-` を添える（既定ではこのファイル分割がフィーチャーの索引を兼ねる）。
+
 用語は [用語集](../glossary.md) を正とする。識別子と記述規約は [文書体系](../README.md) にある。
 
 ## 2. ユースケースの書式
@@ -45,6 +52,7 @@ Web アプリケーション `app/Bookstore.Web` が来店者と店舗スタッ�
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | STORY-nn |
 | アクター | 誰が |
 | 画面 | SCR-xxx |
 | ドメイン対応 | OP-CUST-nn |
@@ -65,6 +73,13 @@ Web アプリケーション `app/Bookstore.Web` が来店者と店舗スタッ�
 三つの節に何を書き、何を書かないかは [文書体系 §5.1](../README.md) が定める。
 **Controller に業務上の条件分岐と計算式を書かない**ことが、この書式の要である。
 
+`UC-` は要求層の `STORY-`（[ユーザーストーリー](../product/story-map.md)）から生まれる。
+一つの `STORY-` が複数の `UC-` を生むことも、まだ `UC-` に落ちていない `STORY-` もある。
+「由来」欄でどの `STORY-` に応えるユースケースかを示す。
+
+**画面をまたぐ品質要求**（性能・安全・多言語・アクセシビリティ）は各ユースケースに書かず、
+[non-functional.md](non-functional.md) に `NFR-` として置き、必要な箇所から識別子で参照する。
+
 ## 3. 合意形成の進め方
 
 1. **読み合わせ**: 各ユースケースの「目的」と【Boundary】を業務担当者と確認する。
@@ -72,6 +87,9 @@ Web アプリケーション `app/Bookstore.Web` が来店者と店舗スタッ�
    （保存する図の条件は [文書体系 §5.4](../README.md)）。
 3. **画面の合意**: ワイヤーフレームを `SCR-` 単位で突き合わせる。
 4. **未決事項の消し込み**: [未決事項](../product/open-questions.md) の `Q-` を潰す。
+
+非機能仕様 `NFR-` も、**測り方まで含めて**業務担当者と合意する。
+測れないものは仕様ではなく、[前提と制約](../product/constraints.md) に前提として置く。
 
 ## 4. 前提と限界
 

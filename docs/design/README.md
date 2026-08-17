@@ -6,8 +6,13 @@ derived-from: 4412aa1
 
 # 設計
 
-ドメイン層 (`app/Bookstore.Domain`) とそのテスト (`app/Bookstore.Domain.Tests`) を、
-ドメイン駆動設計の語彙で再構成した論理設計書である。
+**内部をどう作るか**を置く層である。二つの視点から成る。
+
+- **論理設計**（`domain/`, 技術非依存）: ドメイン層 (`app/Bookstore.Domain`) とそのテスト
+  (`app/Bookstore.Domain.Tests`) を、ドメイン駆動設計の語彙で再構成したもの。
+- **物理・技術アーキテクチャ**（[architecture.md](architecture.md), 技術依存）:
+  コンテナ構成・システム境界・技術選択。C4 のコンテキスト／コンテナに相当し、
+  仕様の `FEAT-` が対応づく先である。
 
 **この層は顧客レビューの対象ではない。** 顧客と読み合わせるのは
 [仕様](../spec/README.md) と [要求・要件](../product/) である（[文書体系 §1.2](../README.md)）。
@@ -19,6 +24,8 @@ derived-from: 4412aa1
 
 ## 2. スコープ
 
+### 2.1 論理設計（domain/）
+
 | 含む | 含まない |
 | --- | --- |
 | 集約・エンティティ・値オブジェクトの構造 | プログラミング言語の構文・型システム |
@@ -28,12 +35,19 @@ derived-from: 4412aa1
 | 読み取りモデル（統計・照会） | ライブラリ・フレームワーク固有の作法 |
 | テストによって固定されている範囲 | 業務ルールそのもの（[spec/rules.md](../spec/rules.md)） |
 
-本層は**論理設計レベル**であり、特定の実装技術を意図的に排除している。
+`domain/` は**論理設計レベル**であり、特定の実装技術を意図的に排除している。
+
+### 2.2 物理・技術アーキテクチャ（architecture.md）
+
+上表で「含まない」とした技術構造——コンテナ、システム境界、API、永続化の在処、技術選択——は
+[architecture.md](architecture.md) が持つ。ただし**構造まで**である。クラスレベルの実装・
+フレームワークの作法・O/R マッピング詳細は文書に持たない（コードが正）。
 
 ## 3. 目次
 
 | 文書 | 内容 |
 | --- | --- |
+| [architecture.md](architecture.md) | コンテナ構成・システム境界・技術選択（C4 L1/L2）`CON-` |
 | [domain/overview.md](domain/overview.md) | サブドメイン分割、集約マップ、整合性境界 |
 | [domain/building-blocks.md](domain/building-blocks.md) | エンティティ基底、値オブジェクト、単位作業 |
 | [domain/aggregate-reference-data.md](domain/aggregate-reference-data.md) | 参照データ集約 |
@@ -90,3 +104,5 @@ derived-from: 4412aa1
 1. 本層は**現行実装から導出**したものである。実装に存在しないルールは記述しない。
 2. ドメイン層に明示されず永続化層に委ねられている判断は、**ドメイン未定義**として明示する。
 3. 「あるべき姿」は [issues.md](issues.md) にのみ置く。他の文書は現状の記述である。
+4. [architecture.md](architecture.md) は現時点で `proposed`（実装との突き合わせ前）。
+   構成を確認し次第 `derived` にする。未確認の構成は「ドメイン未定義／{未確認}」と明記する。
