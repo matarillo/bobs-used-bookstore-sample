@@ -22,6 +22,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-07](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) |
 | ドメイン対応 | [RM-BOOK-LIST](../../design/domain/read-models.md) |
@@ -54,6 +55,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-07](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOK`](../wireframes/admin/SCR-A-BOOK.html) |
 | ドメイン対応 | [AGG-BOOK](../../design/domain/aggregate-book.md) の照会 |
@@ -95,6 +97,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-07](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（新規モード） |
 | ドメイン対応 | [OP-STAFF-04](../../design/domain/operations.md) |
@@ -154,6 +157,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-07](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（更新モード） |
 | ドメイン対応 | [OP-STAFF-05](../../design/domain/operations.md) |
@@ -186,6 +190,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-16](../../product/story-map.md) |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（棚入れモード） |
 | ドメイン対応 | [OP-STAFF-10](../../design/domain/operations.md) |
@@ -264,6 +269,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-18](../../product/story-map.md) |
 | 画面 | [`SCR-A-REFDATA`](../wireframes/admin/SCR-A-REFDATA.html) |
 | ドメイン対応 | [OP-STAFF-03](../../design/domain/operations.md) / [RM-REFDATA-LIST](../../design/domain/read-models.md) |
 
@@ -279,6 +285,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-18](../../product/story-map.md) |
 | 画面 | [`SCR-A-REFDATA-EDIT`](../wireframes/admin/SCR-A-REFDATA-EDIT.html) |
 | ドメイン対応 | [OP-STAFF-01](../../design/domain/operations.md) |
 | 目的 | 新しい出版社やジャンルを、選べるようにする |
@@ -307,6 +314,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-18](../../product/story-map.md) |
 | 画面 | [`SCR-A-REFDATA-EDIT`](../wireframes/admin/SCR-A-REFDATA-EDIT.html) |
 | ドメイン対応 | [OP-STAFF-02](../../design/domain/operations.md) |
 | 目的 | 表記のゆれや誤字を直す |

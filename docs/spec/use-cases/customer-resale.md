@@ -19,6 +19,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-12](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-RESALE-NEW`](../wireframes/customer/SCR-RESALE-NEW.html) |
 | ドメイン対応 | [OP-CUST-14](../../design/domain/operations.md) |
@@ -78,6 +79,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
+| 由来 | [STORY-13](../../product/story-map.md) |
 | アクター | 顧客 |
 | 画面 | [`SCR-RESALE`](../wireframes/customer/SCR-RESALE.html) |
 | ドメイン対応 | [OP-CUST-15](../../design/domain/operations.md) / [RM-OFFER-BY-CUSTOMER](../../design/domain/read-models.md) |
