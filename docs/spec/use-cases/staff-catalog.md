@@ -22,7 +22,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
-| 由来 | [STORY-07](../../product/story-map.md) |
+| 由来 | [STORY-07](../../product/story-map.md), [STORY-22](../../product/story-map.md)（絞り込み） |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOKS`](../wireframes/admin/SCR-A-BOOKS.html) |
 | ドメイン対応 | [RM-BOOK-LIST](../../design/domain/read-models.md) |
@@ -97,7 +97,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
-| 由来 | [STORY-07](../../product/story-map.md) |
+| 由来 | [STORY-07](../../product/story-map.md), [STORY-23](../../product/story-map.md)（表紙画像） |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（新規モード） |
 | ドメイン対応 | [OP-STAFF-04](../../design/domain/operations.md) |
@@ -157,7 +157,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
-| 由来 | [STORY-07](../../product/story-map.md) |
+| 由来 | [STORY-07](../../product/story-map.md), [STORY-23](../../product/story-map.md)（表紙画像） |
 | アクター | 店舗スタッフ |
 | 画面 | [`SCR-A-BOOK-EDIT`](../wireframes/admin/SCR-A-BOOK-EDIT.html)（更新モード） |
 | ドメイン対応 | [OP-STAFF-05](../../design/domain/operations.md) |

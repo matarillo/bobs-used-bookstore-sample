@@ -112,7 +112,7 @@ derived-from: 4412aa1
 
 | 項目 | 内容 |
 | --- | --- |
-| 由来 | [STORY-03](../../product/story-map.md) |
+| 由来 | [STORY-03](../../product/story-map.md), [STORY-23](../../product/story-map.md)（表紙画像の表示） |
 | アクター | 来店者・顧客 |
 | 画面 | [`SCR-BOOK`](../wireframes/customer/SCR-BOOK.html) |
 | ドメイン対応 | [OP-CUST-05](../../design/domain/operations.md) |
