@@ -3,7 +3,7 @@ kind: backlog
 status: proposed
 ---
 
-# R3 — 店に行かずに本を売れる（PBI-030〜037）
+# R3 — 店に行かずに本を売れる（8 件 / 15 pt）
 
 局面は **開発中期**。ただし買取は**新しいサブドメイン**であり、
 最も危うい仮説 [HYP-05](../../docs/product/hypotheses.md) を抱え、
