@@ -157,9 +157,9 @@ status: proposed
 | S (1) | 7 | 7 |
 | **XL / XXL** | **0** | **0** |
 
-**XL・XXL は 1 件も無い。** [initial-backlog.md](initial-backlog.md) の XXL 1 件・XL 4 件は、
+**XL・XXL は 1 件も無い。** [initial-backlog.md](initial-backlog.md) が示す XXL 1 件・XL 4 件は、
 合意と実装の分離（[splitting.md §1.1](policies/splitting.md)）と、
-`STORY-07` のコア／付加分割（[splitting.md §4.3](policies/splitting.md)）で解消した。
+`STORY-07` のコア／付加分割（[splitting.md §4.3](policies/splitting.md)）で L 以下に収まる。
 
 ## 6. ストーリーからの逆引き
 
@@ -197,5 +197,5 @@ status: proposed
 | オンライン決済 | 見送り | [ADR-0001](../docs/product/decisions/ADR-0001-defer-online-payment.md) |
 | 通知メール | 見送り | [ADR-0002](../docs/product/decisions/ADR-0002-defer-notifications.md) |
 | カウンターオファー | 見送り | [ADR-0003](../docs/product/decisions/ADR-0003-defer-counter-offer.md) |
-| `ISSUE-01`〜`21` の解消そのもの | **単独では PBI にしない。** 触れる PBI の中で直すか、`[不成立]` を `[強制]` に上げる必要が出た時点で PBI 化する | [design/issues.md](../docs/design/issues.md) |
+| モデルの歪みの解消そのもの | **単独では PBI にしない。** 見つかった歪みは `ISSUE-` として起票し、そこに触れる PBI の中で直す。`[不成立]` を `[強制]` に上げる必要が出た時点で初めて PBI 化する | [design/issues.md](../docs/design/issues.md) |
 | `NFR-A11Y-01` / `NFR-I18N-01` / `NFR-COMPAT-01` | 規定しないと決めた。実運用の数字が要求し始めたら [phases.md §4](policies/phases.md) の条件で起票する | [non-functional.md §3.2](../docs/spec/non-functional.md) |
